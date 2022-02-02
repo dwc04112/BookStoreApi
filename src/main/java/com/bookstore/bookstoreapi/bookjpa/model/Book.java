@@ -6,7 +6,6 @@ import java.time.LocalDate;
 
 @Entity
 @Getter
-@Setter
 @ToString
 @Table(name = "book")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -26,6 +25,7 @@ public class Book {
     private String detail_tag;
     private String keyword;
     private String isDel;
+
 
     public Book(Long bid, String author, String subject, int price, LocalDate published_date, String tag, String detail_tag, String keyword, String isDel) {
         this.bid = bid;
