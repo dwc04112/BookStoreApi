@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -16,6 +18,16 @@ import org.springframework.web.bind.annotation.*;
 public class BookJpaController {
 
     public final BookJpaService bookJpaService;
+
+    @GetMapping("/")
+    public List<Book> getBookList(){
+        return bookJpaService.getBookList();
+    }
+
+    @GetMapping("/{bid}")
+    public Book getBookId(@PathVariable long bid){
+        return bookJpaService.getBookId(bid);
+    }
 
     @PostMapping("/")
     public Book postBook(@RequestBody BookDTO bookDTO){

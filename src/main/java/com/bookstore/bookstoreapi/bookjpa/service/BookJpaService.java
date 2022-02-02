@@ -8,17 +8,29 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 @RequiredArgsConstructor
 @Service
 @Slf4j
 public class BookJpaService {
 
-    final BookRepository boardRepository;
+    final BookRepository bookRepository;
+
+    //리스트 가져오기
+    public List<Book> getBookList() {
+       return bookRepository.findBookByIsDel("N");
+    }
+
+    //지정한 책만 가져오기
+    public Book getBookId(long bid) {
+        return bookRepository.findBookByBidAndIsDel(bid, "N");
+    }
 
     //책 등록
     public Book postBook(BookDTO bookDTO) {
-        long newBookBidValue = this.getNewBookBidValue(boardRepository);
+        long newBookBidValue = this.getNewBookBidValue(bookRepository);
         Book postData = Book.builder()
                 .bid(newBookBidValue)
                 .author(bookDTO.getAuthor())
@@ -30,7 +42,7 @@ public class BookJpaService {
                 .keyword(bookDTO.getKeyword())
                 .isDel("N")
                 .build();
-        return boardRepository.save(postData);
+        return bookRepository.save(postData);
     }
     //책 id를 정하는 로직
     private long getNewBookBidValue(BookRepository bookRepository) {
@@ -46,4 +58,5 @@ public class BookJpaService {
         log.debug("newBoardIdValue="+result);
         return result;
     }
+
 }
