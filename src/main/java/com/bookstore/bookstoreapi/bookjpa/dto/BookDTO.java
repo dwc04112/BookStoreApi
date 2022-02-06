@@ -8,8 +8,10 @@ import java.time.LocalDate;
 @Data
 public class BookDTO {
     private Long bid;
+    private Long mid;
     private String author;
     private String subject;
+    private int page;
     private int price;
     private LocalDate published_date;
     private String tag;

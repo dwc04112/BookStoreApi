@@ -17,8 +17,10 @@ public class Book {
     private long bid;
 
     @Column(unique = true)
+    private long mid;
     private String author;
     private String subject;
+    private int page;
     private int price;
     private LocalDate published_date;
     private String tag;
@@ -27,10 +29,12 @@ public class Book {
     private String isDel;
 
 
-    public Book(Long bid, String author, String subject, int price, LocalDate published_date, String tag, String detail_tag, String keyword, String isDel) {
+    public Book(Long bid, Long mid, String author, String subject , int page , int price , LocalDate published_date, String tag, String detail_tag, String keyword, String isDel) {
         this.bid = bid;
+        this.mid = mid;
         this.author = author;
         this.subject = subject;
+        this.page = page;
         this.price = price;
         this.published_date = published_date;
         this.tag = tag;

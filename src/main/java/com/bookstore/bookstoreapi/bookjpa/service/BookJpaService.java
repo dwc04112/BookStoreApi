@@ -35,8 +35,10 @@ public class BookJpaService {
         long newBookBidValue = this.getNewBookBidValue(bookRepository);
         Book postData = Book.builder()
                 .bid(newBookBidValue)
+                .mid(1)
                 .author(bookDTO.getAuthor())
                 .subject(bookDTO.getSubject())
+                .page(bookDTO.getPage())
                 .price(bookDTO.getPrice())
                 .published_date(bookDTO.getPublished_date())
                 .detail_tag(bookDTO.getDetail_tag())
