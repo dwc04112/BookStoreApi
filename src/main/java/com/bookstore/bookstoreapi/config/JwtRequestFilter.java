@@ -67,7 +67,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         }
 
 
-
+        if(tokenService.compareToken(jwtToken)){
             if(username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails userDetails = this.jwtUserDetailsService.loadUserByUsername(username);
 
@@ -80,8 +80,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
                 }
             }
-            /* 토큰 등록해야함
-        if(tokenService.compareToken(jwtToken)){
+
+
         }else{
             username = null;
             jwtToken = null;
@@ -89,7 +89,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             log.warn("이미 로그아웃 처리된 token입니다");
         }
 
-             */
         filterChain.doFilter(request,response);
     }
 
