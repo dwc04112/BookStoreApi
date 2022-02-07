@@ -35,10 +35,8 @@ public class BookJpaController {
         return data;
     }
 
-    @PostMapping("/delete")
-    public Book updateIsDelBookById(@RequestBody BookDTO bookDTO){
-        Book data = bookJpaService.updateIsDelBookById(bookDTO);
-        return data;
+    @DeleteMapping("/{bid}")
+    public Book updateIsDelBookById(@PathVariable long bid){
+        return bookJpaService.updateIsDelBookById(bid);
     }
-
 }

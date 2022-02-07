@@ -5,9 +5,11 @@ import com.bookstore.bookstoreapi.bookjpa.dto.BookDTO;
 import com.bookstore.bookstoreapi.bookjpa.model.Book;
 import com.bookstore.bookstoreapi.bookjpa.model.BookRepository;
 import com.bookstore.bookstoreapi.member.MemberRepository;
+import com.bookstore.bookstoreapi.security.controller.MemberController;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -70,21 +72,27 @@ public class BookJpaService {
     }
 
     //SecurityContextHolder에 저장된 사용자Email을 통해 사용자 Mid를 가져오는 로직
-    private Long getMemberIdByEmail(MemberRepository memberRepository){
+    private Long getMemberIdByEmail(MemberRepository memberRepository) {
         String memberEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         return memberRepository.getMemberIdByEmail(memberEmail);
-
     }
 
     //책 삭제 ( isDel "N" -> "Y" )
-    public Book updateIsDelBookById(BookDTO bookDTO) {
-        Optional<Book> bookData = bookRepository.findBookByBidAndIsDel(bookDTO.getBid(), "N");
+    public Book updateIsDelBookById(long bid) {
+        Optional<Book> bookData = bookRepository.findBookByBidAndIsDel(bid, "N");
         Book data = bookData.orElseThrow(() -> new RuntimeException("no data"));
         //북 오너 정보와 매치 필요
-        return null;
+        long midByLoginInfo = getMemberIdByEmail(memberRepository);
+
+        if (data.getMid() == midByLoginInfo) {
+            data.updateIsDel("Y");
+            return bookRepository.save(data);
+        } else {
+            return null;
+        }
     }
 
-    //
+
 
 
 }
