@@ -4,6 +4,7 @@ package com.bookstore.bookstoreapi.bookjpa.service;
 import com.bookstore.bookstoreapi.bookjpa.dto.BookDTO;
 import com.bookstore.bookstoreapi.bookjpa.model.Book;
 import com.bookstore.bookstoreapi.bookjpa.model.BookRepository;
+import com.bookstore.bookstoreapi.common.ApiResponse;
 import com.bookstore.bookstoreapi.member.MemberRepository;
 import com.bookstore.bookstoreapi.security.controller.MemberController;
 import lombok.RequiredArgsConstructor;
@@ -78,7 +79,7 @@ public class BookJpaService {
     }
 
     //책 삭제 ( isDel "N" -> "Y" )
-    public Book updateIsDelBookById(long bid) {
+    public ApiResponse<Book> updateIsDelBookById(long bid) {
         Optional<Book> bookData = bookRepository.findBookByBidAndIsDel(bid, "N");
         Book data = bookData.orElseThrow(() -> new RuntimeException("no data"));
         //북 오너 정보와 매치 필요
@@ -86,9 +87,10 @@ public class BookJpaService {
 
         if (data.getMid() == midByLoginInfo) {
             data.updateIsDel("Y");
-            return bookRepository.save(data);
+            bookRepository.save(data);
+            return new ApiResponse<>(true, "board id " + bid +" is successfully deleted", data);
         } else {
-            return null;
+            return new ApiResponse<>(false, "failed to delete board id " + bid);
         }
     }
 

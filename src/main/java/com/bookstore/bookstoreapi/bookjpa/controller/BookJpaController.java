@@ -4,6 +4,7 @@ package com.bookstore.bookstoreapi.bookjpa.controller;
 import com.bookstore.bookstoreapi.bookjpa.dto.BookDTO;
 import com.bookstore.bookstoreapi.bookjpa.model.Book;
 import com.bookstore.bookstoreapi.bookjpa.service.BookJpaService;
+import com.bookstore.bookstoreapi.common.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -36,7 +37,7 @@ public class BookJpaController {
     }
 
     @DeleteMapping("/{bid}")
-    public Book updateIsDelBookById(@PathVariable long bid){
+    public ApiResponse<Book> updateIsDelBookById(@PathVariable long bid){
         return bookJpaService.updateIsDelBookById(bid);
     }
 }
