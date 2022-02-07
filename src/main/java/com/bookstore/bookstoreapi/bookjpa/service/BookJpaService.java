@@ -37,7 +37,7 @@ public class BookJpaService {
     }
 
     //책 등록
-    public Book postBook(BookDTO bookDTO) {
+    public ApiResponse<Book> postBook(BookDTO bookDTO) {
         long newBookBidValue = this.getNewBookBidValue(bookRepository);
         long memberId = getMemberIdByEmail(memberRepository);
 
@@ -54,7 +54,8 @@ public class BookJpaService {
                 .keyword(bookDTO.getKeyword())
                 .isDel("N")
                 .build();
-        return bookRepository.save(postData);
+        bookRepository.save(postData);
+        return new ApiResponse<>(true, "Registration successfully ", postData);
     }
 
     //책 id를 정하는 로직

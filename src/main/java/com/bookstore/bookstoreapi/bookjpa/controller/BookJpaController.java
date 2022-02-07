@@ -31,9 +31,8 @@ public class BookJpaController {
     }
 
     @PostMapping("/")
-    public Book postBook(@RequestBody BookDTO bookDTO){
-        Book data = bookJpaService.postBook(bookDTO);
-        return data;
+    public ApiResponse<Book> postBook(@RequestBody BookDTO bookDTO){
+        return bookJpaService.postBook(bookDTO);
     }
 
     @DeleteMapping("/{bid}")
