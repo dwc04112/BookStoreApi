@@ -4,6 +4,7 @@ package com.bookstore.bookstoreapi.bookjpa.controller;
 import com.bookstore.bookstoreapi.bookjpa.dto.BookDTO;
 import com.bookstore.bookstoreapi.bookjpa.model.Book;
 import com.bookstore.bookstoreapi.bookjpa.service.BookJpaService;
+import com.bookstore.bookstoreapi.common.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -30,15 +31,12 @@ public class BookJpaController {
     }
 
     @PostMapping("/")
-    public Book postBook(@RequestBody BookDTO bookDTO){
-        Book data = bookJpaService.postBook(bookDTO);
-        return data;
+    public ApiResponse<Book> postBook(@RequestBody BookDTO bookDTO){
+        return bookJpaService.postBook(bookDTO);
     }
 
-    @PostMapping("/delete")
-    public Book updateIsDelBookById(@RequestBody BookDTO bookDTO){
-        Book data = bookJpaService.updateIsDelBookById(bookDTO);
-        return data;
+    @DeleteMapping("/{bid}")
+    public ApiResponse<Book> updateIsDelBookById(@PathVariable long bid){
+        return bookJpaService.updateIsDelBookById(bid);
     }
-
 }

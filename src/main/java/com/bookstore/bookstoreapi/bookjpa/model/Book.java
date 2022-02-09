@@ -28,6 +28,9 @@ public class Book {
     private String keyword;
     private String isDel;
 
+    public void updateIsDel(String isDel){
+        this.isDel = isDel;
+    }
 
     public Book(Long bid, Long mid, String author, String subject , int page , int price , LocalDate published_date, String tag, String detail_tag, String keyword, String isDel) {
         this.bid = bid;

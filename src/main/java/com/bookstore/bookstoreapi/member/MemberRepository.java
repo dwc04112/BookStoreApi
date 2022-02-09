@@ -13,6 +13,9 @@ import java.util.Optional;
 public interface MemberRepository extends CrudRepository<Member , Long> {
     Optional<Member> findByEmail(String email);
 
+    @Query("select mid From Member where email= ?1")
+    Long getMemberIdByEmail(String email);
+
     @Query("select m.mid, m.fullName, m.nickName FROM Member m where m.email=?1")
     List<Object[]> findMemberByEmail(String email);
 
