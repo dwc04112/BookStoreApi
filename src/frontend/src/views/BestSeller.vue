@@ -1,15 +1,12 @@
 <template>
 <div>
-  hi
+  bestSeller page
 </div>
 </template>
+
 <script>
-
 export default {
-  name: "Home",
-  data: () => ({
-
-  })
+  name: "BestSeller"
 }
 </script>
 
