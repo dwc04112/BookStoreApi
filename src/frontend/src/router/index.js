@@ -24,6 +24,11 @@ const routes = [
         name: 'BestSeller',
         component: () =>  import('@/views/BestSeller')
     },
+    {
+        path: '/Menu',
+        name: 'Menu',
+        component: () =>  import('@/views/Menu')
+    },
 ]
 
 const router = new VueRouter({
