@@ -29,6 +29,11 @@ const routes = [
         name: 'Menu',
         component: () =>  import('@/views/Menu')
     },
+    {
+        path: '/post',
+        name: 'PostBook',
+        component: () =>  import('@/views/PostBook')
+    },
 ]
 
 const router = new VueRouter({

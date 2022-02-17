@@ -12,7 +12,7 @@
               >
             <ul class="nav-menu">
               <li @click="('li1')"><a id="li1" href="#home">Home</a></li>
-              <li @click="('li2')"><a id="li2" href="#sub">sub</a></li>
+              <li @click="('li2')"><a id="li2" href="#bestSeller">bestSeller</a></li>
               <li @click="('li3')"><a id="li3" href="#about">about</a></li>
             </ul>
           </v-card>
@@ -26,13 +26,13 @@
         </section>
       </div>
       <div class="section">
-        <section id="sub" style="background-color: #FFE4C0">
-          <h1>반갑습니다</h1>
+        <section id="bestSeller" style="background-color: #FFE4C0">
+          <BestSeller/>
         </section>
       </div>
       <div class="section">
         <section id="about" style="background-color: #FFBBBB">
-          <About></About>
+          <PostBook/>
         </section>
       </div>
     </div>
@@ -40,12 +40,14 @@
 </template>
 <script>
 import $ from 'jquery'
-import About from "@/views/About";
+
+import BestSeller from "@/views/BestSeller";
+import PostBook from "@/views/PostBook";
 
 
 export default {
   name: "Home",
-  components: {About},
+  components: {PostBook, BestSeller},
   data () {
     return {
 
@@ -118,7 +120,7 @@ export default {
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap');
-#home,#sub ,#about{
+#home,#bestSeller ,#about{
   height: 100vh;
   width: 100%;
 }
