@@ -3,6 +3,8 @@ import App from './App.vue';
 import axios from "./plugins/axios";
 import vuetify from './plugins/vuetify';
 import router from './router'
+import "@/plugins/fontAwesomeIcon"
+
 
 Vue.prototype.$eventBus = new Vue();
 Vue.prototype.$axios = axios

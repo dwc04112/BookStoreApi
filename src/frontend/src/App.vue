@@ -1,22 +1,25 @@
 <template>
-  <div>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-
+  <body>
+    <Menu></Menu>
     <v-main>
       <router-view/>
     </v-main>
-  </div>
+  </body>
 </template>
 
 <script>
 
+
+import Menu from "@/views/Menu";
 export default {
   name: 'App',
-
-
+  components: {Menu},
   data: () => ({
     //
   }),
 };
 </script>
+
+<style>
+
+</style>
