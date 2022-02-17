@@ -11,7 +11,7 @@
             <v-col cols="12" sm="11" >
               <v-text-field
                   label="부제목"
-                  v-model="subtitle"
+                  v-model="sub_title"
               ></v-text-field>
             </v-col>
 
@@ -25,17 +25,18 @@
 
             <v-col cols="12" sm="5"  offset-sm="1">
               <v-text-field
-                  v-model="thumb"
+                  v-model="published_date"
                   label="출간일"
               ></v-text-field>
             </v-col>
+
+
             <v-col cols="12" sm="5" >
               <v-text-field
                   label="저자 명"
                   v-model="author"
               ></v-text-field>
             </v-col>
-
             <v-col cols="12" sm="5"   offset-sm="1">
               <v-text-field
                   v-model="translator"
@@ -70,10 +71,6 @@
                   label="책 표지"
               ></v-text-field>
             </v-col>
-
-
-
-
 
             <v-col cols="12" sm="11"  >
               <v-textarea
@@ -125,16 +122,13 @@
               <v-btn
                   color="primary"
                   text
-                  @click="submit"
+                  @click="commit"
               >submit</v-btn>
             </v-col>
           </v-row>
 
-    <!-- 수정 -->
-
-
-
-
+      <div>{{selectedTag.main}}</div>
+      <div>{{selectedSubTag}}</div>
     </v-container>
   </v-app>
 </template>
@@ -144,10 +138,11 @@ export default {
   name: "PostBook",
   data: () => ({
     title : '',
-    subtitle : '',
+    sub_title : '',
     author : '',
     content : '',
     publisher: '',
+    published_date: '',
     price : '',
     page : '',
     keyword : '',
@@ -172,8 +167,37 @@ export default {
   }),
 
   methods: {
-
-    },
+    commit(){
+      let bookData = {}
+      bookData.mid = 1
+      bookData.title = this.title
+      bookData.sub_title = this.sub_title
+      bookData.author = this.author
+      bookData.translator = this.translator
+      bookData.content = this.content
+      bookData.page = this.page
+      bookData.isbn = this.isbn
+      bookData.price = this.price
+      bookData.size = this.size
+      bookData.thumb = this.thumb
+      bookData.publisher = this.publisher
+      bookData.published_date = this.published_date
+      bookData.tag = this.selectedTag.main
+      bookData.detail_tag = this.selectedSubTag
+      bookData.keyword = this.keyword
+      this.$axios.post("book/",JSON.stringify(bookData),{
+        headers: {
+          "Content-Type": `application/json`,
+        },
+      }).then(response=>{
+        console.log(response.data)
+        alert("책 등록신청을 완료하였습니다.");
+        this.$router.push({path: './home'});
+      }).catch(error =>{
+        console.log(error.response);
+      })
+    }
+  },
 }
 </script>
 
