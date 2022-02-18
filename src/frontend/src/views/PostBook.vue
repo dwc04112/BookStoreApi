@@ -65,7 +65,15 @@
               ></v-text-field>
             </v-col>
 
+            <!-- 수정 필-->
             <v-col cols="12" sm="5"   offset-sm="1">
+              <v-text-field
+                  v-model="size"
+                  label="책 사이즈 가로/세로/무게"
+              ></v-text-field>
+            </v-col>
+
+            <v-col cols="12" sm="11">
               <v-text-field
                   v-model="thumb"
                   label="책 표지"
@@ -147,6 +155,7 @@ export default {
     published_date: '',
     price : '',
     page : '',
+    size : '',
     keyword : '',
     isbn : '',
     thumb : '',
@@ -171,6 +180,7 @@ export default {
 
   methods: {
     commit(){
+
       let bookData = {}
       bookData.mid = 1
       bookData.title = this.title
@@ -189,7 +199,7 @@ export default {
       bookData.detail_tag = this.selectedSubTag
       bookData.keyword = this.keyword
 
-      this.$axios.post("book/",JSON.stringify(bookData),{
+      this.$axios.post("book/", JSON.stringify(bookData),{
         headers: {
           "Content-Type": `application/json`,
           Authorization : "Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2NDUxODc0NzUsImlhdCI6MTY0NTE4Mzg3NSwianRpIjoidGVzdEBnbWFpbC5jb20ifQ.UMshLhKIyZOylyGqHnXOoebz3WdbPMZIKwOeXoJmxwWDdQcWdGliWsHbRBFaAbVlp_NP7YJwLC6Ds4upeYY9cQ"

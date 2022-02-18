@@ -38,6 +38,7 @@ public class BookJpaService {
 
     //책 등록
     public ApiResponse<Book> postBook(BookDTO bookDTO) {
+        log.debug(bookDTO.getContent());
         long newBookBidValue = this.getNewBookBidValue(bookRepository);
         long memberId = getMemberIdByEmail(memberRepository);
 
