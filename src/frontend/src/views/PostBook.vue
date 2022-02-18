@@ -92,11 +92,10 @@
               >
               </v-select>
             </v-col>
-
             <v-col cols="12" sm="5"  offset-sm="1">
               <v-select
                   v-model="selectedSubTag"
-                  :items="selectedTag.sub"
+                  :items=selectedTag.sub
                   label="subTag"
               >
               </v-select>
@@ -113,7 +112,10 @@
 
           <v-row justify="center" style="margin-bottom: 3%; margin-top: 3%">
             <v-col cols="12" sm="1">
-              <v-btn text>
+              <v-btn
+                  text
+                  @click="cancel"
+              >
                 Cancel
               </v-btn>
             </v-col>
@@ -162,8 +164,9 @@ export default {
       {main : '기술/공학', sub : ['건축','토목/건설','환경/소방/도시/조경','자동차/운전','공학일반','금속/재료']},
       {main : '컴퓨터/IT', sub : ['컴퓨터공학','IT일반','데이터베이스','네트워크','프로그래밍/언어','웹프로그래밍']},
     ],
-    selectedTag : '',
+    selectedTag : [],
     selectedSubTag : '',
+    users : [],
   }),
 
   methods: {
@@ -185,9 +188,11 @@ export default {
       bookData.tag = this.selectedTag.main
       bookData.detail_tag = this.selectedSubTag
       bookData.keyword = this.keyword
+
       this.$axios.post("book/",JSON.stringify(bookData),{
         headers: {
           "Content-Type": `application/json`,
+          Authorization : "Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2NDUxODc0NzUsImlhdCI6MTY0NTE4Mzg3NSwianRpIjoidGVzdEBnbWFpbC5jb20ifQ.UMshLhKIyZOylyGqHnXOoebz3WdbPMZIKwOeXoJmxwWDdQcWdGliWsHbRBFaAbVlp_NP7YJwLC6Ds4upeYY9cQ"
         },
       }).then(response=>{
         console.log(response.data)
@@ -196,7 +201,22 @@ export default {
       }).catch(error =>{
         console.log(error.response);
       })
-    }
+    },
+
+    cancel(){
+      this.$axios.get('book/',{
+        headers : {
+          Authorization : "Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2NDUxODc0NzUsImlhdCI6MTY0NTE4Mzg3NSwianRpIjoidGVzdEBnbWFpbC5jb20ifQ.UMshLhKIyZOylyGqHnXOoebz3WdbPMZIKwOeXoJmxwWDdQcWdGliWsHbRBFaAbVlp_NP7YJwLC6Ds4upeYY9cQ"
+        }
+      })
+        .then(response=>{
+            this.users = response.data
+            console.log(response.data);
+          })
+        .catch(error =>{
+          console.log(error.response);
+        })
+      },
   },
 }
 </script>
