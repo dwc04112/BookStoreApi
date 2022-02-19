@@ -34,6 +34,11 @@ const routes = [
         name: 'PostBook',
         component: () =>  import('@/views/PostBook')
     },
+    {
+        path: '/login',
+        name: 'Login',
+        component: () =>  import('@/views/Login')
+    },
 ]
 
 const router = new VueRouter({
