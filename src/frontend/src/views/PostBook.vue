@@ -213,11 +213,7 @@ export default {
     },
 
     cancel(){
-      this.$axios.get('book/',{
-        headers: {
-          "Content-Type": `application/json`,
-        },
-      })
+      this.$axios.get('book/')
         .then(response=>{
             this.users = response.data
             console.log(response.data);

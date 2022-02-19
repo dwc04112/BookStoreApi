@@ -1,13 +1,18 @@
 import axios from 'axios';
 import {store} from "@/store";
 
-axios.interceptors.request.use(function (config) {
 
-    if (document.URL.match("signup")) {
+// Add a request interceptor
+axios.interceptors.request.use(function (config) {
+    // Do something before request is sent
+    console.log('request interceptor!!!!')
+
+    if(document.URL.match("signup")){
         console.log("인증이 필요없는 url : " + document.URL)
         return config;
     }
-    config.headers.Authorization = "Bearer " + store.state.memberStore.token;
+    config.headers.Authorization = "Bearer "+store.state.memberStore.token;
+    //this.$router.go(0); //새로고침
     return config;
 }, function (error) {
     // Do something with request error

@@ -27,7 +27,7 @@ const memberStore = {
             commit('login', data)
 
         },
-        
+
         logout({commit}){
             axios.post("/logout")
                 .then(response => {
