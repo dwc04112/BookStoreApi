@@ -202,7 +202,6 @@ export default {
       this.$axios.post("book/", JSON.stringify(bookData),{
         headers: {
           "Content-Type": `application/json`,
-          Authorization : "Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2NDUxODc0NzUsImlhdCI6MTY0NTE4Mzg3NSwianRpIjoidGVzdEBnbWFpbC5jb20ifQ.UMshLhKIyZOylyGqHnXOoebz3WdbPMZIKwOeXoJmxwWDdQcWdGliWsHbRBFaAbVlp_NP7YJwLC6Ds4upeYY9cQ"
         },
       }).then(response=>{
         console.log(response.data)
@@ -215,9 +214,9 @@ export default {
 
     cancel(){
       this.$axios.get('book/',{
-        headers : {
-          Authorization : "Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2NDUxODc0NzUsImlhdCI6MTY0NTE4Mzg3NSwianRpIjoidGVzdEBnbWFpbC5jb20ifQ.UMshLhKIyZOylyGqHnXOoebz3WdbPMZIKwOeXoJmxwWDdQcWdGliWsHbRBFaAbVlp_NP7YJwLC6Ds4upeYY9cQ"
-        }
+        headers: {
+          "Content-Type": `application/json`,
+        },
       })
         .then(response=>{
             this.users = response.data
