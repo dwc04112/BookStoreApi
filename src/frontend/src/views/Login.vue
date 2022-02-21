@@ -1,7 +1,5 @@
 <template>
-<<<<<<< HEAD
-<!--0219 로그인 -->
-=======
+
   <v-main>
     <v-container
         style="position: relative; top: 10%; margin-left: 10%"
@@ -63,7 +61,6 @@
       </v-layout>
     </v-container>
   </v-main>
->>>>>>> Vue/Login
 </template>
 
 <script>
