@@ -14,9 +14,12 @@ public class BookDTO {
     private String author;
     private String translator;
     private String content;
+    private String index;
+    private String preview;
     private int page;
-    private int isbn;
+    private long isbn;
     private int price;
+    private int sale_price;
     private String size;
     private String thumb;
     private String publisher;

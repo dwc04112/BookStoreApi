@@ -23,9 +23,12 @@ public class Book {
     private String author;
     private String translator;
     private String content;
+    private String index;
+    private String preview;
     private int page;
-    private int isbn;
+    private long isbn;
     private int price;
+    private int sale_price;
     private String size;
     private String thumb;
     private String publisher;
@@ -47,9 +50,12 @@ public class Book {
             String author,
             String translator,
             String content,
+            String index,
+            String preview,
             int page,
-            int isbn,
+            long isbn,
             int price,
+            int sale_price,
             String size,
             String thumb,
             String publisher,
@@ -65,9 +71,12 @@ public class Book {
         this.author = author;
         this.translator = translator;
         this.content = content;
+        this.index = index;
+        this.preview = preview;
         this.page = page;
         this.isbn = isbn;
         this.price = price;
+        this.sale_price = sale_price;
         this.size = size;
         this.thumb = thumb;
         this.publisher = publisher;

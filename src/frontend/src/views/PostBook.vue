@@ -25,6 +25,8 @@
                     label="*제목"
                     v-model="title"
                     :rules="[rules.required]"
+                    append-outer-icon="mdi-magnify"
+                    @click:append-outer="searchTitle(title)"
                 ></v-text-field>
             </v-col>
 
@@ -39,7 +41,6 @@
           </v-row>
         </v-card>
       </v-row>
-
 
 
 
@@ -124,17 +125,12 @@
         </v-card>
       </v-row>
 
-
-
-
       <v-row>
-              <v-card class="name_card" elevation="0"  style=" border-radius: 0; border: 1.5px gray solid;" color="#EEEEEE">
-
-                  <v-card-title>
-                    도서 정보
-                  </v-card-title>
-
-              </v-card>
+        <v-card class="name_card" elevation="0"  style=" border-radius: 0; border: 1.5px gray solid;" color="#EEEEEE">
+            <v-card-title>
+              도서 정보
+            </v-card-title>
+        </v-card>
 
         <v-card class="input_card" elevation="0"  style="border-radius: 0; border-right: 1.5px gray solid; border-bottom: 1.5px gray solid; border-top: 1.5px gray solid;" >
           <v-row class="inner_row">
@@ -144,6 +140,8 @@
                     placeholder="13자리 또는 10자리 ISBN을 입력해주세요"
                     label="*ISBN"
                     :rules="[rules.required, rules.min, rules.intStrType]"
+                    append-outer-icon="mdi-magnify"
+                    @click:append-outer="searchIsbn(isbn)"
                 ></v-text-field>
               </v-col>
 
@@ -162,9 +160,15 @@
                     :rules="[rules.required, rules.intType]"
                 ></v-text-field>
               </v-col>
+              <v-col cols="12" sm="5"  offset-sm="1" >
+                <v-text-field
+                    v-model="sale_price"
+                    label="*판매 가격"
+                    :rules="[rules.required, rules.intType]"
+                ></v-text-field>
+              </v-col>
 
-
-              <v-col cols="12" sm="5"   offset-sm="1" >
+              <v-col cols="12" sm="5" >
                 <v-text-field
                     class="size_field"
                     v-model="length"
@@ -193,20 +197,15 @@
                 ></v-text-field>
               </v-col>
 
-              <v-col cols="12" sm="5">
-                <v-file-input
+              <v-col cols="12" sm="5" offset-sm="1">
+                <v-text-field
                     style="margin-top: 5%"
                     v-model="thumb"
-                    :rules="[rules.img]"
-                    accept="image/png, image/jpeg, image/bmp"
-                    prepend-icon="mdi-camera"
+                    label="*책 표지 URL등록"
                     outlined
                     dense
-                    label="*책 표지 등록"
-                ></v-file-input>
+                ></v-text-field>
               </v-col>
-            <!--수정해야함 -->
-            <div>{{thumb}}</div>
         </v-row>
       </v-card>
     </v-row>
@@ -225,11 +224,36 @@
                   <v-textarea
                       style="margin-top: 30px ;"
                       v-model="content"
+                      label="책 소개"
                       auto-grow
                       outlined
                       row-height="40"
                   ></v-textarea>
                 </v-col>
+          </v-row>
+          <v-row class="inner_row">
+            <v-col cols="12" sm="11"  >
+              <v-textarea
+                  style="margin-top: -6% ;"
+                  v-model="index"
+                  label="책 목차"
+                  auto-grow
+                  outlined
+                  row-height="40"
+              ></v-textarea>
+            </v-col>
+          </v-row>
+          <v-row class="inner_row">
+            <v-col cols="12" sm="11"  >
+              <v-textarea
+                  style="margin-top: -6% ;"
+                  v-model="preview"
+                  label="출판사 서평"
+                  auto-grow
+                  outlined
+                  row-height="40"
+              ></v-textarea>
+            </v-col>
           </v-row>
         </v-card>
       </v-row>
@@ -321,8 +345,7 @@
           </v-row>
 
 
-      <div>{{selectedTag.main}}</div>
-      <div>{{selectedSubTag}}</div>
+      <div></div>
 
 
 
@@ -334,74 +357,136 @@
 </template>
 
 <script>
+import $ from 'jquery'
+
 export default {
   name: "PostBook",
-  data: () => ({
-    title : '',
-    sub_title : '',
-    author : '',
-    content : '',
-    publisher: '',
-    price : '',
-    page : '',
+  data: function (){
+    return{
+      title : '',
+      sub_title : '',
+      author : '',
+      publisher: '',
 
-    //size
-    length : '',
-    width : '',
-    height : '',
-    weight : '',
+      content : '',
+      index : '',
+      preview: '',
 
-    isbn : '',
-    thumb : '',
-    translator : '',
-    detailTag : [
-      {main : '소설' , sub : ['한국소설', '영미소설' , '일본소설' , '중국소설', '기타나라소설','고전소설','장르소설']},
-      {main : '시/에세이',  sub : ['한국시','해외시','나라별 에세이','인물/자전적에세이']},
-      {main : '자기계발', sub : ['자기능력계발','비즈니스','능력개발','화술/협상']},
-      {main : '인문', sub : ['인문일반학', '심리학','교육학','유아교육','특수교육','임용고시','철학','문학이론','언어학','독서/글쓰기','문헌정보학']},
-      {main : '역사/문화', sub : ['역사일반','세계사','서양사','동양사','한국사','신화','민속학']},
-      {main : '종교', sub : ['종교일반','기독교','가톨릭','불교','그외종교']},
-      {main : '정치/사회', sub : ['정치/외교','행정/정책','국방/군사','법학','사회학','사회문제/복지','언론/신문/방송']},
-      {main : '예술/대중문화', sub : ['예술일반','미술','만화/애니메이션','디자인','패션/의류','음악','연극']},
-      {main : '과학', sub : ['과학이론','수학','물리학','화학','지구과학','생물과학','천문학']},
-      {main : '기술/공학', sub : ['건축','토목/건설','환경/소방/도시/조경','자동차/운전','공학일반','금속/재료']},
-      {main : '컴퓨터/IT', sub : ['컴퓨터공학','IT일반','데이터베이스','네트워크','프로그래밍/언어','웹프로그래밍']},
-    ],
-    selectedTag : [],
-    selectedSubTag : '',
-    users : [],
-    rules:{
-      required : value => !!value || '필수 입력란입니다.',
-      min : v => (v && v.length === 10 || v.length ===13 ) || 'ISBN은 10자 또는 13자 입니다',
-      intType :  v => /^[0-9]*$/.test(v) || '숫자만 입력해주세요.',
-      intStrType : v => /^[a-zA-Z0-9]*$/.test(v) || '영문+숫자만 입력 가능합니다.',
-      img : value => !value || 0< value.size < 2000000 || 'Avatar size should be less than 2 MB!',
-    },
+      price : '',
+      sale_price : '',
+      page : '',
 
-    date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
-    menu: false,
+      //size
+      length : '',
+      width : '',
+      height : '',
+      weight : '',
+
+      isbn : '',
+
+      thumb : '',
+
+      translator : '',
+      detailTag : [
+        {main : '소설' , sub : ['한국소설', '영미소설' , '일본소설' , '중국소설', '기타나라소설','고전소설','장르소설']},
+        {main : '시/에세이',  sub : ['한국시','해외시','나라별 에세이','인물/자전적에세이']},
+        {main : '자기계발', sub : ['자기능력계발','비즈니스','능력개발','화술/협상']},
+        {main : '인문', sub : ['인문일반학', '심리학','교육학','유아교육','특수교육','임용고시','철학','문학이론','언어학','독서/글쓰기','문헌정보학']},
+        {main : '역사/문화', sub : ['역사일반','세계사','서양사','동양사','한국사','신화','민속학']},
+        {main : '종교', sub : ['종교일반','기독교','가톨릭','불교','그외종교']},
+        {main : '정치/사회', sub : ['정치/외교','행정/정책','국방/군사','법학','사회학','사회문제/복지','언론/신문/방송']},
+        {main : '예술/대중문화', sub : ['예술일반','미술','만화/애니메이션','디자인','패션/의류','음악','연극']},
+        {main : '과학', sub : ['과학이론','수학','물리학','화학','지구과학','생물과학','천문학']},
+        {main : '기술/공학', sub : ['건축','토목/건설','환경/소방/도시/조경','자동차/운전','공학일반','금속/재료']},
+        {main : '컴퓨터/IT', sub : ['컴퓨터공학','IT일반','데이터베이스','네트워크','프로그래밍/언어','웹프로그래밍']},
+      ],
+      selectedTag : [],
+      selectedSubTag : '',
+      rules:{
+        required : value => !!value || '필수 입력란입니다.',
+        min : v => (v && v.length === 10 || v.length ===13 || v.length === 24) || 'ISBN은 10자 또는 13자 입니다',
+        intType :  v => /^[0-9]*$/.test(v) || '숫자만 입력해주세요.',
+        intStrType : v => /^[a-zA-Z0-9 ]*$/.test(v) || '영문+숫자만 입력 가능합니다.',
+        img : value => !value || 0< value.size < 2000000 || 'Avatar size should be less than 2 MB!',
+      },
+
+      date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
+      menu: false,
 
 
-    items: [],
-    keyword: [],
-    search: null,
-    tmp : '',
-  }),
+      items: [],
+      keyword: [],
+      search: null,
+      tmp : '',
+  }},
+
 
   methods: {
-
+    searchTitle(title) {
+      console.log(title)
+      if (title !== undefined && title !== "") {
+        $.ajax({
+          url: "https://dapi.kakao.com/v3/search/book",
+          headers: {'Authorization': 'KakaoAK 4df208f0ba1d7575a4e67ef3822dcf1c'},
+          type : "get",
+          data:{
+            query: title,
+            target:'title'
+          },
+          success:function(data){
+            console.log(data);
+          },
+          error : function(e){
+            console.log(e);
+          }
+        })
+      }
+    },
+    searchIsbn(isbn){
+      console.log(isbn)
+      if (isbn !== undefined && isbn !== "") {
+        this.$axios.get("https://dapi.kakao.com/v3/search/book",{
+          params : {
+            query : isbn ,
+            target : 'isbn'
+          },
+          headers: {'Authorization': 'KakaoAK 4df208f0ba1d7575a4e67ef3822dcf1c'},
+        })
+            .then(response=>{
+              console.log(response.data);
+              let info = response.data.documents[0]
+              this.title = info.title
+              this.author = info.authors
+              this.isbn = info.isbn
+              this.translator = info.translators
+              this.content = info.contents
+              this.price = info.price
+              this.sale_price = info.sale_price
+              this.thumb = info.thumbnail
+              this.publisher = info.publisher
+              this.date = info.datetime.substring(0,10)
+            })
+            .catch(error =>{
+              console.log(error.response);
+            })
+      }
+    },
 
     commit(){
-
       let bookData = {}
+
+      //
       bookData.title = this.title
       bookData.sub_title = this.sub_title
       bookData.author = this.author
       bookData.translator = this.translator
       bookData.content = this.content
+      bookData.index = this.index
+      bookData.preview = this.preview
       bookData.page = this.page
       bookData.isbn = this.isbn
       bookData.price = this.price
+      bookData.sale_price = this.sale_price
       bookData.size = this.length +"*"+this.width+"*"+this.height+"mm/"+this.weight+"g"
       bookData.thumb = this.thumb
       bookData.publisher = this.publisher
@@ -410,7 +495,8 @@ export default {
       bookData.detail_tag = this.selectedSubTag
       bookData.keyword = this.keyword
 
-      this.$axios.post("book/", JSON.stringify(bookData),{
+
+      this.$axios.post('book/',JSON.stringify(bookData),{
         headers: {
           "Content-Type": `application/json`,
         },
@@ -426,7 +512,6 @@ export default {
     cancel(){
       this.$axios.get('book/')
         .then(response=>{
-            this.users = response.data
             console.log(response.data);
           })
         .catch(error =>{
