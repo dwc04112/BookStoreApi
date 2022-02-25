@@ -38,31 +38,31 @@ public class BookJpaService {
 
     //책 등록
     public ApiResponse<Book> postBook(BookDTO bookDTO) {
-        log.debug(bookDTO.getContent());
         long newBookBidValue = this.getNewBookBidValue(bookRepository);
         long memberId = getMemberIdByEmail(memberRepository);
+        log.debug("member id : "+memberId);
 
         Book postData = Book.builder()
                 .bid(newBookBidValue)
                 .mid(memberId)
-                .title(bookDTO.getTitle())
-                .sub_title(bookDTO.getSub_title())
-                .author(bookDTO.getAuthor())
-                .translator(bookDTO.getTranslator())
-                .content(bookDTO.getContent())
-                .index(bookDTO.getIndex())
-                .preview(bookDTO.getPreview())
-                .page(bookDTO.getPage())
-                .isbn(bookDTO.getIsbn())
-                .price(bookDTO.getPrice())
-                .sale_price(bookDTO.getSale_price())
-                .size(bookDTO.getSize())
-                .thumb(bookDTO.getThumb())
-                .publisher(bookDTO.getPublisher())
-                .published_date(bookDTO.getPublished_date())
-                .detail_tag(bookDTO.getDetail_tag())
-                .tag(bookDTO.getTag())
-                .keyword(bookDTO.getKeyword())
+                .b_title(bookDTO.getB_title())
+                .b_subTitle(bookDTO.getB_subTitle())
+                .b_author(bookDTO.getB_author())
+                .b_translator(bookDTO.getB_translator())
+                .b_content(bookDTO.getB_content())
+                .b_index(bookDTO.getB_index())
+                .b_preview(bookDTO.getB_preview())
+                .b_page(bookDTO.getB_page())
+                .b_isbn(bookDTO.getB_isbn())
+                .b_price(bookDTO.getB_price())
+                .b_salePrice(bookDTO.getB_salePrice())
+                .b_size(bookDTO.getB_size())
+                .b_thumb(bookDTO.getB_thumb())
+                .b_publisher(bookDTO.getB_publisher())
+                .b_publishedDate(bookDTO.getB_publishedDate())
+                .b_tag(bookDTO.getB_tag())
+                .b_detailTag(bookDTO.getB_detailTag())
+                .b_keyword(bookDTO.getB_keyword())
                 .isDel("N")
                 .build();
         bookRepository.save(postData);
