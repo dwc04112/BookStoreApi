@@ -170,31 +170,10 @@
 
               <v-col cols="12" sm="5" >
                 <v-text-field
-                    class="size_field"
-                    v-model="length"
-                    label="가로"
-                    suffix="*"
+                    v-model="size"
+                    label="책 사이즈 (가로*세로*너비/무게g)"
+                    :rules="[rules.required]"
                 > </v-text-field>
-                <v-text-field
-                    class="size_field"
-                    v-model="width"
-                    style="margin-left: 5%"
-                    suffix="*"
-                    label="세로"
-                ></v-text-field>
-                <v-text-field
-                    class="size_field"
-                    v-model="height"
-                    style="margin-left: 5%"
-                    suffix="/"
-                    label="높이"
-                ></v-text-field>
-                <v-text-field
-                    class="size_field"
-                    style="margin-left: 5%"
-                    v-model="weight"
-                    label="무게"
-                ></v-text-field>
               </v-col>
 
               <v-col cols="12" sm="5" offset-sm="1">
@@ -365,28 +344,27 @@ export default {
     return{
       title : '',
       sub_title : '',
-      author : '',
-      publisher: '',
 
-      content : '',
-      index : '',
-      preview: '',
+      author : [],
+      publisher: '',
+      translator : [],
 
       price : '',
       sale_price : '',
       page : '',
+      size : '',
+      // length : '',
+      // width : '',
+      // height : '',
+      // weight : '',
 
-      //size
-      length : '',
-      width : '',
-      height : '',
-      weight : '',
+      index : '',
+      preview: '',
+      content : '',
 
       isbn : '',
-
       thumb : '',
 
-      translator : '',
       detailTag : [
         {main : '소설' , sub : ['한국소설', '영미소설' , '일본소설' , '중국소설', '기타나라소설','고전소설','장르소설']},
         {main : '시/에세이',  sub : ['한국시','해외시','나라별 에세이','인물/자전적에세이']},
@@ -404,9 +382,9 @@ export default {
       selectedSubTag : '',
       rules:{
         required : value => !!value || '필수 입력란입니다.',
-        min : v => (v && v.length === 10 || v.length ===13 || v.length === 24) || 'ISBN은 10자 또는 13자 입니다',
+        min : v => (v && v.length === 10 || v.length ===13 || v.length === 25) || 'ISBN은 10자 또는 13자 입니다',
         intType :  v => /^[0-9]*$/.test(v) || '숫자만 입력해주세요.',
-        intStrType : v => /^[a-zA-Z0-9 ]*$/.test(v) || '영문+숫자만 입력 가능합니다.',
+        intStrType : v => /^[a-zA-Z0-9 ()]*$/.test(v) || '영문+숫자만 입력 가능합니다.', /*space & () 제외*/
         img : value => !value || 0< value.size < 2000000 || 'Avatar size should be less than 2 MB!',
       },
 
@@ -457,7 +435,6 @@ export default {
               let info = response.data.documents[0]
               this.title = info.title
               this.author = info.authors
-              this.isbn = info.isbn
               this.translator = info.translators
               this.content = info.contents
               this.price = info.price
@@ -465,6 +442,12 @@ export default {
               this.thumb = info.thumbnail
               this.publisher = info.publisher
               this.date = info.datetime.substring(0,10)
+
+              if(info.isbn.length === 24){
+                this.isbn = info.isbn.substring(11,24)+('(')+info.isbn.substring(0,10)+(')')
+              }else{
+                this.isbn = info.isbn
+              }
             })
             .catch(error =>{
               console.log(error.response);
@@ -475,25 +458,24 @@ export default {
     commit(){
       let bookData = {}
 
-      //
-      bookData.title = this.title
-      bookData.sub_title = this.sub_title
-      bookData.author = this.author
-      bookData.translator = this.translator
-      bookData.content = this.content
-      bookData.index = this.index
-      bookData.preview = this.preview
-      bookData.page = this.page
-      bookData.isbn = this.isbn
-      bookData.price = this.price
-      bookData.sale_price = this.sale_price
-      bookData.size = this.length +"*"+this.width+"*"+this.height+"mm/"+this.weight+"g"
-      bookData.thumb = this.thumb
-      bookData.publisher = this.publisher
-      bookData.published_date = this.date
-      bookData.tag = this.selectedTag.main
-      bookData.detail_tag = this.selectedSubTag
-      bookData.keyword = this.keyword
+      bookData.b_title = this.title
+      bookData.b_subTitle = this.sub_title
+      bookData.b_author = this.author.toString()
+      bookData.b_publisher = this.publisher
+      bookData.b_publishedDate = this.date
+      bookData.b_translator = this.translator.toString()
+      bookData.b_isbn = this.isbn
+      bookData.b_page = Number(this.page)
+      bookData.b_price = Number(this.price)
+      bookData.b_salePrice = Number(this.sale_price)
+      bookData.b_size = this.size
+      bookData.b_thumb = this.thumb
+      bookData.b_content = this.content
+      bookData.b_index = this.index
+      bookData.b_preview = this.preview
+      bookData.b_tag = this.selectedTag.main
+      bookData.b_detailTag = this.selectedSubTag
+      bookData.b_keyword = this.keyword.toString()
 
 
       this.$axios.post('book/',JSON.stringify(bookData),{
