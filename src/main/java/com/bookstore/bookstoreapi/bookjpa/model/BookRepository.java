@@ -1,6 +1,7 @@
 package com.bookstore.bookstoreapi.bookjpa.model;
 
 
+import com.bookstore.bookstoreapi.bookjpa.dto.BookMainDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -11,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface BookRepository extends JpaRepository<Book, Integer> {
+public interface BookRepository extends JpaRepository<Book, Long> {
 
     List<Book> findBookByIsDel(String isDel);
 
@@ -27,4 +28,9 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
     @Query("UPDATE Book SET isDel = ?1 WHERE mid=?2")
     void updateIsDel(String isDel, Long mid);
 
+
+    @Query("select bThumb,bTitle,bKeyword,bAuthor From Book")
+    List<BookMain> getBookMain();
+
+    List<BookMainDTO> findBookBy();
 }

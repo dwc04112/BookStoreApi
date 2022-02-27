@@ -2,6 +2,7 @@ package com.bookstore.bookstoreapi.bookjpa.controller;
 
 
 import com.bookstore.bookstoreapi.bookjpa.dto.BookDTO;
+import com.bookstore.bookstoreapi.bookjpa.dto.BookMainDTO;
 import com.bookstore.bookstoreapi.bookjpa.model.Book;
 import com.bookstore.bookstoreapi.bookjpa.service.BookJpaService;
 import com.bookstore.bookstoreapi.common.ApiResponse;
@@ -23,6 +24,11 @@ public class BookJpaController {
     @GetMapping("/")
     public List<Book> getBookList(){
         return bookJpaService.getBookList();
+    }
+
+    @GetMapping("/info")
+    public List<BookMainDTO> getBookList2(){
+        return bookJpaService.getBookList2();
     }
 
     @GetMapping("/{bid}")

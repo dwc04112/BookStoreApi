@@ -116,7 +116,7 @@
                 <v-col cols="12" sm="5"   offset-sm="1">
                   <v-text-field
                       v-model="translator"
-                      label="*번역가"
+                      label="번역가"
                       :rules="[rules.required]"
                       style="margin-bottom: 2%"
                   ></v-text-field>
@@ -458,24 +458,24 @@ export default {
     commit(){
       let bookData = {}
 
-      bookData.b_title = this.title
-      bookData.b_subTitle = this.sub_title
-      bookData.b_author = this.author.toString()
-      bookData.b_publisher = this.publisher
-      bookData.b_publishedDate = this.date
-      bookData.b_translator = this.translator.toString()
-      bookData.b_isbn = this.isbn
-      bookData.b_page = Number(this.page)
-      bookData.b_price = Number(this.price)
-      bookData.b_salePrice = Number(this.sale_price)
-      bookData.b_size = this.size
-      bookData.b_thumb = this.thumb
-      bookData.b_content = this.content
-      bookData.b_index = this.index
-      bookData.b_preview = this.preview
-      bookData.b_tag = this.selectedTag.main
-      bookData.b_detailTag = this.selectedSubTag
-      bookData.b_keyword = this.keyword.toString()
+      bookData.bTitle = this.title
+      bookData.bSubTitle = this.sub_title
+      bookData.bAuthor = this.author.toString()
+      bookData.bPublisher = this.publisher
+      bookData.bPublishedDate = this.date
+      bookData.bTranslator = this.translator.toString()
+      bookData.bIsbn = this.isbn
+      bookData.bPage = Number(this.page)
+      bookData.bPrice = Number(this.price)
+      bookData.bSalePrice = Number(this.sale_price)
+      bookData.bSize = this.size
+      bookData.bThumb = this.thumb
+      bookData.bContent = this.content
+      bookData.bIndex = this.index
+      bookData.bPreview = this.preview
+      bookData.bTag = this.selectedTag.main
+      bookData.bDetailTag = this.selectedSubTag
+      bookData.bKeyword = this.keyword.toString()
 
 
       this.$axios.post('book/',JSON.stringify(bookData),{

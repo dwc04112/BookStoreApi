@@ -32,7 +32,7 @@
       </div>
       <div class="section">
         <section id="about" style="background-color: #FFBBBB">
-          <PostBook/>
+          <About/>
         </section>
       </div>
     </div>
@@ -42,12 +42,12 @@
 import $ from 'jquery'
 
 import BestSeller from "@/views/BestSeller";
-import PostBook from "@/views/PostBook";
+import About from "@/views/About";
 
 
 export default {
   name: "Home",
-  components: {PostBook, BestSeller},
+  components: {About, BestSeller},
   data () {
     return {
 
