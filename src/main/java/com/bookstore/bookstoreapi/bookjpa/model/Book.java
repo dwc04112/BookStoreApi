@@ -4,12 +4,12 @@ import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDate;
 
+@Entity
+@Getter
+@Table(name = "book")
 @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
-@Getter
-@Entity
-@Table(name = "book")
 public class Book {
 
     @Id
@@ -18,24 +18,24 @@ public class Book {
 
     @Column(unique = true)
     private long mid;
-    private String bTitle;
-    private String bSubTitle;
-    private String bAuthor;
-    private String bTranslator;
-    private String bContent;
-    private String bIndex;
-    private String bPreview;
-    private int bPage;
-    private String bIsbn;
-    private int bPrice;
-    private int bSalePrice;
-    private String bSize;
-    private String bThumb;
-    private String bPublisher;
-    private LocalDate bPublishedDate;
-    private String bTag;
-    private String bDetailTag;
-    private String bKeyword;
+    private String bookTitle;
+    private String bookSubTitle;
+    private String bookAuthor;
+    private String bookTranslator;
+    private String bookContent;
+    private String bookIndex;
+    private String bookPreview;
+    private int bookPage;
+    private String bookIsbn;
+    private int bookPrice;
+    private int bookSalePrice;
+    private String bookSize;
+    private String bookThumb;
+    private String bookPublisher;
+    private LocalDate bookPublishedDate;
+    private String bookTag;
+    private String bookDetailTag;
+    private String bookKeyword;
     private String isDel;
 
     public void updateIsDel(String isDel){
@@ -44,45 +44,45 @@ public class Book {
 
     public Book(Long bid,
                 Long mid,
-                String bTitle,
-                String bSubTitle,
-                String bAuthor,
-                String bTranslator,
-                String bContent,
-                String bIndex,
-                String bPreview,
-                int bPage,
-                String bIsbn,
-                int bPrice,
-                int bSalePrice,
-                String bSize,
-                String bThumb,
-                String bPublisher,
-                LocalDate bPublishedDate,
-                String bTag,
-                String bDetailTag,
-                String bKeyword,
+                String bookTitle,
+                String bookSubTitle,
+                String bookAuthor,
+                String bookTranslator,
+                String bookContent,
+                String bookIndex,
+                String bookPreview,
+                int bookPage,
+                String bookIsbn,
+                int bookPrice,
+                int bookSalePrice,
+                String bookSize,
+                String bookThumb,
+                String bookPublisher,
+                LocalDate bookPublishedDate,
+                String bookTag,
+                String bookDetailTag,
+                String bookKeyword,
                 String isDel ) {
         this.bid = bid;
         this.mid = mid;
-        this.bTitle = bTitle;
-        this.bSubTitle = bSubTitle;
-        this.bAuthor = bAuthor;
-        this.bTranslator = bTranslator;
-        this.bContent = bContent;
-        this.bIndex = bIndex;
-        this.bPreview = bPreview;
-        this.bPage = bPage;
-        this.bIsbn = bIsbn;
-        this.bPrice = bPrice;
-        this.bSalePrice = bSalePrice;
-        this.bSize = bSize;
-        this.bThumb = bThumb;
-        this.bPublisher = bPublisher;
-        this.bPublishedDate = bPublishedDate;
-        this.bTag = bTag;
-        this.bDetailTag = bDetailTag;
-        this.bKeyword = bKeyword;
+        this.bookTitle = bookTitle;
+        this.bookSubTitle = bookSubTitle;
+        this.bookAuthor = bookAuthor;
+        this.bookTranslator = bookTranslator;
+        this.bookContent = bookContent;
+        this.bookIndex = bookIndex;
+        this.bookPreview = bookPreview;
+        this.bookPage = bookPage;
+        this.bookIsbn = bookIsbn;
+        this.bookPrice = bookPrice;
+        this.bookSalePrice = bookSalePrice;
+        this.bookSize = bookSize;
+        this.bookThumb = bookThumb;
+        this.bookPublisher = bookPublisher;
+        this.bookPublishedDate = bookPublishedDate;
+        this.bookTag = bookTag;
+        this.bookDetailTag = bookDetailTag;
+        this.bookKeyword = bookKeyword;
         this.isDel = isDel;
     }
 }

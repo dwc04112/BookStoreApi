@@ -4,19 +4,19 @@ import lombok.Data;
 
 @Data
 public class BookMainDTO {
-    private String bThumb;
-    private String bTitle;
-    private String bKeyword;
-    private String bAuthor;
+    private String bookThumb;
+    private String bookTitle;
+    private String bookKeyword;
+    private String bookAuthor;
 
 
-    public BookMainDTO(String bThumb,
-                       String bTitle,
-                       String bKeyword,
-                       String bAuthor){
-        this.bThumb = bThumb;
-        this.bTitle = bTitle;
-        this.bKeyword = bKeyword;
-        this.bAuthor = bAuthor;
+    public BookMainDTO(String bookThumb,
+                       String bookTitle,
+                       String bookKeyword,
+                       String bookAuthor){
+        this.bookThumb = bookThumb;
+        this.bookTitle = bookTitle;
+        this.bookKeyword = bookKeyword;
+        this.bookAuthor = bookAuthor;
     }
 }

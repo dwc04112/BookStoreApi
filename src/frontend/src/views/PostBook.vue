@@ -336,7 +336,6 @@
 </template>
 
 <script>
-import $ from 'jquery'
 
 export default {
   name: "PostBook",
@@ -402,22 +401,21 @@ export default {
   methods: {
     searchTitle(title) {
       console.log(title)
-      if (title !== undefined && title !== "") {
-        $.ajax({
-          url: "https://dapi.kakao.com/v3/search/book",
-          headers: {'Authorization': 'KakaoAK 4df208f0ba1d7575a4e67ef3822dcf1c'},
-          type : "get",
-          data:{
-            query: title,
-            target:'title'
-          },
-          success:function(data){
-            console.log(data);
-          },
-          error : function(e){
-            console.log(e);
-          }
+        if (title !== undefined && title !== "") {
+          this.$axios.get("https://dapi.kakao.com/v3/search/book",{
+            params : {
+              query : title ,
+              target : 'title'
+            },
+            headers: {'Authorization': 'KakaoAK 4df208f0ba1d7575a4e67ef3822dcf1c'},
+
         })
+          .then(response=>{
+            console.log(response.data);
+          })
+          .catch(error =>{
+            console.log(error.response);
+          })
       }
     },
     searchIsbn(isbn){
@@ -456,27 +454,27 @@ export default {
     },
 
     commit(){
+
       let bookData = {}
 
-      bookData.bTitle = this.title
-      bookData.bSubTitle = this.sub_title
-      bookData.bAuthor = this.author.toString()
-      bookData.bPublisher = this.publisher
-      bookData.bPublishedDate = this.date
-      bookData.bTranslator = this.translator.toString()
-      bookData.bIsbn = this.isbn
-      bookData.bPage = Number(this.page)
-      bookData.bPrice = Number(this.price)
-      bookData.bSalePrice = Number(this.sale_price)
-      bookData.bSize = this.size
-      bookData.bThumb = this.thumb
-      bookData.bContent = this.content
-      bookData.bIndex = this.index
-      bookData.bPreview = this.preview
-      bookData.bTag = this.selectedTag.main
-      bookData.bDetailTag = this.selectedSubTag
-      bookData.bKeyword = this.keyword.toString()
-
+      bookData.bookTitle = this.title
+      bookData.bookSubTitle = this.sub_title
+      bookData.bookAuthor = this.author.toString()
+      bookData.bookPublisher = this.publisher
+      bookData.bookPublishedDate = this.date
+      bookData.bookTranslator = this.translator.toString()
+      bookData.bookIsbn = this.isbn
+      bookData.bookPage = Number(this.page)
+      bookData.bookPrice = Number(this.price)
+      bookData.bookSalePrice = Number(this.sale_price)
+      bookData.bookSize = this.size
+      bookData.bookThumb = this.thumb
+      bookData.bookContent = this.content
+      bookData.bookIndex = this.index
+      bookData.bookPreview = this.preview
+      bookData.bookTag = this.selectedTag.main
+      bookData.bookDetailTag = this.selectedSubTag
+      bookData.bookKeyword = this.keyword.toString()
 
       this.$axios.post('book/',JSON.stringify(bookData),{
         headers: {

@@ -38,6 +38,8 @@ public class BookJpaController {
 
     @PostMapping("/")
     public ApiResponse<Book> postBook(@RequestBody BookDTO bookDTO){
+
+        log.debug("post data : " + bookDTO);
         log.debug("책 등록");
         return bookJpaService.postBook(bookDTO);
     }
