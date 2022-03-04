@@ -6,8 +6,8 @@ import java.time.LocalDate;
 
 @Entity
 @Getter
-@ToString
 @Table(name = "book")
+@ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 public class Book {
@@ -15,67 +15,74 @@ public class Book {
     @Id
     @Column(name = "bid")
     private long bid;
-// 1 title 2 publisher 3 size 4 thumb 5 translator 6 isbn 7 content
+
     @Column(unique = true)
     private long mid;
-    private String title;
-    private String sub_title;
-    private String author;
-    private String translator;
-    private String content;
-    private int page;
-    private int isbn;
-    private int price;
-    private String size;
-    private String thumb;
-    private String publisher;
-    private LocalDate published_date;
-    private String tag;
-    private String detail_tag;
-    private String keyword;
+    private String bookTitle;
+    private String bookSubTitle;
+    private String bookAuthor;
+    private String bookTranslator;
+    private String bookContent;
+    private String bookIndex;
+    private String bookPreview;
+    private int bookPage;
+    private String bookIsbn;
+    private int bookPrice;
+    private int bookSalePrice;
+    private String bookSize;
+    private String bookThumb;
+    private String bookPublisher;
+    private LocalDate bookPublishedDate;
+    private String bookTag;
+    private String bookDetailTag;
+    private String bookKeyword;
     private String isDel;
 
     public void updateIsDel(String isDel){
         this.isDel = isDel;
     }
 
-    public Book(
-            Long bid,
-            Long mid,
-            String title ,
-            String sub_title,
-            String author,
-            String translator,
-            String content,
-            int page,
-            int isbn,
-            int price,
-            String size,
-            String thumb,
-            String publisher,
-            LocalDate published_date,
-            String tag,
-            String detail_tag,
-            String keyword,
-            String isDel) {
+    public Book(Long bid,
+                Long mid,
+                String bookTitle,
+                String bookSubTitle,
+                String bookAuthor,
+                String bookTranslator,
+                String bookContent,
+                String bookIndex,
+                String bookPreview,
+                int bookPage,
+                String bookIsbn,
+                int bookPrice,
+                int bookSalePrice,
+                String bookSize,
+                String bookThumb,
+                String bookPublisher,
+                LocalDate bookPublishedDate,
+                String bookTag,
+                String bookDetailTag,
+                String bookKeyword,
+                String isDel ) {
         this.bid = bid;
         this.mid = mid;
-        this.title = title;
-        this.sub_title = sub_title;
-        this.author = author;
-        this.translator = translator;
-        this.content = content;
-        this.page = page;
-        this.isbn = isbn;
-        this.price = price;
-        this.size = size;
-        this.thumb = thumb;
-        this.publisher = publisher;
-        this.published_date = published_date;
-        this.tag = tag;
-        this.detail_tag = detail_tag;
-        this.keyword = keyword;
+        this.bookTitle = bookTitle;
+        this.bookSubTitle = bookSubTitle;
+        this.bookAuthor = bookAuthor;
+        this.bookTranslator = bookTranslator;
+        this.bookContent = bookContent;
+        this.bookIndex = bookIndex;
+        this.bookPreview = bookPreview;
+        this.bookPage = bookPage;
+        this.bookIsbn = bookIsbn;
+        this.bookPrice = bookPrice;
+        this.bookSalePrice = bookSalePrice;
+        this.bookSize = bookSize;
+        this.bookThumb = bookThumb;
+        this.bookPublisher = bookPublisher;
+        this.bookPublishedDate = bookPublishedDate;
+        this.bookTag = bookTag;
+        this.bookDetailTag = bookDetailTag;
+        this.bookKeyword = bookKeyword;
         this.isDel = isDel;
     }
-
 }

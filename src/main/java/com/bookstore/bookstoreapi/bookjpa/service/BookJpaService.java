@@ -2,15 +2,14 @@ package com.bookstore.bookstoreapi.bookjpa.service;
 
 
 import com.bookstore.bookstoreapi.bookjpa.dto.BookDTO;
+import com.bookstore.bookstoreapi.bookjpa.dto.BookMainDTO;
 import com.bookstore.bookstoreapi.bookjpa.model.Book;
 import com.bookstore.bookstoreapi.bookjpa.model.BookRepository;
 import com.bookstore.bookstoreapi.common.ApiResponse;
 import com.bookstore.bookstoreapi.member.MemberRepository;
-import com.bookstore.bookstoreapi.security.controller.MemberController;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,8 +17,8 @@ import java.util.Optional;
 
 
 @RequiredArgsConstructor
-@Service
 @Slf4j
+@Service
 public class BookJpaService {
 
     final BookRepository bookRepository;
@@ -30,6 +29,10 @@ public class BookJpaService {
         return bookRepository.findBookByIsDel("N");
     }
 
+    public List<BookMainDTO> getBookList2() {
+        return bookRepository.findBookBy();
+    }
+
     //지정한 책만 가져오기
     public Book getBookId(long bid) {
         Optional<Book> bookData = bookRepository.findBookByBidAndIsDel(bid, "N");
@@ -38,28 +41,31 @@ public class BookJpaService {
 
     //책 등록
     public ApiResponse<Book> postBook(BookDTO bookDTO) {
-        log.debug(bookDTO.getContent());
         long newBookBidValue = this.getNewBookBidValue(bookRepository);
         long memberId = getMemberIdByEmail(memberRepository);
+        log.debug("member id : "+memberId);
 
         Book postData = Book.builder()
                 .bid(newBookBidValue)
                 .mid(memberId)
-                .title(bookDTO.getTitle())
-                .sub_title(bookDTO.getSub_title())
-                .author(bookDTO.getAuthor())
-                .translator(bookDTO.getTranslator())
-                .content(bookDTO.getContent())
-                .page(bookDTO.getPage())
-                .isbn(bookDTO.getIsbn())
-                .price(bookDTO.getPrice())
-                .size(bookDTO.getSize())
-                .thumb(bookDTO.getThumb())
-                .publisher(bookDTO.getPublisher())
-                .published_date(bookDTO.getPublished_date())
-                .detail_tag(bookDTO.getDetail_tag())
-                .tag(bookDTO.getTag())
-                .keyword(bookDTO.getKeyword())
+                .bookTitle(bookDTO.getBookTitle())
+                .bookSubTitle(bookDTO.getBookSubTitle())
+                .bookAuthor(bookDTO.getBookAuthor())
+                .bookTranslator(bookDTO.getBookTranslator())
+                .bookContent(bookDTO.getBookContent())
+                .bookIndex(bookDTO.getBookIndex())
+                .bookPreview(bookDTO.getBookPreview())
+                .bookPage(bookDTO.getBookPage())
+                .bookIsbn(bookDTO.getBookIsbn())
+                .bookPrice(bookDTO.getBookPrice())
+                .bookSalePrice(bookDTO.getBookSalePrice())
+                .bookSize(bookDTO.getBookSize())
+                .bookThumb(bookDTO.getBookThumb())
+                .bookPublisher(bookDTO.getBookPublisher())
+                .bookPublishedDate(bookDTO.getBookPublishedDate())
+                .bookTag(bookDTO.getBookTag())
+                .bookDetailTag(bookDTO.getBookDetailTag())
+                .bookKeyword(bookDTO.getBookKeyword())
                 .isDel("N")
                 .build();
         bookRepository.save(postData);
@@ -102,8 +108,4 @@ public class BookJpaService {
             return new ApiResponse<>(false, "failed to delete board id " + bid);
         }
     }
-
-
-
-
 }

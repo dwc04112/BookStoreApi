@@ -1,24 +1,24 @@
 <template>
   <div class="container-fluid">
     <div style="justify-content: center">
-      <div>
-        <nav class="nav" style="position: fixed">
-          <v-card
-              class = "menu-card"
-              height=250px
-              width="80px"
-              style="margin-top: 100%; margin-left: 50%; background-color: rgba(255,255,255,0.4)"
-              elevation="0"
-              >
-            <ul class="nav-menu">
-              <li @click="('li1')"><a id="li1" href="#home">Home</a></li>
-              <li @click="('li2')"><a id="li2" href="#bestSeller">bestSeller</a></li>
-              <li @click="('li3')"><a id="li3" href="#about">about</a></li>
-            </ul>
-          </v-card>
 
-        </nav>
-      </div>
+      <nav class="nav" style="position: fixed; z-index: 6">
+        <v-card
+            class = "menu-card"
+            height=250px
+            width="80px"
+            style="margin-top: 100%; margin-left: 50%; background-color: rgba(255,255,255,0.4)"
+            elevation="0"
+            >
+          <ul class="nav-menu">
+            <li @click="('li1')"><a id="li1" href="#home">Home</a></li>
+            <li @click="('li2')"><a id="li2" href="#bestSeller">bestSeller</a></li>
+            <li @click="('li3')"><a id="li3" href="#about">about</a></li>
+          </ul>
+        </v-card>
+
+      </nav>
+
 
       <div class="section">
         <section id="home" style="background-color: #F0FFC2">
@@ -32,7 +32,7 @@
       </div>
       <div class="section">
         <section id="about" style="background-color: #FFBBBB">
-          <PostBook/>
+          <About/>
         </section>
       </div>
     </div>
@@ -42,12 +42,12 @@
 import $ from 'jquery'
 
 import BestSeller from "@/views/BestSeller";
-import PostBook from "@/views/PostBook";
+import About from "@/views/About";
 
 
 export default {
   name: "Home",
-  components: {PostBook, BestSeller},
+  components: {About, BestSeller},
   data () {
     return {
 
@@ -129,6 +129,9 @@ export default {
 }
 div{
   font-family: 'Source Sans Pro', sans-serif;
+}
+.section{
+  z-index: 3;
 }
 
 

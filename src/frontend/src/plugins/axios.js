@@ -11,6 +11,11 @@ axios.interceptors.request.use(function (config) {
         console.log("인증이 필요없는 url : " + document.URL)
         return config;
     }
+    if(config.url.match("kakao")){
+        console.log("kakao Api Request")
+        return config;
+    }
+
     config.headers.Authorization = "Bearer "+store.state.memberStore.token;
     //this.$router.go(0); //새로고침
     return config;
@@ -38,5 +43,6 @@ axios.interceptors.response.use(function (response) {
     }
     return Promise.reject(error);
 });
+
 
 export default axios;
