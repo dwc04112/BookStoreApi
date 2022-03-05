@@ -29,4 +29,10 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     void updateIsDel(String isDel, Long mid);
 
     List<BookMainDTO> findBookBy();
+
+    List<BookMainDTO> findBookByBookKeywordContainingAndIsDel(String keyword, String IsDel);
+    List<BookMainDTO> findBookByBookKeywordContainingAndBookKeywordContainingAndIsDel(String keyword1, String keyword2,String IsDel);
+    List<BookMainDTO> findBookByBookKeywordContainingAndBookKeywordContainingAndBookKeywordContainingAndIsDel(String keyword1, String keyword2, String keyword3, String IsDel);
+    List<BookMainDTO> findBookByBookKeywordContainingAndBookKeywordContainingAndBookKeywordContainingAndBookKeywordContainingAndIsDel(String keyword1, String keyword2, String keyword3, String keyword4, String IsDel);
+    List<BookMainDTO> findBookByBookKeywordContainingAndBookKeywordContainingAndBookKeywordContainingAndBookKeywordContainingAndBookKeywordContainingAndIsDel(String keyword1, String keyword2, String keyword3, String keyword4, String keyword5, String IsDel);
 }

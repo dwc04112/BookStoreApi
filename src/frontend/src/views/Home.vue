@@ -1,19 +1,18 @@
 <template>
   <div class="container-fluid">
     <div style="justify-content: center">
-
       <nav class="nav" style="position: fixed; z-index: 6">
         <v-card
             class = "menu-card"
-            height=250px
+            height=150px
             width="80px"
-            style="margin-top: 100%; margin-left: 50%; background-color: rgba(255,255,255,0.4)"
+            style="margin-top: 1100px; margin-left: 50%; background-color: rgba(255,255,255,0.4)"
             elevation="0"
             >
           <ul class="nav-menu">
             <li @click="('li1')"><a id="li1" href="#home">Home</a></li>
-            <li @click="('li2')"><a id="li2" href="#bestSeller">bestSeller</a></li>
-            <li @click="('li3')"><a id="li3" href="#about">about</a></li>
+            <li @click="('li2')"><a id="li2" href="#about">about</a></li>
+            <li @click="('li3')"><a id="li3" href="#bestSeller">bestSeller</a></li>
           </ul>
         </v-card>
 
@@ -26,13 +25,13 @@
         </section>
       </div>
       <div class="section">
-        <section id="bestSeller" style="background-color: #FFE4C0">
-          <BestSeller/>
+        <section id="about" style="background-color: #FFBBBB">
+          <About/>
         </section>
       </div>
       <div class="section">
-        <section id="about" style="background-color: #FFBBBB">
-          <About/>
+        <section id="bestSeller" style="background-color: #FFE4C0">
+          <BestSeller/>
         </section>
       </div>
     </div>
@@ -47,7 +46,7 @@ import About from "@/views/About";
 
 export default {
   name: "Home",
-  components: {About, BestSeller},
+  components: { About, BestSeller},
   data () {
     return {
 
@@ -59,16 +58,15 @@ export default {
 
   created() {
     $(document).ready(function () {
-
       const $menu_a = $("a", $(".nav-menu"));
+
       $menu_a.click(function () {
-        $("html").animate(
-            {scrollTop: $($(this).attr("href")).offset().top},
-            {duration: 900, complete: $(this).attr("href")}
-        );
-
-
+          $("html").animate(
+              {scrollTop: $($(this).attr("href")).offset().top},
+              {duration: 900, complete: $(this).attr("href")}
+          );
       });
+
 
       $(".section").each(function () {
         // 개별적으로 Wheel 이벤트 적용 mousewheel(IE/chrome/opera) DOMMouseScroll(FF)
@@ -88,19 +86,25 @@ export default {
           // 마우스휠을 위에서 아래로
           if (delta < 0) {
             if ($(this).next() !== undefined) {
-              moveTop = $(this).next().offset().top;
 
+              //error
+              if(($(this).offset().top>2400)){
+                return null;
+              }
+
+              moveTop = $(this).next().offset().top;
             }
             // 마우스휠을 아래에서 위로
           } else {
             if ($(this).prev() !== undefined) {
               moveTop = $(this).prev().offset().top;
-
               if($(this).offset().top <100){
                 moveTop = 0;
               }
             }
           }
+
+
           // 화면 이동 0.8초(800)
           $("html,body").stop().animate({
             scrollTop: moveTop + 'px'
@@ -108,8 +112,10 @@ export default {
             duration: 700, complete: function () {
             }
           });
+
         });
       });
+
     })
   },
 

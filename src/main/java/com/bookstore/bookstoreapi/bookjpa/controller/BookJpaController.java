@@ -36,6 +36,7 @@ public class BookJpaController {
         return bookJpaService.getBookId(bid);
     }
 
+
     @PostMapping("/")
     public ApiResponse<Book> postBook(@RequestBody BookDTO bookDTO){
 
@@ -47,5 +48,13 @@ public class BookJpaController {
     @DeleteMapping("/{bid}")
     public ApiResponse<Book> updateIsDelBookById(@PathVariable long bid){
         return bookJpaService.updateIsDelBookById(bid);
+    }
+
+
+    @PostMapping("/keyword")
+    public List<BookMainDTO> searchBookList(@RequestBody BookDTO bookDTO){
+        String keyword = bookDTO.getBookKeyword();
+        log.debug("keyword : " + keyword);
+        return bookJpaService.searchBookByKeyword(keyword);
     }
 }

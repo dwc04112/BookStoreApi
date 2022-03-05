@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -106,6 +107,27 @@ public class BookJpaService {
             return new ApiResponse<>(true, "board id " + bid +" is successfully deleted", data);
         } else {
             return new ApiResponse<>(false, "failed to delete board id " + bid);
+        }
+    }
+
+    public List<BookMainDTO> searchBookByKeyword(String keyword) {
+        String[] keywords = keyword.split(",");
+        log.debug("keywords : " +keywords.length);
+
+
+
+        if(keywords.length == 1){
+            return bookRepository.findBookByBookKeywordContainingAndIsDel(keyword, "N");
+        }else if(keywords.length == 2){
+            return bookRepository.findBookByBookKeywordContainingAndBookKeywordContainingAndIsDel(keywords[0], keywords[1], "N");
+        }else if(keywords.length == 3){
+            return bookRepository.findBookByBookKeywordContainingAndBookKeywordContainingAndBookKeywordContainingAndIsDel(keywords[0], keywords[1], keywords[2], "N");
+        }else if(keywords.length == 4){
+            return bookRepository.findBookByBookKeywordContainingAndBookKeywordContainingAndBookKeywordContainingAndBookKeywordContainingAndIsDel(keywords[0], keywords[1], keywords[2], keywords[3], "N");
+        }else if(keywords.length == 5){
+            return bookRepository.findBookByBookKeywordContainingAndBookKeywordContainingAndBookKeywordContainingAndBookKeywordContainingAndBookKeywordContainingAndIsDel(keywords[0], keywords[1], keywords[2], keywords[3], keywords[4], "N");
+        }else{
+            return null;
         }
     }
 }

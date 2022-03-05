@@ -8,15 +8,25 @@ public class BookMainDTO {
     private String bookTitle;
     private String bookKeyword;
     private String bookAuthor;
+    private String bookPublisher;
 
 
     public BookMainDTO(String bookThumb,
                        String bookTitle,
                        String bookKeyword,
-                       String bookAuthor){
+                       String bookAuthor,
+                       String bookPublisher){
         this.bookThumb = bookThumb;
         this.bookTitle = bookTitle;
         this.bookKeyword = bookKeyword;
         this.bookAuthor = bookAuthor;
+        this.bookPublisher = bookPublisher;
+    }
+    public interface BookMainInterface {
+        String getBookThumb();
+        String getBookTitle();
+        String getBookKeyword();
+        String getBookAuthor();
+        String getBookPublisher();
     }
 }

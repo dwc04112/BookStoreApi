@@ -1,6 +1,6 @@
 <template>
   <body>
-    <Menu></Menu>
+
     <v-main>
       <router-view/>
     </v-main>
@@ -10,10 +10,9 @@
 <script>
 
 
-import Menu from "@/views/Menu";
 export default {
   name: 'App',
-  components: {Menu},
+
   data: () => ({
     //
   }),
