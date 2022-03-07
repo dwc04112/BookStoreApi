@@ -6,40 +6,6 @@
     >
       <v-layout wrap row>
         <v-flex>
-
-
-          <v-row style="display: flex;
-                    align-items: center;
-                    justify-items: center;">
-            <v-col >
-              <v-card
-                  elevation="0"
-                  style="border-radius: 0"
-                  height="80px"
-              >
-                <v-card-title style="float: left;">선택된 태그</v-card-title>
-                <v-chip-group style="float: left; margin-top: 5px">
-                  <v-chip
-                      v-for="(tag,index) in selection"
-                      :key="tag"
-                      color="gray"
-                      close
-                      @click:close="removeChip(index)"
-                  >{{tag}}
-                  </v-chip>
-                </v-chip-group>
-
-                <v-btn
-                    style="float: right; margin-top: 5px"
-                    @click="searchBook"
-                > Search
-                </v-btn>
-                <v-text-field style="float:right"></v-text-field>
-
-              </v-card>
-            </v-col>
-          </v-row>
-
           <v-row style="display: flex;
                     align-items: center;
                     justify-items: center;"
@@ -66,6 +32,7 @@
                   >
                     <v-card-title class="bookTitle"> {{book.bookTitle}} </v-card-title>
                     <v-card-text>
+
                       <v-chip-group
                           active-class="primary--text"
                           multiple
@@ -86,6 +53,41 @@
 
               </v-col>
           </v-row>
+
+
+
+          <v-footer
+              padless
+              fixed
+              height="120%"
+          >
+            <v-row style="display: flex;
+                    align-items: center;"
+                   justify="center"
+                   no-gutters
+            >
+              <v-col>
+                  <v-card-title style="float: left;">선택된 태그</v-card-title>
+                  <v-chip-group style="float: left; margin-top: 5px">
+                    <v-chip
+                        v-for="(tag,index) in selection"
+                        :key="tag"
+                        color="gray"
+                        close
+                        @click:close="removeChip(index)"
+                    >{{tag}}
+                    </v-chip>
+                  </v-chip-group>
+
+                  <v-btn
+                      style="float: right; margin-top: 5px"
+                      @click="searchBook"
+                  > Search
+                  </v-btn>
+                  <v-text-field style="float:right"></v-text-field>
+              </v-col>
+            </v-row>
+          </v-footer>
         </v-flex>
       </v-layout>
     </v-container>
@@ -95,14 +97,18 @@
 <script>
 
 
+
 export default {
   name: "About",
-
   data: function (){
     return{
       bookDatas : [],
       keywords : [],
       selection : [],
+
+      rules:{
+        max : v => (v && v.length <5) || '최대 5개 키워드까지 선택 가능합니다',
+      }
     }},
 
   methods: {
@@ -127,25 +133,31 @@ export default {
     },
 
     searchBook(){
-      console.log(this.selection)
-      let data = {}
-      data.bookKeyword = this.selection.toString()
-      this.$axios.post("book/keyword",JSON.stringify(data),{
-        headers: {
-          "Content-Type": `application/json`,
-        },
-      }).then(response=>{
-        console.log(response.data)
-        this.bookDatas = response.data
-        this.keywords = []
-        for(let i =0; i<response.data.length; i++){
-          this.keywords.push(response.data[i].bookKeyword.split(','))
-        }
-      }).catch(error =>{
-        console.log(error.response);
-      })
-    }
+      console.log(this.selection.length)
+      if(this.selection.length>5){
+        alert("키워드는 5개 까지 선택 가능합니다")
+        this.selection = []
 
+      }else{
+
+        let data = {}
+        data.bookKeyword = this.selection.toString()
+        this.$axios.post("book/keyword",JSON.stringify(data),{
+          headers: {
+            "Content-Type": `application/json`,
+          },
+        }).then(response=>{
+          console.log(response.data)
+          this.bookDatas = response.data
+          this.keywords = []
+          for(let i =0; i<response.data.length; i++){
+            this.keywords.push(response.data[i].bookKeyword.split(','))
+          }
+        }).catch(error =>{
+          console.log(error.response);
+        })
+      }
+    },
   },
   mounted() {
     this.getBookInfo();

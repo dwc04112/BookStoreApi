@@ -1,40 +1,44 @@
 <template>
-  <div class="container-fluid">
-    <div style="justify-content: center">
-      <nav class="nav" style="position: fixed; z-index: 6">
-        <v-card
-            class = "menu-card"
-            height=150px
-            width="80px"
-            style="margin-top: 1100px; margin-left: 50%; background-color: rgba(255,255,255,0.4)"
-            elevation="0"
-            >
-          <ul class="nav-menu">
-            <li @click="('li1')"><a id="li1" href="#home">Home</a></li>
-            <li @click="('li2')"><a id="li2" href="#about">about</a></li>
-            <li @click="('li3')"><a id="li3" href="#bestSeller">bestSeller</a></li>
-          </ul>
-        </v-card>
+  <div>
+    <v-container fluid>
+          <v-row>
+            <v-col>
+              <nav class="nav" style="position: fixed; z-index: 6;">
+                  <ul class="nav-menu">
+                    <v-card
+                        class = "menu-card"
+                        height=300px
+                        width=30px
+                        style="margin-left: 50%; background-color: rgba(255,255,255,0.4); margin-top: 35vh"
+                        elevation="0"
+                    >
+                      <li @click="('li1')"><a id="li1" href="#home"><div class="div-menu-1"></div></a></li>
+                      <li @click="('li2')"><a id="li2" href="#about"><div class="div-menu-2"></div></a></li>
+                      <li @click="('li3')"><a id="li3" href="#bestSeller"><div class="div-menu-3"></div></a></li>
+                    </v-card>
+                  </ul>
+              </nav>
+            </v-col>
+          </v-row>
 
-      </nav>
 
 
-      <div class="section">
-        <section id="home" style="background-color: #F0FFC2">
-          <h1>안녕하세요</h1>
-        </section>
-      </div>
-      <div class="section">
-        <section id="about" style="background-color: #FFBBBB">
-          <About/>
-        </section>
-      </div>
-      <div class="section">
-        <section id="bestSeller" style="background-color: #FFE4C0">
-          <BestSeller/>
-        </section>
-      </div>
-    </div>
+            <div class="section">
+              <section id="home" style="background-color: #F0FFC2">
+                <h1>안녕하세요</h1>
+              </section>
+            </div>
+            <div class="section">
+              <section id="about" style="background-color: #FFBBBB">
+                <About/>
+              </section>
+            </div>
+            <div class="section">
+              <section id="bestSeller" style="background-color: #FFE4C0">
+                <BestSeller/>
+              </section>
+            </div>
+    </v-container>
   </div>
 </template>
 <script>
@@ -139,6 +143,17 @@ div{
 .section{
   z-index: 3;
 }
-
+.div-menu-1,.div-menu-2,.div-menu-3{
+  height: 100px;
+}
+.div-menu-1{
+  background-color: rgba(255,178,166,0.3);
+}
+.div-menu-2{
+  background-color: rgba(154,220,255,0.3);
+}
+.div-menu-2{
+  background-color: rgba(255,248,166,0.3);
+}
 
 </style>
