@@ -3,6 +3,8 @@ package com.bookstore.bookstoreapi.bookjpa.service;
 
 import com.bookstore.bookstoreapi.bookjpa.dto.BookDTO;
 import com.bookstore.bookstoreapi.bookjpa.dto.BookMainDTO;
+import com.bookstore.bookstoreapi.bookjpa.dto.BookMainDetailDTO;
+import com.bookstore.bookstoreapi.bookjpa.dto.BookMainDetailInterface;
 import com.bookstore.bookstoreapi.bookjpa.model.Book;
 import com.bookstore.bookstoreapi.bookjpa.model.BookRepository;
 import com.bookstore.bookstoreapi.common.ApiResponse;
@@ -12,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,6 +33,10 @@ public class BookJpaService {
 
     public List<BookMainDTO> getBookList2() {
         return bookRepository.findBookBy();
+    }
+
+    public List<BookMainDetailInterface> getBookListMain(){
+        return bookRepository.getMainBook();
     }
 
     //지정한 책만 가져오기
@@ -130,4 +135,5 @@ public class BookJpaService {
             return null;
         }
     }
+
 }

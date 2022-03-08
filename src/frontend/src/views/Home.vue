@@ -10,7 +10,7 @@
                         height=300px
                         width=30px
                         style="margin-left: 50%; background-color: rgba(255,255,255,0.4); margin-top: 35vh"
-                        elevation="0"
+                        elevation="3"
                     >
                       <li @click="('li1')"><a id="li1" href="#home"><div class="div-menu-1"></div></a></li>
                       <li @click="('li2')"><a id="li2" href="#about"><div class="div-menu-2"></div></a></li>
@@ -25,7 +25,7 @@
 
             <div class="section">
               <section id="home" style="background-color: #F0FFC2">
-                <h1>안녕하세요</h1>
+                <MainBook/>
               </section>
             </div>
             <div class="section">
@@ -46,11 +46,12 @@ import $ from 'jquery'
 
 import BestSeller from "@/views/BestSeller";
 import About from "@/views/About";
+import MainBook from "@/views/MainBook";
 
 
 export default {
   name: "Home",
-  components: { About, BestSeller},
+  components: {MainBook, About, BestSeller},
   data () {
     return {
 

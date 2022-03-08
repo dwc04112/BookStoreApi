@@ -3,6 +3,8 @@ package com.bookstore.bookstoreapi.bookjpa.controller;
 
 import com.bookstore.bookstoreapi.bookjpa.dto.BookDTO;
 import com.bookstore.bookstoreapi.bookjpa.dto.BookMainDTO;
+import com.bookstore.bookstoreapi.bookjpa.dto.BookMainDetailDTO;
+import com.bookstore.bookstoreapi.bookjpa.dto.BookMainDetailInterface;
 import com.bookstore.bookstoreapi.bookjpa.model.Book;
 import com.bookstore.bookstoreapi.bookjpa.service.BookJpaService;
 import com.bookstore.bookstoreapi.common.ApiResponse;
@@ -30,6 +32,10 @@ public class BookJpaController {
     public List<BookMainDTO> getBookList2(){
         return bookJpaService.getBookList2();
     }
+    @GetMapping("/main")
+    public List<BookMainDetailInterface> getBookListMain(){
+        return bookJpaService.getBookListMain();
+    }
 
     @GetMapping("/{bid}")
     public Book getBookId(@PathVariable long bid){
@@ -50,11 +56,12 @@ public class BookJpaController {
         return bookJpaService.updateIsDelBookById(bid);
     }
 
-
+    //책 검색
     @PostMapping("/keyword")
     public List<BookMainDTO> searchBookList(@RequestBody BookDTO bookDTO){
         String keyword = bookDTO.getBookKeyword();
         log.debug("keyword : " + keyword);
         return bookJpaService.searchBookByKeyword(keyword);
     }
+
 }

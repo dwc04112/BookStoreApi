@@ -22,11 +22,4 @@ public class BookMainDTO {
         this.bookAuthor = bookAuthor;
         this.bookPublisher = bookPublisher;
     }
-    public interface BookMainInterface {
-        String getBookThumb();
-        String getBookTitle();
-        String getBookKeyword();
-        String getBookAuthor();
-        String getBookPublisher();
-    }
 }
