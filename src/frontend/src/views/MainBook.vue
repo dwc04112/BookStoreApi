@@ -1,55 +1,67 @@
 <template>
-<div>
-  <v-container>
-    <v-carousel
-        cycle
-        height="1100px"
-        hide-delimiter-background
-        show-arrows-on-hover
-    >
-      <v-carousel-item
-          v-for="(book, index) in bookDatas"
-          :key="index"
-          reverse-transition="fade-transition"
+  <div>
+    <v-container>
+      <v-carousel
+          cycle
+          height="800px"
+          hide-delimiter-background
+          :show-arrows="false"
       >
-        <v-card
-            width="300px" height="434px"
-            outlined
-            elevation="0"
-            style="float: left"
+        <v-carousel-item
+            v-for="(book, index) in bookDatas"
+            :key="index"
+            reverse-transition="fade-transition"
         >
-          <v-img :src="book.bookThumb"></v-img>
-        </v-card>
+            <v-layout align-center justify-center>
+              <v-sheet
+                  color="rgba(0,0,0,0)"
+                  width="85%"
+                  height="700px"
+              >
+                <v-sheet
+                    width="100%"
+                    height="680px"
+                    color="grey"
+                >
+                  <v-row>
+                    <v-col class="img-area" cols="12" sm="4" >
+                      <v-img :src="thumbs[index]" width="480px" height="712px"></v-img>
+                    </v-col>
 
-        <v-card
-            style="float: left"
-            elevation="0"
-        >
-          <v-card-title class="bookTitle"> {{book.bookTitle}} </v-card-title>
-          <v-card-text>{{book.bookContent}}</v-card-text>
-          <v-card-text>
 
-            <v-chip-group
-                active-class="primary--text"
-                multiple
-                v-model="selection"
-            >
-              <v-chip
-                  v-for="keyword in keywords[index]"
-                  :key="keyword"
-                  :value="keyword"
-                  outlined
-                  small
-              >{{keyword}}
-              </v-chip>
-            </v-chip-group>
-            <v-card-subtitle>{{book.bookAuthor}} | {{book.bookPublisher}}</v-card-subtitle>
-            </v-card-text>
-        </v-card>
-      </v-carousel-item>
-    </v-carousel>
-  </v-container>
-</div>
+                    <v-col class="info-area" cols="12" sm="7">
+                      <div>
+                        <v-chip-group
+                            active-class="primary--text"
+                            multiple
+                            v-model="selection"
+                        >
+                          <v-chip
+                              v-for="keyword in keywords[index]"
+                              :key="keyword"
+                              :value="keyword"
+                              outlined
+                          >{{keyword}}
+                          </v-chip>
+                        </v-chip-group>
+                      </div>
+                      <div style="margin-top: 10%">
+                        <a class="book-title"> {{book.bookTitle}} </a>
+                        <a>{{book.bookAuthor}} | {{book.bookPublisher}}</a>
+
+                        <a class="book-content">{{book.bookPreview}}</a>
+                        <br>
+                        <a class="book-content">{{book.bookContent}}</a>
+                      </div>
+                    </v-col>
+                  </v-row>
+              </v-sheet>
+              </v-sheet>
+            </v-layout>
+        </v-carousel-item>
+      </v-carousel>
+    </v-container>
+  </div>
 </template>
 
 <script>
@@ -60,6 +72,12 @@ export default {
       bookDatas : [],
       keywords : [],
       selection : [],
+      thumbs : [
+          "http://image.kyobobook.co.kr/images/book/xlarge/342/x9788996991342.jpg",
+          "http://image.kyobobook.co.kr/images/book/xlarge/188/x9791161571188.jpg",
+          "http://image.kyobobook.co.kr/images/book/xlarge/252/x9791165344252.jpg",
+          "http://image.kyobobook.co.kr/images/book/xlarge/001/x9791191824001.jpg",
+      ],
       colors: [
         'primary',
         'secondary',
@@ -91,5 +109,35 @@ export default {
 </script>
 
 <style scoped>
+.book-content{
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  color: black;
+}
+::v-deep .v-carousel__controls > div{
+  margin-bottom: 17%;
+  margin-left: 70%;
+}
+::v-deep .v-carousel__controls > div > button{
+  width: 40px;
+  height: 40px;
+}
+::v-deep .v-carousel__controls > div > button > span > i {
+  font-size: 33px !important;
+}
 
+
+.img-area{
+  margin-top: 50px;
+  margin-left: 90px;
+}
+.info-area{
+  margin-top: 50px;
+}
+.book-title{
+  font-size: 27px;
+}
 </style>
