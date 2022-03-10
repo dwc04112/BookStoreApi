@@ -437,14 +437,15 @@ export default {
               this.content = info.contents
               this.price = info.price
               this.sale_price = info.sale_price
-              this.thumb = info.thumbnail
               this.publisher = info.publisher
               this.date = info.datetime.substring(0,10)
 
               if(info.isbn.length === 24){
                 this.isbn = info.isbn.substring(11,24)+('(')+info.isbn.substring(0,10)+(')')
+                this.thumb = ('http://image.kyobobook.co.kr/images/book/xlarge/342/x')+info.isbn.substring(11,24)+('.jpg')
               }else{
                 this.isbn = info.isbn
+                this.thumb = ('http://image.kyobobook.co.kr/images/book/xlarge/342/x')+info.isbn+('.jpg')
               }
             })
             .catch(error =>{

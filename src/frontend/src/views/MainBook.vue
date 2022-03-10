@@ -25,7 +25,7 @@
                 >
                   <v-row>
                     <v-col class="img-area" cols="12" sm="4" >
-                      <v-img :src="thumbs[index]" width="480px" height="712px"></v-img>
+                      <v-img :src="book.bookThumb" width="480px" height="712px"></v-img>
                     </v-col>
 
 
