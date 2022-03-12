@@ -1,6 +1,5 @@
 <template>
-  <div>
-    <v-container fluid>
+    <v-container fluid  class="grid-list-sm pa-0">
           <v-row>
             <v-col>
               <nav class="nav" style="position: fixed; z-index: 6;">
@@ -22,24 +21,22 @@
           </v-row>
 
 
-
-            <div class="section">
-              <section id="home" style="background-color: #F0FFC2">
-                <MainBook/>
-              </section>
-            </div>
-            <div class="section">
-              <section id="about" style="background-color: #FFBBBB">
-                <About/>
-              </section>
-            </div>
-            <div class="section">
-              <section id="bestSeller" style="background-color: #FFE4C0">
-                <BestSeller/>
-              </section>
-            </div>
+          <div class="section">
+            <section id="home" style="background-color: #FBF8F1">
+              <MainBook/>
+            </section>
+          </div>
+          <div class="section">
+            <section id="about" style="background-color: #F7ECDE">
+              <About/>
+            </section>
+          </div>
+          <div class="section">
+            <section id="bestSeller" style="background-color: #FFE4C0">
+              <BestSeller/>
+            </section>
+          </div>
     </v-container>
-  </div>
 </template>
 <script>
 import $ from 'jquery'
@@ -113,7 +110,7 @@ export default {
           // 화면 이동 0.8초(800)
           $("html,body").stop().animate({
             scrollTop: moveTop + 'px'
-          }, {
+          },{
             duration: 700, complete: function () {
             }
           });

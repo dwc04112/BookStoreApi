@@ -1,6 +1,6 @@
 <template>
-  <div>
     <v-container>
+      <div style="height: 200px"/>
       <v-carousel
           cycle
           height="800px"
@@ -12,56 +12,56 @@
             :key="index"
             reverse-transition="fade-transition"
         >
-            <v-layout align-center justify-center>
+          <v-layout align-center justify-center>
+            <v-sheet
+                color="rgba(0,0,0,0)"
+                width="85%"
+                height="700px"
+            >
               <v-sheet
-                  color="rgba(0,0,0,0)"
-                  width="85%"
-                  height="700px"
+                  width="100%"
+                  height="680px"
+                  color="white"
               >
-                <v-sheet
-                    width="100%"
-                    height="680px"
-                    color="grey"
-                >
-                  <v-row>
-                    <v-col class="img-area" cols="12" sm="4" >
-                      <v-img :src="book.bookThumb" width="480px" height="712px"></v-img>
-                    </v-col>
+                <v-row>
+                  <v-col class="img-area" cols="12" sm="4" >
+                    <v-img :src="book.bookThumb" width="480px" height="712px"></v-img>
+                  </v-col>
 
+                  <v-col class="info-area" cols="12" sm="7">
+                    <div>
+                      <v-chip-group
+                          active-class="primary--text"
+                          multiple
+                          v-model="selection"
+                      >
+                        <v-chip
+                            v-for="keyword in keywords[index]"
+                            :key="keyword"
+                            :value="keyword"
+                            outlined
+                        >{{keyword}}
+                        </v-chip>
+                      </v-chip-group>
+                    </div>
 
-                    <v-col class="info-area" cols="12" sm="7">
-                      <div>
-                        <v-chip-group
-                            active-class="primary--text"
-                            multiple
-                            v-model="selection"
-                        >
-                          <v-chip
-                              v-for="keyword in keywords[index]"
-                              :key="keyword"
-                              :value="keyword"
-                              outlined
-                          >{{keyword}}
-                          </v-chip>
-                        </v-chip-group>
-                      </div>
-                      <div style="margin-top: 10%">
-                        <a class="book-title"> {{book.bookTitle}} </a>
-                        <a>{{book.bookAuthor}} | {{book.bookPublisher}}</a>
-
-                        <a class="book-content">{{book.bookPreview}}</a>
-                        <br>
-                        <a class="book-content">{{book.bookContent}}</a>
-                      </div>
-                    </v-col>
-                  </v-row>
+                    <div style="margin-top: 10%">
+                      <a class="book-title"> {{book.bookTitle}} </a>
+                      <a>{{book.bookAuthor}} | {{book.bookPublisher}}</a>
+                      <a class="book-content">{{book.bookPreview}}</a>
+                      <br>
+                      <a class="book-content">{{book.bookContent}}</a>
+                    </div>
+                  </v-col>
+                </v-row>
               </v-sheet>
-              </v-sheet>
-            </v-layout>
+            </v-sheet>
+          </v-layout>
         </v-carousel-item>
       </v-carousel>
+
+
     </v-container>
-  </div>
 </template>
 
 <script>
@@ -72,12 +72,6 @@ export default {
       bookDatas : [],
       keywords : [],
       selection : [],
-      thumbs : [
-          "http://image.kyobobook.co.kr/images/book/xlarge/342/x9788996991342.jpg",
-          "http://image.kyobobook.co.kr/images/book/xlarge/188/x9791161571188.jpg",
-          "http://image.kyobobook.co.kr/images/book/xlarge/252/x9791165344252.jpg",
-          "http://image.kyobobook.co.kr/images/book/xlarge/001/x9791191824001.jpg",
-      ],
       colors: [
         'primary',
         'secondary',
@@ -119,14 +113,16 @@ export default {
 }
 ::v-deep .v-carousel__controls > div{
   margin-bottom: 17%;
-  margin-left: 70%;
+  margin-left: 67%;
 }
 ::v-deep .v-carousel__controls > div > button{
   width: 40px;
   height: 40px;
+  color: mediumseagreen !important;
 }
 ::v-deep .v-carousel__controls > div > button > span > i {
   font-size: 33px !important;
+  color: #1b5e20 !important;
 }
 
 

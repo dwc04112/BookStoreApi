@@ -442,10 +442,10 @@ export default {
 
               if(info.isbn.length === 24){
                 this.isbn = info.isbn.substring(11,24)+('(')+info.isbn.substring(0,10)+(')')
-                this.thumb = ('http://image.kyobobook.co.kr/images/book/xlarge/342/x')+info.isbn.substring(11,24)+('.jpg')
+                this.thumb = ('http://image.kyobobook.co.kr/images/book/xlarge/')+info.isbn.substring(21,24)+('/x')+info.isbn.substring(11,24)+('.jpg')
               }else{
                 this.isbn = info.isbn
-                this.thumb = ('http://image.kyobobook.co.kr/images/book/xlarge/342/x')+info.isbn+('.jpg')
+                this.thumb = ('http://image.kyobobook.co.kr/images/book/xlarge/')+info.isbn.substring(21,24)+('/x')+info.isbn+('.jpg')
               }
             })
             .catch(error =>{
@@ -484,7 +484,7 @@ export default {
       }).then(response=>{
         console.log(response.data)
         alert("책 등록신청을 완료하였습니다.");
-        this.$router.push({path: './home'});
+        this.$router.push({path: './'});
       }).catch(error =>{
         console.log(error.response);
       })
