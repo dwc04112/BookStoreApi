@@ -65,7 +65,7 @@ export default {
       {main:5, sub:'fehi5'},
       {main:6, sub:'fehi6'},
       {main:7, sub:'fehi7'},
-    ]
+    ],
   }),
 }
 </script>

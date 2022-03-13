@@ -4,24 +4,31 @@
     >
       <v-layout wrap row>
         <v-flex>
-          <v-row>
-            <v-col cols="12" sm="6" offset-sm="3">
+          <v-row justify="center">
+            <v-col cols="12" sm="8" class="mt-8">
               <v-tabs
                   v-model="tab"
+                  class="mb-2"
                   background-color="transparent"
-                  color="basil"
+                  color="#6B4F4F"
                   grow
                   centered
               >
                 <v-tab
                     v-for="(item,index) in detailTag"
                     :key="index"
+                    class="category-tab"
                 >
                   {{ item.main }}
                 </v-tab>
               </v-tabs>
 
-              <v-tabs-items v-model="tab" style="background-color: transparent">
+              <v-layout justify-center>
+              <v-tabs-items
+                  v-model="tab"
+                  style="background-color: transparent;"
+                  class="mb-3"
+              >
                 <v-tab-item
                     v-for="(item,index) in detailTag"
                     :key="index"
@@ -34,14 +41,19 @@
                         v-for="(subData,index) in item.sub"
                         :key="index"
                         :value="item.sub[index]"
-                        color="white"
-                    >{{subData}}
+                        outlined
+                        color="#6B4F4F"
+                        class="top-chip"
+                    ><span>{{subData}}</span>
                     </v-chip>
+
                   </v-chip-group>
                 </v-tab-item>
               </v-tabs-items>
+              </v-layout>
             </v-col>
           </v-row>
+
 
           <v-layout wrap row justify-center>
             <v-flex
@@ -53,34 +65,42 @@
             >
               <v-card
                   width="250px"
-                  height="520px"
                   outlined
                   elevation="2"
+                  color="transparent"
               >
                 <v-img
                     :src="book.bookThumb"
-                    width="250px" height="310px"
+                    width="250px" height="390px"
+                    @click="show[index].data = !show[index].data"
                 ></v-img>
-                <v-card-title class="bookTitle"> {{book.bookTitle}} </v-card-title>
-                <v-card-text>
+                <v-expand-transition>
+                  <div v-show="show[index].data">
+                    <v-divider></v-divider>
+                    <v-card-title class="bookTitle"> {{book.bookTitle}} </v-card-title>
+                    <v-card-text>
+                      <v-chip-group
+                          active-class="primary--text"
+                          multiple
+                          column
+                          v-model="selection"
+                      >
+                        <v-chip
+                            v-for="keyword in keywords[index]"
+                            :key="keyword"
+                            :value="keyword"
+                            outlined
+                            small
+                        >{{keyword}}
+                        </v-chip>
+                      </v-chip-group>
+                      <v-card-subtitle>{{book.bookAuthor}} | {{book.bookPublisher}}</v-card-subtitle>
+                    </v-card-text>
+                  </div>
+                </v-expand-transition>
+                <!--
 
-                  <v-chip-group
-                      active-class="primary--text"
-                      multiple
-                      column
-                      v-model="selection"
-                  >
-                    <v-chip
-                        v-for="keyword in keywords[index]"
-                        :key="keyword"
-                        :value="keyword"
-                        outlined
-                        small
-                    >{{keyword}}
-                    </v-chip>
-                  </v-chip-group>
-                  <v-card-subtitle>{{book.bookAuthor}} | {{book.bookPublisher}}</v-card-subtitle>
-                </v-card-text>
+                -->
               </v-card>
 
             </v-flex>
@@ -89,22 +109,22 @@
           <v-footer
               padless
               fixed
-              height="200%"
-              color="transparent"
+              height="150%"
+              color="rgba(255,255,255,0.3)"
           >
             <v-layout
                 wrap row
-                style="flex-direction: row-reverse"
+                style="flex-direction: row-reverse; margin-top: 20px"
+
             >
               <v-flex
                   class="footer-col"
                   xs12 sm1 md1
-                  style="background-color: #0d47a1"
               >
                 <v-btn
                     class="footer-btn"
-                    width="100px"
-                    height="100px"
+                    width="90px"
+                    height="90px"
                     @click="searchBook"
                     elevation="2"
                     absolute
@@ -115,17 +135,18 @@
               </v-flex>
               <v-flex
                   class="footer-col"
-                  xs12 sm5 md5
-                  style="background-color: white;"
+                  xs12 sm4 md4
               >
                   <v-chip-group column>
                     <v-chip
                         class="footer-chip"
                         v-for="(tag,index) in selection"
                         :key="tag"
-                        color="#EDCDBB"
+                        color="#6B4F4F"
                         close
                         @click:close="removeChip(index)"
+                        outlined
+                        large
                     >
                       <span>{{tag}}</span>
                     </v-chip>
@@ -153,7 +174,6 @@ export default {
       selection : [],
       selectTag : '',
 
-
       absolute: true,
       overlay: false,
 
@@ -177,9 +197,18 @@ export default {
 
       rules:{
         max : v => (v && v.length <5) || '최대 5개 키워드까지 선택 가능합니다',
-      }
-    }},
+      },
 
+
+
+      show: [],
+      group: null,
+    }},
+  watch:{
+    group () {
+      this.drawer = false
+    },
+  },
   methods: {
     getBookInfo(){
 
@@ -190,6 +219,7 @@ export default {
 
         for(let i =0; i<response.data.length; i++){
           this.keywords.push(response.data[i].bookKeyword.split(','))
+          this.show.push({data:false})
         }
       })
       .catch(error =>{
@@ -233,8 +263,6 @@ export default {
 }
 </script>
 
-
-
 <style scoped>
 v-container{
   display: flex;
@@ -260,11 +288,27 @@ v-container{
   margin-bottom: 60px;
   height: 150px;
 }
-/* 0312 수정*/
-.footer-chip{
 
-}
-.footer-chip span{
+.category-tab{
   font-size: 20px;
+  font-weight: bolder;
+  color: #6B4F4F;
 }
+
+
+
+.footer-chip span{
+  font-size: 22px;
+  font-weight: bolder;
+}
+.footer-chip.v-chip--outlined{
+  border-width: 3px;
+}
+
+.top-chip span{
+  font-size: 16px;
+}
+
+
+
 </style>
