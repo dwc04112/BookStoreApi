@@ -21,14 +21,33 @@
               <v-sheet
                   width="100%"
                   height="680px"
-                  color="white"
+                  color="#FFEDDB"
               >
                 <v-row>
-                  <v-col class="img-area" cols="12" sm="4" >
-                    <v-img :src="book.bookThumb" width="480px" height="712px"></v-img>
+                  <v-col class="img-area" cols="12" sm="5" style="display: flex" >
+                    <div
+                        style="
+                        height : 712px;
+                        width: 480px;
+                        background-color: #FFEDDB;
+                        position: relative;
+                        margin-top: 24px;
+                        margin-left: 24px"/>
+                    <div
+                        style="
+                        height : 712px;
+                        width: 480px;
+                        background-color: rgba(83, 67, 64,0.4);
+                        position: absolute;
+                        margin-top: 12px;
+                        margin-left: 12px"/>
+
+
+                    <v-img :src="book.bookThumb" width="480px" height="712px" style="position: absolute"></v-img>
+
                   </v-col>
 
-                  <v-col class="info-area" cols="12" sm="7">
+                  <v-col class="info-area" cols="12" sm="6">
                     <div>
                       <v-chip-group
                           active-class="primary--text"
@@ -118,17 +137,17 @@ export default {
 ::v-deep .v-carousel__controls > div > button{
   width: 40px;
   height: 40px;
-  color: mediumseagreen !important;
+  color: #534340 !important;
 }
 ::v-deep .v-carousel__controls > div > button > span > i {
   font-size: 33px !important;
-  color: #1b5e20 !important;
+  color: #534340 !important;
 }
 
 
 .img-area{
   margin-top: 50px;
-  margin-left: 90px;
+  margin-left: 80px;
 }
 .info-area{
   margin-top: 50px;

@@ -58,27 +58,28 @@
           <v-layout wrap row justify-center>
             <v-flex
                 class="pb-4 pl-4"
-                xs12 sm4 md2
-                style="flex-basis: auto"
+                xs12 sm6 md6
+                style="flex-basis: auto;"
                 v-for="(book, index) in bookDatas"
                 :key="index"
             >
               <v-card
                   width="250px"
-                  outlined
                   elevation="2"
-                  color="transparent"
+                  color="rgba(244, 223, 186, 0.5)"
               >
                 <v-img
                     :src="book.bookThumb"
                     width="250px" height="390px"
                     @click="show[index].data = !show[index].data"
                 ></v-img>
+
                 <v-expand-transition>
-                  <div v-show="show[index].data">
+                  <div v-show="show[index].data" style="text-align: center">
                     <v-divider></v-divider>
-                    <v-card-title class="bookTitle"> {{book.bookTitle}} </v-card-title>
-                    <v-card-text>
+                    <h3 class="pt-4" style="color: #505050"> {{book.bookTitle}} </h3>
+                    <v-card-text style="margin-top: -6%">
+                      <v-card-subtitle>{{book.bookAuthor}} | {{book.bookPublisher}}</v-card-subtitle>
                       <v-chip-group
                           active-class="primary--text"
                           multiple
@@ -94,17 +95,14 @@
                         >{{keyword}}
                         </v-chip>
                       </v-chip-group>
-                      <v-card-subtitle>{{book.bookAuthor}} | {{book.bookPublisher}}</v-card-subtitle>
                     </v-card-text>
                   </div>
                 </v-expand-transition>
-                <!--
 
-                -->
               </v-card>
-
             </v-flex>
           </v-layout>
+
 
           <v-footer
               padless
@@ -198,8 +196,6 @@ export default {
       rules:{
         max : v => (v && v.length <5) || '최대 5개 키워드까지 선택 가능합니다',
       },
-
-
 
       show: [],
       group: null,
