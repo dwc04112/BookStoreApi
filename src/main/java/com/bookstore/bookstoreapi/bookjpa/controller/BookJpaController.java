@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 
@@ -62,6 +63,11 @@ public class BookJpaController {
         String keyword = bookDTO.getBookKeyword();
         log.debug("keyword : " + keyword);
         return bookJpaService.searchBookByKeyword(keyword);
+    }
+
+    @GetMapping("/category/{bookTag}")
+    public List<BookMainDTO> searchByMainTag(@PathVariable String bookTag){
+        return bookJpaService.searchByMainTag(bookTag);
     }
 
 }

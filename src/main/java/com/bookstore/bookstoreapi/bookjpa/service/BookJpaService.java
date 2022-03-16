@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Optional;
 
@@ -70,7 +71,6 @@ public class BookJpaService {
                 .bookPublisher(bookDTO.getBookPublisher())
                 .bookPublishedDate(bookDTO.getBookPublishedDate())
                 .bookTag(bookDTO.getBookTag())
-                .bookDetailTag(bookDTO.getBookDetailTag())
                 .bookKeyword(bookDTO.getBookKeyword())
                 .isDel("N")
                 .build();
@@ -136,4 +136,8 @@ public class BookJpaService {
         }
     }
 
+    public List<BookMainDTO> searchByMainTag(String bookTag) {
+
+        return bookRepository.findBookByBookTagStartingWithAndIsDel(bookTag, "N");
+    }
 }

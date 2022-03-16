@@ -18,42 +18,46 @@
                     v-for="(item,index) in detailTag"
                     :key="index"
                     class="category-tab"
+                    @click="mainTag(index)"
                 >
                   {{ item.main }}
                 </v-tab>
               </v-tabs>
 
               <v-layout justify-center>
-              <v-tabs-items
-                  v-model="tab"
-                  style="background-color: transparent;"
-                  class="mb-3"
-              >
-                <v-tab-item
-                    v-for="(item,index) in detailTag"
-                    :key="index"
+                <v-tabs-items
+                    v-model="tab"
+                    style="background-color: transparent;"
+                    class="mb-3"
                 >
-                  <v-chip-group
-                      active-class="primary--text"
-                      v-model="selectTag"
+                  <v-tab-item
+                      v-for="(item,index) in detailTag"
+                      :key="index"
                   >
-                    <v-chip
-                        v-for="(subData,index) in item.sub"
-                        :key="index"
-                        :value="item.sub[index]"
-                        outlined
-                        color="#6B4F4F"
-                        class="top-chip"
-                    ><span>{{subData}}</span>
-                    </v-chip>
+                    <v-chip-group
+                        active-class="primary--text"
+                        v-model="selectTag"
+                    >
+                      <v-chip
+                          v-for="(subData,subIndex) in item.sub"
+                          :key="subIndex"
+                          outlined
+                          color="#6B4F4F"
+                          class="top-chip"
+                          @click="searchBySubTag(subIndex)"
+                      ><span>{{subData}}</span>
+                      </v-chip>
 
-                  </v-chip-group>
-                </v-tab-item>
-              </v-tabs-items>
+
+            <!-- 수정 해야함 -->
+
+
+                    </v-chip-group>
+                  </v-tab-item>
+                </v-tabs-items>
               </v-layout>
             </v-col>
           </v-row>
-
 
           <v-layout wrap row justify-center>
             <v-flex
@@ -170,15 +174,16 @@ export default {
       bookDatas : [],
       keywords : [],
       selection : [],
+
       selectTag : '',
+      tab : null,
 
       absolute: true,
       overlay: false,
 
 
-      tab : null,
-
       detailTag : [
+        {main : '전체'},
         {main : '소설' , sub : ['한국소설', '영미소설' , '일본소설' , '중국소설', '기타나라소설','고전소설','장르소설']},
         {main : '시/에세이',  sub : ['한국시','해외시','나라별 에세이','인물/자전적에세이']},
         {main : '자기계발', sub : ['자기능력계발','비즈니스','능력개발','화술/협상']},
@@ -191,6 +196,8 @@ export default {
         {main : '기술/공학', sub : ['건축','토목/건설','환경/소방/도시/조경','자동차/운전','공학일반','금속/재료']},
         {main : '컴퓨터/IT', sub : ['컴퓨터공학','IT일반','데이터베이스','네트워크','프로그래밍/언어','웹프로그래밍']},
       ],
+      selectedMainTag : [],
+      selectedSubTag : '',
 
 
       rules:{
@@ -206,11 +213,10 @@ export default {
     },
   },
   methods: {
+    //전체 책
     getBookInfo(){
-
       this.$axios.get('book/info')
       .then(response=>{
-        console.log(response.data);
         this.bookDatas = response.data
 
         for(let i =0; i<response.data.length; i++){
@@ -227,13 +233,15 @@ export default {
       this.selection.splice(index,1)
     },
 
+
+
+    //키워드로 검색
     searchBook(){
+      this.selectTag=null     //선택된 detailTag 초기화
       if(this.selection.length>5){
         alert("키워드는 5개 까지 선택 가능합니다")
         this.selection = []
-
       }else{
-
         let data = {}
         data.bookKeyword = this.selection.toString()
         this.$axios.post("book/keyword",JSON.stringify(data),{
@@ -241,7 +249,6 @@ export default {
             "Content-Type": `application/json`,
           },
         }).then(response=>{
-          console.log(response.data)
           this.bookDatas = response.data
           this.keywords = []
           for(let i =0; i<response.data.length; i++){
@@ -252,6 +259,60 @@ export default {
         })
       }
     },
+
+
+
+    //태그로 검색
+    mainTag(index){
+      if(index===0){
+        this.getBookInfo()  //전체 책
+      }else{
+        //index = 0 은 전체보기가 할당돼서 index로 할당된 tag Num가 1씩 밀림
+        //Tag Num = 소설 0000 ~
+        this.searchByMainTag(index-1)
+      }
+    },
+
+    searchByMainTag(index){
+      this.selectTag=null     //선택된 detailTag 초기화
+      let mainTag = index
+      if(mainTag<10){
+        mainTag = '0'+index
+      }
+      this.$axios.get("book/category/"+mainTag)
+          .then(response=>{
+              this.bookDatas = response.data
+              this.keywords = []
+              for(let i =0; i<response.data.length; i++){
+                this.keywords.push(response.data[i].bookKeyword.split(','))
+              }
+          }).catch(error =>{
+            console.log(error.response);
+          })
+    },
+
+    searchBySubTag(subIndex,){
+      //위와 같은 이유로 mainTag -1
+      let mainTag = Number(this.tab)-1
+      let subTag = subIndex
+      if(mainTag<10){
+        mainTag = '0'+mainTag
+      }
+      if(subTag<10){
+        subTag = '0'+subIndex
+      }
+      this.$axios.get("book/category/"+mainTag+subTag)
+          .then(response=>{
+            this.bookDatas = response.data
+            this.keywords = []
+            for(let i =0; i<response.data.length; i++){
+              this.keywords.push(response.data[i].bookKeyword.split(','))
+            }
+          }).catch(error =>{
+        console.log(error.response);
+      })
+    },
+
   },
   mounted() {
     this.getBookInfo();
