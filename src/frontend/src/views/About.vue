@@ -160,11 +160,6 @@
 
 <script>
 
-<<<<<<< HEAD
-=======
-
-
->>>>>>> Vue/mainPage-1
 export default {
   name: "About",
   data: function (){
