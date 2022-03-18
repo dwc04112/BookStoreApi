@@ -46,9 +46,21 @@ const routes = [
         component: () =>  import('@/views/exam')
     },
     {
-        path: '/MainBook',
+        path: '/mainBook',
         name: 'MainBook',
         component: () =>  import('@/views/MainBook')
+    },
+
+
+    {
+        path: '/infoMain',
+        name: 'InfoMain',
+        component: () =>  import('@/views/mypage/InfoMain')
+    },
+    {
+        path: '/infoNavi',
+        name: 'InfoNavi',
+        component: () =>  import('@/views/mypage/InfoNavi')
     },
 ]
 

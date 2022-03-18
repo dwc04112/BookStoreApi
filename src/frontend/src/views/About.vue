@@ -5,14 +5,16 @@
       <v-layout wrap row>
         <v-flex>
           <v-row justify="center">
-            <v-col cols="12" sm="8" class="mt-8">
+            <v-col cols="12" sm="9" class="mt-8">
               <v-tabs
                   v-model="tab"
-                  class="mb-2"
+                  class="mb-2 main-tabs"
                   background-color="transparent"
                   color="#6B4F4F"
+                  style="margin-top: -2%"
                   grow
                   centered
+
               >
                 <v-tab
                     v-for="(item,index) in detailTag"
@@ -20,7 +22,7 @@
                     class="category-tab"
                     @click="byCategory(item.num)"
                 >
-                  {{ item.main }}
+                  <span style="font-size: 14px">{{ item.main }}</span>
                 </v-tab>
               </v-tabs>
 
@@ -45,6 +47,7 @@
                           color="#6B4F4F"
                           class="top-chip"
                           @click="byCategory(subData.num)"
+                          small
                       ><span>{{subData.subMain}}</span>
                       </v-chip>
                     </v-chip-group>
@@ -63,38 +66,40 @@
                 :key="index"
             >
               <v-card
-                  width="250px"
+                  width="160px"
                   elevation="2"
                   color="rgba(244, 223, 186, 0.5)"
               >
                 <v-img
                     :src="book.bookThumb"
-                    width="250px" height="390px"
+                    width="160px" height="250px"
                     @click="show[index].data = !show[index].data"
                 ></v-img>
 
                 <v-expand-transition>
                   <div v-show="show[index].data" style="text-align: center">
                     <v-divider></v-divider>
-                    <h3 class="pt-4" style="color: #505050"> {{book.bookTitle}} </h3>
-                    <v-card-text style="margin-top: -6%">
-                      <v-card-subtitle>{{book.bookAuthor}} | {{book.bookPublisher}}</v-card-subtitle>
-                      <v-chip-group
+                    <h5 class="pt-4" style="color: #505050"> {{book.bookTitle}} </h5>
+
+                      <v-card-subtitle class="expand-font">{{book.bookAuthor}} | {{book.bookPublisher}}</v-card-subtitle>
+
+                    <v-chip-group
                           active-class="primary--text"
                           multiple
                           column
                           v-model="selection"
                       >
                         <v-chip
+                            class="inner-chip"
                             v-for="keyword in keywords[index]"
                             :key="keyword"
                             :value="keyword"
                             outlined
                             small
-                        >{{keyword}}
+                        ><span>{{keyword}}</span>
                         </v-chip>
-                      </v-chip-group>
-                    </v-card-text>
+                    </v-chip-group>
+
                   </div>
                 </v-expand-transition>
 
@@ -106,7 +111,7 @@
           <v-footer
               padless
               fixed
-              height="150%"
+              height="110%"
               color="rgba(255,255,255,0.3)"
           >
             <v-layout
@@ -120,14 +125,14 @@
               >
                 <v-btn
                     class="footer-btn"
-                    width="90px"
-                    height="90px"
+                    width="60px"
+                    height="60px"
                     @click="searchBook"
                     elevation="2"
                     absolute
                     icon
                 >
-                  <v-icon size="60">mdi-magnify</v-icon>
+                  <v-icon size="40">mdi-magnify</v-icon>
                 </v-btn>
               </v-flex>
               <v-flex
@@ -143,7 +148,7 @@
                         close
                         @click:close="removeChip(index)"
                         outlined
-                        large
+                        small
                     >
                       <span>{{tag}}</span>
                     </v-chip>
@@ -481,6 +486,7 @@ v-container{
 
 .footer-btn{
   margin-right: 50px;
+
   background-color: rgba(191, 146, 112, 0.5);
 }
 .footer-col{
@@ -494,20 +500,27 @@ v-container{
   color: #6B4F4F;
 }
 
-
+.expand-font{
+  font-size: 10px;
+}
 
 .footer-chip span{
-  font-size: 22px;
-  font-weight: bolder;
+  font-size: 15px;
 }
 .footer-chip.v-chip--outlined{
-  border-width: 3px;
+  border-width: 1.5px;
 }
 
 .top-chip span{
-  font-size: 16px;
+  margin-top: 2%;
+  font-size: 12px;
+  font-weight: bold;
 }
 
+
+.inner-chip span{
+  font-size: 10px
+}
 
 
 </style>
