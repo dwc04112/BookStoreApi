@@ -325,8 +325,8 @@
             </v-col>
           </v-row>
 
-
-      <div></div>
+      <div>{{selectedTag}}</div>
+      <div>{{selectedSubTag}}</div>
 
 
 
@@ -367,8 +367,10 @@ export default {
       thumb : '',
 
       detailTag : [
+
         {
           main: '소설',
+          num: '00',
           sub: [
             {num: '0000', subMain: '한국소설'},
             {num: '0001', subMain: '영미소설'},
@@ -382,10 +384,11 @@ export default {
             {num: '0009', subMain: '기타나라소설'},
             {num: '0010', subMain: '고전소설'},
             {num: '0011', subMain: '장르소설'},
-              ]
+          ]
         },
         {
           main : '시/에세이',
+          num: '01',
           sub : [
             {num: '0100', subMain: '한국시'},
             {num: '0101', subMain: '해외시'},
@@ -396,6 +399,7 @@ export default {
         },
         {
           main : '자기계발',
+          num: '02',
           sub : [
             {num: '0200', subMain: '자기능력계발'},
             {num: '0201', subMain: '비즈니스'},
@@ -405,6 +409,7 @@ export default {
         },
         {
           main : '인문',
+          num: '03',
           sub : [
             {num: '0300', subMain: '인문일반학'},
             {num: '0301', subMain: '심리학'},
@@ -421,6 +426,7 @@ export default {
         },
         {
           main : '역사/문화',
+          num: '04',
           sub : [
             {num: '0400', subMain: '역사일반'},
             {num: '0401', subMain: '세계사'},
@@ -437,6 +443,7 @@ export default {
         },
         {
           main : '종교',
+          num: '05',
           sub : [
             {num: '0500', subMain: '종교일반'},
             {num: '0501', subMain: '기독교'},
@@ -447,6 +454,7 @@ export default {
         },
         {
           main : '정치/사회',
+          num: '06',
           sub : [
             {num: '0600', subMain: '정치/외교'},
             {num: '0601', subMain: '행정/정책'},
@@ -460,6 +468,7 @@ export default {
         },
         {
           main : '예술/대중문화',
+          num: '07',
           sub : [
             {num: '0700', subMain: '예술일반'},
             {num: '0701', subMain: '미술'},
@@ -475,6 +484,7 @@ export default {
         },
         {
           main : '과학',
+          num: '08',
           sub : [
             {num: '0800', subMain: '과학이론'},
             {num: '0801', subMain: '수학'},
@@ -488,6 +498,7 @@ export default {
         },
         {
           main : '기술/공학',
+          num: '09',
           sub : [
             {num: '0900', subMain: '건축'},
             {num: '0901', subMain: '토목/건설'},
@@ -504,6 +515,7 @@ export default {
         },
         {
           main : '컴퓨터/IT',
+          num: '10',
           sub : [
             {num: '1000', subMain: '컴퓨터공학'},
             {num: '1001', subMain: 'IT일반'},
@@ -520,8 +532,8 @@ export default {
             {num: '1012', subMain: '자격증/수험서'},
           ]
         },
-
       ],
+
       selectedTag : [],
       selectedSubTag : '',
       rules:{

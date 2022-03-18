@@ -49,19 +49,17 @@
 
                   <v-col class="info-area" cols="12" sm="6">
                     <div>
-                      <v-chip-group
-                          active-class="primary--text"
-                          multiple
-                          v-model="selection"
-                      >
-                        <v-chip
-                            v-for="keyword in keywords[index]"
-                            :key="keyword"
-                            :value="keyword"
-                            outlined
-                        >{{keyword}}
-                        </v-chip>
-                      </v-chip-group>
+
+                      <v-chip
+                          class="ml-4"
+                          v-for="keyword in keywords[index]"
+                          :key="keyword"
+                          :value="keyword"
+                          outlined
+                          @click="pushKeyword(keyword)"
+                      >{{keyword}}
+                      </v-chip>
+
                     </div>
 
                     <div style="margin-top: 10%">
@@ -113,6 +111,9 @@ export default {
           .catch(error =>{
             console.log(error.response);
           })
+    },
+    pushKeyword(keyword){
+      this.$eventBus.$emit('mainKeyword',keyword)
     },
   },
   mounted() {

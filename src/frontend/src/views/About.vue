@@ -18,7 +18,7 @@
                     v-for="(item,index) in detailTag"
                     :key="index"
                     class="category-tab"
-                    @click="mainTag(index)"
+                    @click="byCategory(item.num)"
                 >
                   {{ item.main }}
                 </v-tab>
@@ -44,14 +44,9 @@
                           outlined
                           color="#6B4F4F"
                           class="top-chip"
-                          @click="searchBySubTag(subIndex)"
-                      ><span>{{subData}}</span>
+                          @click="byCategory(subData.num)"
+                      ><span>{{subData.subMain}}</span>
                       </v-chip>
-
-
-            <!-- 수정 해야함 -->
-
-
                     </v-chip-group>
                   </v-tab-item>
                 </v-tabs-items>
@@ -181,10 +176,10 @@ export default {
       absolute: true,
       overlay: false,
 
-
+      /*
       detailTag : [
         {main : '전체'},
-        {main : '소설' , sub : ['한국소설', '영미소설' , '일본소설' , '중국소설', '기타나라소설','고전소설','장르소설']},
+        {main : '소설' , sub : ['한국소설', '영미소설' , '일본소설' , '중국소설', '러시아소설','프랑스소설','독일소설','북유럽소설','기타나라소설','고전소설','장르소설']},
         {main : '시/에세이',  sub : ['한국시','해외시','나라별 에세이','인물/자전적에세이']},
         {main : '자기계발', sub : ['자기능력계발','비즈니스','능력개발','화술/협상']},
         {main : '인문', sub : ['인문일반학', '심리학','교육학','유아교육','특수교육','임용고시','철학','문학이론','언어학','독서/글쓰기','문헌정보학']},
@@ -196,6 +191,179 @@ export default {
         {main : '기술/공학', sub : ['건축','토목/건설','환경/소방/도시/조경','자동차/운전','공학일반','금속/재료']},
         {main : '컴퓨터/IT', sub : ['컴퓨터공학','IT일반','데이터베이스','네트워크','프로그래밍/언어','웹프로그래밍']},
       ],
+
+       */
+      detailTag : [
+        {
+          main: '전체'
+        },
+        {
+          main: '소설',
+          num: '00',
+          sub: [
+            {num: '0000', subMain: '한국소설'},
+            {num: '0001', subMain: '영미소설'},
+            {num: '0002', subMain: '일본소설'},
+            {num: '0003', subMain: '중국소설'},
+            {num: '0004', subMain: '러시아소설'},
+            {num: '0005', subMain: '프랑스소설'},
+            {num: '0006', subMain: '독일소설'},
+            {num: '0007', subMain: '북유럽소설'},
+            {num: '0008', subMain: '그외유럽소설'},
+            {num: '0009', subMain: '기타나라소설'},
+            {num: '0010', subMain: '고전소설'},
+            {num: '0011', subMain: '장르소설'},
+          ]
+        },
+        {
+          main : '시/에세이',
+          num: '01',
+          sub : [
+            {num: '0100', subMain: '한국시'},
+            {num: '0101', subMain: '해외시'},
+            {num: '0102', subMain: '나라별 에세이'},
+            {num: '0103', subMain: '인물/자전적에세이'},
+            {num: '0104', subMain: '청소년 시/에세이'}
+          ]
+        },
+        {
+          main : '자기계발',
+          num: '02',
+          sub : [
+            {num: '0200', subMain: '자기능력계발'},
+            {num: '0201', subMain: '비즈니스'},
+            {num: '0202', subMain: '능력개발'},
+            {num: '0203', subMain: '화술/협상'},
+          ]
+        },
+        {
+          main : '인문',
+          num: '03',
+          sub : [
+            {num: '0300', subMain: '인문일반학'},
+            {num: '0301', subMain: '심리학'},
+            {num: '0302', subMain: '교육학'},
+            {num: '0303', subMain: '유아교육'},
+            {num: '0304', subMain: '특수교육'},
+            {num: '0305', subMain: '임용고시'},
+            {num: '0306', subMain: '철학'},
+            {num: '0307', subMain: '문학이론'},
+            {num: '0308', subMain: '언어학'},
+            {num: '0309', subMain: '독서/글쓰기'},
+            {num: '0310', subMain: '문헌정보학'},
+          ]
+        },
+        {
+          main : '역사/문화',
+          num: '04',
+          sub : [
+            {num: '0400', subMain: '역사일반'},
+            {num: '0401', subMain: '세계사'},
+            {num: '0402', subMain: '서양사'},
+            {num: '0403', subMain: '동양사'},
+            {num: '0404', subMain: '한국사'},
+            {num: '0405', subMain: '신화'},
+            {num: '0406', subMain: '민속학'},
+            {num: '0407', subMain: '문화사'},
+            {num: '0408', subMain: '역사인물'},
+            {num: '0409', subMain: '역사기행'},
+            {num: '0410', subMain: '지리학'},
+          ]
+        },
+        {
+          main : '종교',
+          num: '05',
+          sub : [
+            {num: '0500', subMain: '종교일반'},
+            {num: '0501', subMain: '기독교'},
+            {num: '0502', subMain: '가톨릭'},
+            {num: '0503', subMain: '불교'},
+            {num: '0504', subMain: '그외종교'},
+          ]
+        },
+        {
+          main : '정치/사회',
+          num: '06',
+          sub : [
+            {num: '0600', subMain: '정치/외교'},
+            {num: '0601', subMain: '행정/정책'},
+            {num: '0602', subMain: '국방/군사'},
+            {num: '0603', subMain: '법학'},
+            {num: '0604', subMain: '사회학'},
+            {num: '0605', subMain: '사회문제/복지'},
+            {num: '0606', subMain: '언론/신문/방송'},
+            {num: '0607', subMain: '정치/사회문고'},
+          ]
+        },
+        {
+          main : '예술/대중문화',
+          num: '07',
+          sub : [
+            {num: '0700', subMain: '예술일반'},
+            {num: '0701', subMain: '미술'},
+            {num: '0702', subMain: '만화/애니메이션'},
+            {num: '0703', subMain: '디자인'},
+            {num: '0704', subMain: '패션/의류'},
+            {num: '0705', subMain: '음악'},
+            {num: '0706', subMain: '연극'},
+            {num: '0707', subMain: '영화'},
+            {num: '0708', subMain: '예술기행'},
+            {num: '0709', subMain: '예술문화'},
+          ]
+        },
+        {
+          main : '과학',
+          num: '08',
+          sub : [
+            {num: '0800', subMain: '과학이론'},
+            {num: '0801', subMain: '수학'},
+            {num: '0802', subMain: '물리학'},
+            {num: '0803', subMain: '화학'},
+            {num: '0804', subMain: '지구과학'},
+            {num: '0805', subMain: '생물과학'},
+            {num: '0806', subMain: '천문학'},
+            {num: '0807', subMain: '청소년 교향과학'},
+          ]
+        },
+        {
+          main : '기술/공학',
+          num: '09',
+          sub : [
+            {num: '0900', subMain: '건축'},
+            {num: '0901', subMain: '토목/건설'},
+            {num: '0902', subMain: '환경/소방/도시/조경'},
+            {num: '0903', subMain: '자동차/운전'},
+            {num: '0904', subMain: '공학일반'},
+            {num: '0905', subMain: '금속/재료'},
+            {num: '0906', subMain: '기계/역학/항공'},
+            {num: '0907', subMain: '전기/전자'},
+            {num: '0908', subMain: '농수산/축사'},
+            {num: '0909', subMain: '생활과학'},
+            {num: '0910', subMain: '의학'},
+          ]
+        },
+        {
+          main : '컴퓨터/IT',
+          num: '10',
+          sub : [
+            {num: '1000', subMain: '컴퓨터공학'},
+            {num: '1001', subMain: 'IT일반'},
+            {num: '1002', subMain: '데이터베이스'},
+            {num: '1003', subMain: '네트워크'},
+            {num: '1004', subMain: '보안/해킹'},
+            {num: '1005', subMain: '프로그래밍/언어'},
+            {num: '1006', subMain: '웹프로그래밍'},
+            {num: '1007', subMain: '게임'},
+            {num: '1008', subMain: '모바일 프로그래밍'},
+            {num: '1009', subMain: '그래픽'},
+            {num: '1010', subMain: '멀티미디어'},
+            {num: '1011', subMain: 'CAD'},
+            {num: '1012', subMain: '자격증/수험서'},
+          ]
+        },
+
+      ],
+
       selectedMainTag : [],
       selectedSubTag : '',
 
@@ -260,60 +428,36 @@ export default {
       }
     },
 
-
-
-    //태그로 검색
-    mainTag(index){
-      if(index===0){
-        this.getBookInfo()  //전체 책
+    byCategory(num){
+      this.selectTag=null
+      if(num==null){
+        this.getBookInfo()
       }else{
-        //index = 0 은 전체보기가 할당돼서 index로 할당된 tag Num가 1씩 밀림
-        //Tag Num = 소설 0000 ~
-        this.searchByMainTag(index-1)
-      }
-    },
-
-    searchByMainTag(index){
-      this.selectTag=null     //선택된 detailTag 초기화
-      let mainTag = index
-      if(mainTag<10){
-        mainTag = '0'+index
-      }
-      this.$axios.get("book/category/"+mainTag)
-          .then(response=>{
+        this.$axios.get("book/category/"+num)
+            .then(response=>{
               this.bookDatas = response.data
               this.keywords = []
               for(let i =0; i<response.data.length; i++){
                 this.keywords.push(response.data[i].bookKeyword.split(','))
               }
-          }).catch(error =>{
-            console.log(error.response);
-          })
-    },
-
-    searchBySubTag(subIndex,){
-      //위와 같은 이유로 mainTag -1
-      let mainTag = Number(this.tab)-1
-      let subTag = subIndex
-      if(mainTag<10){
-        mainTag = '0'+mainTag
+            }).catch(error =>{
+          console.log(error.response);
+        })
       }
-      if(subTag<10){
-        subTag = '0'+subIndex
-      }
-      this.$axios.get("book/category/"+mainTag+subTag)
-          .then(response=>{
-            this.bookDatas = response.data
-            this.keywords = []
-            for(let i =0; i<response.data.length; i++){
-              this.keywords.push(response.data[i].bookKeyword.split(','))
-            }
-          }).catch(error =>{
-        console.log(error.response);
-      })
     },
 
   },
+  created() {
+    this.$eventBus.$on('mainKeyword',(payload)=> {
+      let index = this.selection.indexOf(payload);
+      if(index===-1) {
+        this.selection.push(payload)
+      }else{
+        this.selection.splice(index,1)
+      }
+    })
+  },
+
   mounted() {
     this.getBookInfo();
   }
