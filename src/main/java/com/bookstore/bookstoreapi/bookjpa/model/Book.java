@@ -34,7 +34,6 @@ public class Book {
     private String bookPublisher;
     private LocalDate bookPublishedDate;
     private String bookTag;
-    private String bookDetailTag;
     private String bookKeyword;
     private String isDel;
 
@@ -60,7 +59,6 @@ public class Book {
                 String bookPublisher,
                 LocalDate bookPublishedDate,
                 String bookTag,
-                String bookDetailTag,
                 String bookKeyword,
                 String isDel ) {
         this.bid = bid;
@@ -81,7 +79,6 @@ public class Book {
         this.bookPublisher = bookPublisher;
         this.bookPublishedDate = bookPublishedDate;
         this.bookTag = bookTag;
-        this.bookDetailTag = bookDetailTag;
         this.bookKeyword = bookKeyword;
         this.isDel = isDel;
     }

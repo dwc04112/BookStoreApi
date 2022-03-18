@@ -1,6 +1,7 @@
 <template>
   <nav
       class="main_nav"
+
   >
     <div class="navLogo" style="float: left;">
       <router-link to="/">
@@ -76,7 +77,6 @@ v-img{
   display: flex;
   list-style:none;
   padding-left: 0;
-
 }
 .menu_nav li{
   margin-top: 3px;

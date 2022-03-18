@@ -3,6 +3,8 @@ package com.bookstore.bookstoreapi.bookjpa.service;
 
 import com.bookstore.bookstoreapi.bookjpa.dto.BookDTO;
 import com.bookstore.bookstoreapi.bookjpa.dto.BookMainDTO;
+import com.bookstore.bookstoreapi.bookjpa.dto.BookMainDetailDTO;
+import com.bookstore.bookstoreapi.bookjpa.dto.BookMainDetailInterface;
 import com.bookstore.bookstoreapi.bookjpa.model.Book;
 import com.bookstore.bookstoreapi.bookjpa.model.BookRepository;
 import com.bookstore.bookstoreapi.common.ApiResponse;
@@ -12,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,6 +34,10 @@ public class BookJpaService {
 
     public List<BookMainDTO> getBookList2() {
         return bookRepository.findBookBy();
+    }
+
+    public List<BookMainDetailInterface> getBookListMain(){
+        return bookRepository.getMainBook();
     }
 
     //지정한 책만 가져오기
@@ -64,7 +71,6 @@ public class BookJpaService {
                 .bookPublisher(bookDTO.getBookPublisher())
                 .bookPublishedDate(bookDTO.getBookPublishedDate())
                 .bookTag(bookDTO.getBookTag())
-                .bookDetailTag(bookDTO.getBookDetailTag())
                 .bookKeyword(bookDTO.getBookKeyword())
                 .isDel("N")
                 .build();
@@ -107,5 +113,31 @@ public class BookJpaService {
         } else {
             return new ApiResponse<>(false, "failed to delete board id " + bid);
         }
+    }
+
+    public List<BookMainDTO> searchBookByKeyword(String keyword) {
+        String[] keywords = keyword.split(",");
+        log.debug("keywords : " +keywords.length);
+
+
+
+        if(keywords.length == 1){
+            return bookRepository.findBookByBookKeywordContainingAndIsDel(keyword, "N");
+        }else if(keywords.length == 2){
+            return bookRepository.findBookByBookKeywordContainingAndBookKeywordContainingAndIsDel(keywords[0], keywords[1], "N");
+        }else if(keywords.length == 3){
+            return bookRepository.findBookByBookKeywordContainingAndBookKeywordContainingAndBookKeywordContainingAndIsDel(keywords[0], keywords[1], keywords[2], "N");
+        }else if(keywords.length == 4){
+            return bookRepository.findBookByBookKeywordContainingAndBookKeywordContainingAndBookKeywordContainingAndBookKeywordContainingAndIsDel(keywords[0], keywords[1], keywords[2], keywords[3], "N");
+        }else if(keywords.length == 5){
+            return bookRepository.findBookByBookKeywordContainingAndBookKeywordContainingAndBookKeywordContainingAndBookKeywordContainingAndBookKeywordContainingAndIsDel(keywords[0], keywords[1], keywords[2], keywords[3], keywords[4], "N");
+        }else{
+            return null;
+        }
+    }
+
+    public List<BookMainDTO> searchByMainTag(String bookTag) {
+
+        return bookRepository.findBookByBookTagStartingWithAndIsDel(bookTag, "N");
     }
 }

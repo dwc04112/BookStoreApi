@@ -25,7 +25,6 @@ public class BookDTO {
     private String bookPublisher;
     private LocalDate bookPublishedDate;
     private String bookTag;
-    private String bookDetailTag;
     private String bookKeyword;
     private String isDel;
 

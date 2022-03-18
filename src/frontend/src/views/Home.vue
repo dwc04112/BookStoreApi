@@ -1,53 +1,54 @@
 <template>
-  <div class="container-fluid">
-    <div style="justify-content: center">
+    <v-container fluid  class="grid-list-sm pa-0">
+          <v-row>
+            <v-col>
+              <nav class="nav" style="position: fixed; z-index: 6;">
+                  <ul class="nav-menu">
+                    <v-card
+                        class = "menu-card"
+                        height=300px
+                        width=30px
+                        style="margin-left: 50%; background-color: rgba(255,255,255,0.4); margin-top: 35vh"
+                        elevation="3"
+                    >
+                      <li @click="('li1')"><a id="li1" href="#home"><div class="div-menu-1"></div></a></li>
+                      <li @click="('li2')"><a id="li2" href="#about"><div class="div-menu-2"></div></a></li>
+                      <li @click="('li3')"><a id="li3" href="#bestSeller"><div class="div-menu-3"></div></a></li>
+                    </v-card>
+                  </ul>
+              </nav>
+            </v-col>
+          </v-row>
 
-      <nav class="nav" style="position: fixed; z-index: 6">
-        <v-card
-            class = "menu-card"
-            height=250px
-            width="80px"
-            style="margin-top: 100%; margin-left: 50%; background-color: rgba(255,255,255,0.4)"
-            elevation="0"
-            >
-          <ul class="nav-menu">
-            <li @click="('li1')"><a id="li1" href="#home">Home</a></li>
-            <li @click="('li2')"><a id="li2" href="#bestSeller">bestSeller</a></li>
-            <li @click="('li3')"><a id="li3" href="#about">about</a></li>
-          </ul>
-        </v-card>
 
-      </nav>
-
-
-      <div class="section">
-        <section id="home" style="background-color: #F0FFC2">
-          <h1>안녕하세요</h1>
-        </section>
-      </div>
-      <div class="section">
-        <section id="bestSeller" style="background-color: #FFE4C0">
-          <BestSeller/>
-        </section>
-      </div>
-      <div class="section">
-        <section id="about" style="background-color: #FFBBBB">
-          <About/>
-        </section>
-      </div>
-    </div>
-  </div>
+          <div class="section">
+            <section id="home" style="background-color: #FBF8F1">
+              <MainBook/>
+            </section>
+          </div>
+          <div class="section">
+            <section id="about" style="background-color: #F7ECDE">
+              <About/>
+            </section>
+          </div>
+          <div class="section">
+            <section id="bestSeller" style="background-color: #FFE4C0">
+              <BestSeller/>
+            </section>
+          </div>
+    </v-container>
 </template>
 <script>
 import $ from 'jquery'
 
 import BestSeller from "@/views/BestSeller";
 import About from "@/views/About";
+import MainBook from "@/views/MainBook";
 
 
 export default {
   name: "Home",
-  components: {About, BestSeller},
+  components: {MainBook, About, BestSeller},
   data () {
     return {
 
@@ -59,16 +60,15 @@ export default {
 
   created() {
     $(document).ready(function () {
-
       const $menu_a = $("a", $(".nav-menu"));
+
       $menu_a.click(function () {
-        $("html").animate(
-            {scrollTop: $($(this).attr("href")).offset().top},
-            {duration: 900, complete: $(this).attr("href")}
-        );
-
-
+          $("html").animate(
+              {scrollTop: $($(this).attr("href")).offset().top},
+              {duration: 900, complete: $(this).attr("href")}
+          );
       });
+
 
       $(".section").each(function () {
         // 개별적으로 Wheel 이벤트 적용 mousewheel(IE/chrome/opera) DOMMouseScroll(FF)
@@ -88,28 +88,36 @@ export default {
           // 마우스휠을 위에서 아래로
           if (delta < 0) {
             if ($(this).next() !== undefined) {
-              moveTop = $(this).next().offset().top;
 
+              //error
+              if(($(this).offset().top>2400)){
+                return null;
+              }
+
+              moveTop = $(this).next().offset().top;
             }
             // 마우스휠을 아래에서 위로
           } else {
             if ($(this).prev() !== undefined) {
               moveTop = $(this).prev().offset().top;
-
               if($(this).offset().top <100){
                 moveTop = 0;
               }
             }
           }
+
+
           // 화면 이동 0.8초(800)
           $("html,body").stop().animate({
             scrollTop: moveTop + 'px'
-          }, {
+          },{
             duration: 700, complete: function () {
             }
           });
+
         });
       });
+
     })
   },
 
@@ -133,6 +141,17 @@ div{
 .section{
   z-index: 3;
 }
-
+.div-menu-1,.div-menu-2,.div-menu-3{
+  height: 100px;
+}
+.div-menu-1{
+  background-color: rgba(255,178,166,0.3);
+}
+.div-menu-2{
+  background-color: rgba(154,220,255,0.3);
+}
+.div-menu-2{
+  background-color: rgba(255,248,166,0.3);
+}
 
 </style>

@@ -3,6 +3,8 @@ package com.bookstore.bookstoreapi.bookjpa.controller;
 
 import com.bookstore.bookstoreapi.bookjpa.dto.BookDTO;
 import com.bookstore.bookstoreapi.bookjpa.dto.BookMainDTO;
+import com.bookstore.bookstoreapi.bookjpa.dto.BookMainDetailDTO;
+import com.bookstore.bookstoreapi.bookjpa.dto.BookMainDetailInterface;
 import com.bookstore.bookstoreapi.bookjpa.model.Book;
 import com.bookstore.bookstoreapi.bookjpa.service.BookJpaService;
 import com.bookstore.bookstoreapi.common.ApiResponse;
@@ -10,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 
@@ -30,11 +33,16 @@ public class BookJpaController {
     public List<BookMainDTO> getBookList2(){
         return bookJpaService.getBookList2();
     }
+    @GetMapping("/main")
+    public List<BookMainDetailInterface> getBookListMain(){
+        return bookJpaService.getBookListMain();
+    }
 
     @GetMapping("/{bid}")
     public Book getBookId(@PathVariable long bid){
         return bookJpaService.getBookId(bid);
     }
+
 
     @PostMapping("/")
     public ApiResponse<Book> postBook(@RequestBody BookDTO bookDTO){
@@ -48,4 +56,18 @@ public class BookJpaController {
     public ApiResponse<Book> updateIsDelBookById(@PathVariable long bid){
         return bookJpaService.updateIsDelBookById(bid);
     }
+
+    //책 검색
+    @PostMapping("/keyword")
+    public List<BookMainDTO> searchBookList(@RequestBody BookDTO bookDTO){
+        String keyword = bookDTO.getBookKeyword();
+        log.debug("keyword : " + keyword);
+        return bookJpaService.searchBookByKeyword(keyword);
+    }
+
+    @GetMapping("/category/{bookTag}")
+    public List<BookMainDTO> searchByMainTag(@PathVariable String bookTag){
+        return bookJpaService.searchByMainTag(bookTag);
+    }
+
 }
