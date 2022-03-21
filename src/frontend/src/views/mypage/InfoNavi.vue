@@ -18,7 +18,7 @@
             ></v-avatar>
           </div>
 
-          <div style="font-size: 20px; text-align: center" class="md12">john@vuetifyjs.com 님</div>
+          <div style="font-size: 20px; text-align: center" class="md12">{{this.$store.state.memberStore.nickName}} 님</div>
           <div style="font-size: 12px; text-align: center" class="pt-2">개인회원 / 일반등급</div>
         </v-sheet>
 
@@ -92,11 +92,11 @@ export default {
       drawer: true,
       links: [
         ['mdi-inbox-arrow-down', '마이페이지', 'InfoMain'],
-        ['mdi-send', 'Info', 'Login'],
-        ['mdi-delete', 'About', 'About'],
-        ['mdi-alert-octagon', '메인 북', 'MainBook'],
+        ['mdi-send', '나의활동' , 'InfoWishList'],
+        ['mdi-delete', '위시리스트', 'InfoWishList'],
+        ['mdi-alert-octagon', '위시리스트', 'InfoWishList'],
       ],
-      tab : "About"
+      tab : "InfoMain"
     }
   },
   computed:{
@@ -112,7 +112,7 @@ export default {
     },
     logout(){
       console.log("logout!!")
-    }
+    },
   }
 }
 </script>

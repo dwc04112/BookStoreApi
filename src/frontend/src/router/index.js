@@ -51,7 +51,7 @@ const routes = [
         component: () =>  import('@/views/MainBook')
     },
 
-
+    // myPage
     {
         path: '/infoMain',
         name: 'InfoMain',
@@ -61,6 +61,11 @@ const routes = [
         path: '/infoNavi',
         name: 'InfoNavi',
         component: () =>  import('@/views/mypage/InfoNavi')
+    },
+    {
+        path: '/infoWishList',
+        name: 'InfoWishList',
+        component: () =>  import('@/views/mypage/InfoWishList')
     },
 ]
 
