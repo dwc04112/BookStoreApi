@@ -2,14 +2,18 @@ package com.bookstore.bookstoreapi.wishlist.service;
 
 import com.bookstore.bookstoreapi.bookjpa.model.Book;
 import com.bookstore.bookstoreapi.bookjpa.model.BookRepository;
+import com.bookstore.bookstoreapi.common.ApiResponse;
+import com.bookstore.bookstoreapi.member.MemberRepository;
 import com.bookstore.bookstoreapi.wishlist.DTO.WishListDTO;
 import com.bookstore.bookstoreapi.wishlist.model.Wishlist;
 import com.bookstore.bookstoreapi.wishlist.model.WishlistRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -17,11 +21,18 @@ import java.util.List;
 public class WishlistService {
 
    final WishlistRepository wishlistRepository;
+   final MemberRepository memberRepository;
    final BookRepository bookRepository;
 
+    public long getMemberId(){
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        return memberRepository.getMemberIdByEmail(email);
+    }
+
     public List<Wishlist> getWishList() {
-        log.debug("data : " + wishlistRepository.findAll());
-        return wishlistRepository.findWishlistBy();
+        log.debug("my Wish List");
+        log.debug("my id : " +getMemberId() );
+        return wishlistRepository.findWishlistByMid(getMemberId());
     }
 
 
@@ -32,7 +43,7 @@ public class WishlistService {
 
         Wishlist postData = Wishlist.builder()
                 .wid(newWishIdValue)
-                .mid(wishListDTO.getMid())
+                .mid(getMemberId())
                 .wishlistTitle(wishListDTO.getWishlistTitle())
                 .bid(wishListDTO.getBid())
                 .bookTitle(data.getBookTitle())
@@ -61,5 +72,27 @@ public class WishlistService {
         }
         log.debug("newBoardIdValue=" + result);
         return result;
+    }
+
+    public ApiResponse<Wishlist> deleteWishList(int wid) {
+        Optional<Wishlist> wishData = wishlistRepository.findWishlistByWid(wid);
+        Wishlist data = wishData.orElseThrow(() -> new RuntimeException("no data"));
+
+        boolean matchInfo= this.matchInfo(wishlistRepository, data.getMid());
+        if(!matchInfo){
+            return new ApiResponse<>(false, "failed to delete board id " + wid);
+        }else{
+            wishlistRepository.deleteWishlistByWid(wid);
+            return new ApiResponse<>(true,"wid " + wid +" is successfully deleted");
+        }
+    }
+
+    private boolean matchInfo(WishlistRepository wishlistRepository, long targetMid){
+        long loginMid = getMemberId();
+        if(loginMid!=targetMid){
+            log.debug("게시글의 Id와 사용자의 ID가 일치하지 않습니다");
+            return false;
+        }
+        return true;
     }
 }

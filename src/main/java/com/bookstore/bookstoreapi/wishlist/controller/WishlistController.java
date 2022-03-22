@@ -2,6 +2,7 @@ package com.bookstore.bookstoreapi.wishlist.controller;
 
 
 
+import com.bookstore.bookstoreapi.common.ApiResponse;
 import com.bookstore.bookstoreapi.wishlist.DTO.WishListDTO;
 import com.bookstore.bookstoreapi.wishlist.DTO.WishListDataDTO;
 import com.bookstore.bookstoreapi.wishlist.model.Wishlist;
@@ -26,10 +27,15 @@ public class WishlistController {
     }
 
 
-
     @PostMapping("/")
     public Wishlist saveWishList(@RequestBody WishListDTO wishListDTO){
         log.debug("post data : " + wishListDTO);
         return wishlistService.saveWishList(wishListDTO);
+    }
+
+    @DeleteMapping("/{wid}")
+    public ApiResponse<Wishlist> deleteWishList(@PathVariable int wid){
+        log.debug("delete data : " + wid);
+        return wishlistService.deleteWishList(wid);
     }
 }
