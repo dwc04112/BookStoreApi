@@ -100,12 +100,104 @@
                         </v-chip>
                     </v-chip-group>
 
+                    <v-divider></v-divider>
+                    <v-card-actions>
+                      <v-tooltip top color="pink">
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-btn
+                            v-bind="attrs"
+                            v-on="on"
+                            v-for="w in wish[index]"
+                            :key="w"
+                            icon
+                            @click.stop="dialog = true"
+                        >
+                          <v-icon color="pink">
+                            mdi-heart
+                          </v-icon>
+                        </v-btn>
+                        </template>
+                        <span>ADD Wish List</span>
+                      </v-tooltip>
+                    </v-card-actions>
+
                   </div>
                 </v-expand-transition>
-
               </v-card>
             </v-flex>
           </v-layout>
+
+
+          <v-container fluid>
+          <v-dialog
+              class="align-center justify-center align-content-center"
+              v-model="dialog"
+              max-width="700"
+          >
+            <v-card color="#FDF6EC">
+              <v-card-title class="text-h5">
+                Select Wish List
+              </v-card-title>
+              <v-card-text>위시리스트 카테고리</v-card-text>
+
+              <div class="d-flex flex-column align-center">
+                <v-row
+                    align="center" justify="center"
+                    style="width: 75%; background-color: #F3E9DD; text-align: center;"
+                    class="pt-2"
+                    dense
+                >
+                  <v-col
+                      cols="6" sm="4" md="4"
+                      class="pa-3 fill-height d-flex flex-column justify-center align-center"
+                      v-for="data in 4"
+                      :key="data"
+                  >
+                        <v-card
+                            class="book mb-2"
+                            height="140"
+                            width="100"
+                            elevation="2"
+                            tile
+                        >
+                        </v-card>
+                        <a class="wish-a">나의 보관함</a>
+                  </v-col>
+
+                  <v-col
+                      cols="6" sm="4" md="4"
+                      class="pa-3 fill-height d-flex flex-column justify-center align-center">
+                    <v-card
+                        class="mb-2 d-flex align-center justify-center"
+                        height="140"
+                        width="100"
+                        elevation="2"
+                        tile
+                        color="rgba(100,100,100,0.1)"
+                    >
+                        <font-awesome-icon class="plus-icon" icon="fa-solid fa-plus"/>
+                    </v-card>
+                    <a class="wish-a">위시리스트 추가</a>
+                  </v-col>
+                </v-row>
+              </div>
+
+              <v-divider class="mt-8"></v-divider>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+
+                <v-btn
+                    color="green darken-1"
+                    text
+                    @click="dialog = false"
+                >
+                  Close
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+        </v-container>
+
 
 
           <v-footer
@@ -164,11 +256,11 @@
 </template>
 
 <script>
-
 export default {
   name: "About",
   data: function (){
     return{
+
       bookDatas : [],
       keywords : [],
       selection : [],
@@ -376,7 +468,9 @@ export default {
       },
 
       show: [],
+      wish: [],
       group: null,
+      dialog: false,
     }},
   watch:{
     group () {
@@ -393,6 +487,7 @@ export default {
         for(let i =0; i<response.data.length; i++){
           this.keywords.push(response.data[i].bookKeyword.split(','))
           this.show.push({data:false})
+          this.wish.push({"color" : 'grey' })
         }
       })
       .catch(error =>{
@@ -448,6 +543,12 @@ export default {
         })
       }
     },
+
+
+    //add wishList
+    addWish(index){
+      alert("wishList" + index)
+    }
 
   },
   created() {
@@ -522,5 +623,14 @@ v-container{
   font-size: 10px
 }
 
+.plus-icon{
+  font-size: 40px;
+  color: rgba(100,100,100,0.3);
+}
+.wish-a{
+  font-size: 14px;
+  color : rgba(40,40,40,0.5);
+  font-weight: bold;
+}
 
 </style>
