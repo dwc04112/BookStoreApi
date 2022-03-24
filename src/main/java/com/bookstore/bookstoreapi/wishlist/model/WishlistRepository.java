@@ -17,6 +17,8 @@ public interface WishlistRepository extends JpaRepository<Wishlist, Long> {
 
     Wishlist findTopByOrderByWidDesc();
 
+    boolean existsWishlistByMidAndWishlistTitleAndBid(long mid, String wishlistTitle, long bid);
+
     Optional<Wishlist> findWishlistByWid(long wid);
 
     @Transactional

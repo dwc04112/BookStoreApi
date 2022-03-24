@@ -42,23 +42,28 @@ public class WishlistService {
 
 
 
-    public Wishlist saveWishList(WishListDTO wishListDTO) {
-        long newWishIdValue = this.getnewWishIdValue(wishlistRepository);
-        Book data = getWishBookData(bookRepository, wishListDTO.getBid());
+    public ApiResponse<Wishlist> saveWishList(WishListDTO wishListDTO) {
+        boolean result = wishlistRepository.existsWishlistByMidAndWishlistTitleAndBid(getMemberId() ,wishListDTO.getWishlistTitle() ,wishListDTO.getBid());
 
-        Wishlist postData = Wishlist.builder()
-                .wid(newWishIdValue)
-                .mid(getMemberId())
-                .wishlistTitle(wishListDTO.getWishlistTitle())
-                .bid(wishListDTO.getBid())
-                .bookTitle(data.getBookTitle())
-                .bookAuthor(data.getBookAuthor())
-                .bookSalePrice(data.getBookSalePrice())
-                .bookThumb(data.getBookThumb())
-                .build();
-        wishlistRepository.save(postData);
-        return postData;
+        if(!result) {
+            long newWishIdValue = this.getnewWishIdValue(wishlistRepository);
+            Book data = getWishBookData(bookRepository, wishListDTO.getBid());
 
+            Wishlist postData = Wishlist.builder()
+                    .wid(newWishIdValue)
+                    .mid(getMemberId())
+                    .wishlistTitle(wishListDTO.getWishlistTitle())
+                    .bid(wishListDTO.getBid())
+                    .bookTitle(data.getBookTitle())
+                    .bookAuthor(data.getBookAuthor())
+                    .bookSalePrice(data.getBookSalePrice())
+                    .bookThumb(data.getBookThumb())
+                    .build();
+            wishlistRepository.save(postData);
+            return new ApiResponse<>(true,data.getBookTitle() +" is successfully save for" + wishListDTO.getWishlistTitle(), postData);
+        }else{
+            return new ApiResponse<>(false, "이미 등록된 책입니다",null);
+        }
     }
 
     private Book getWishBookData(BookRepository bookRepository, long bid) {

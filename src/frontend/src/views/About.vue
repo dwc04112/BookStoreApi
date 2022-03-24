@@ -100,6 +100,7 @@
                         </v-chip>
                     </v-chip-group>
 
+
                     <v-divider></v-divider>
                     <v-card-actions>
                       <v-tooltip top color="pink">
@@ -107,10 +108,8 @@
                           <v-btn
                             v-bind="attrs"
                             v-on="on"
-                            v-for="w in wish[index]"
-                            :key="w"
                             icon
-                            @click.stop="dialog = true"
+                            @click.stop="getWishTitle(book.bid)"
                         >
                           <v-icon color="pink">
                             mdi-heart
@@ -139,7 +138,6 @@
                 Select Wish List
               </v-card-title>
               <v-card-text>위시리스트 카테고리</v-card-text>
-
               <div class="d-flex flex-column align-center">
                 <v-row
                     align="center" justify="center"
@@ -150,8 +148,8 @@
                   <v-col
                       cols="6" sm="4" md="4"
                       class="pa-3 fill-height d-flex flex-column justify-center align-center"
-                      v-for="data in 4"
-                      :key="data"
+                      v-for="(wishCategory,index) in wishlistTitle"
+                      :key="index"
                   >
                         <v-card
                             class="book mb-2"
@@ -159,9 +157,10 @@
                             width="100"
                             elevation="2"
                             tile
+                            @click.stop="setWishData(wishCategory.wishlistTitle)"
                         >
                         </v-card>
-                        <a class="wish-a">나의 보관함</a>
+                        <a class="wish-a">{{wishCategory.wishlistTitle}}</a>
                   </v-col>
 
                   <v-col
@@ -199,6 +198,36 @@
         </v-container>
 
 
+        <v-container fluid>
+          <v-dialog
+              class="align-center justify-center align-content-center"
+              v-model="commitDialog"
+              max-width="300"
+          >
+            <v-card color="#FDF6EC">
+              <v-card-title>등록하시겠습니까?</v-card-title>
+
+              <v-divider/>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn
+                    color="green darken-1"
+                    text
+                    @click="pushWishData()"
+                >
+                  등록
+                </v-btn>
+                <v-btn
+                    color="green darken-1"
+                    text
+                    @click="commitDialog = false"
+                >
+                  취소
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+         </v-container>
 
           <v-footer
               padless
@@ -458,19 +487,21 @@ export default {
         },
 
       ],
-
       selectedMainTag : [],
       selectedSubTag : '',
+
+      show: [],             // expand transition
+      wishlistTitle : [],   // wishTitle & count
+      wishData : [],        //bid & wishlistTItle
+      // group: null,
+      dialog: false,        //wishlist Dialog
+      commitDialog : false, //wishlist post commit/close
 
 
       rules:{
         max : v => (v && v.length <5) || '최대 5개 키워드까지 선택 가능합니다',
       },
 
-      show: [],
-      wish: [],
-      group: null,
-      dialog: false,
     }},
   watch:{
     group () {
@@ -487,7 +518,6 @@ export default {
         for(let i =0; i<response.data.length; i++){
           this.keywords.push(response.data[i].bookKeyword.split(','))
           this.show.push({data:false})
-          this.wish.push({"color" : 'grey' })
         }
       })
       .catch(error =>{
@@ -544,11 +574,48 @@ export default {
       }
     },
 
+    getWishTitle(bid){
+      this.dialog = true
+      this.wishData.bid = bid
+      this.$axios.get("wish/title/")
+          .then(response=>{
+            this.wishlistTitle = response.data
+          }).catch(error =>{
+        console.log(error.response);
+      })
+    },
+    setWishData(wishlistTitle){
+      this.commitDialog = true
+      this.wishData.wishlistTitle = wishlistTitle;
+    },
+
+    pushWishData(){
+      let data = {}
+      data.wishlistTitle = this.wishData.wishlistTitle;
+      data.bid = this.wishData.bid;
+      this.$axios.post("wish/",JSON.stringify(data),{
+        headers: {
+          "Content-Type": `application/json`,
+        },
+      }).then(response=>{
+        console.log(response.data.message)
+        if(response.data.success == true){
+          alert(this.wishData.wishlistTitle+" 에 성공적으로 등록했습니다!")
+        }else{
+          alert("이미 해당 책이 등록되어 있습니다. 다른 보관함을 이용해주세요.")
+        }
+        this.commitDialog=false
+      }).catch(error =>{
+        console.log(error.response);
+      })
+
+    },
+
 
     //add wishList
     addWish(index){
       alert("wishList" + index)
-    }
+    },
 
   },
   created() {

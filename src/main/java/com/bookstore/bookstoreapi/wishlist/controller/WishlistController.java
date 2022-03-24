@@ -33,7 +33,7 @@ public class WishlistController {
     }
 
     @PostMapping("/")
-    public Wishlist saveWishList(@RequestBody WishListDTO wishListDTO){
+    public ApiResponse<Wishlist> saveWishList(@RequestBody WishListDTO wishListDTO){
         log.debug("post data : " + wishListDTO);
         return wishlistService.saveWishList(wishListDTO);
     }
