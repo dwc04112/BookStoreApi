@@ -5,6 +5,7 @@ import com.bookstore.bookstoreapi.bookjpa.model.BookRepository;
 import com.bookstore.bookstoreapi.common.ApiResponse;
 import com.bookstore.bookstoreapi.member.MemberRepository;
 import com.bookstore.bookstoreapi.wishlist.DTO.WishListDTO;
+import com.bookstore.bookstoreapi.wishlist.DTO.WishListTitleInterface;
 import com.bookstore.bookstoreapi.wishlist.model.Wishlist;
 import com.bookstore.bookstoreapi.wishlist.model.WishlistRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,10 @@ public class WishlistService {
     public long getMemberId(){
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         return memberRepository.getMemberIdByEmail(email);
+    }
+
+    public List<WishListTitleInterface> getWishListTitle() {
+        return wishlistRepository.getWishListTitle(getMemberId());
     }
 
     public List<Wishlist> getWishList() {
@@ -95,4 +100,6 @@ public class WishlistService {
         }
         return true;
     }
+
+
 }

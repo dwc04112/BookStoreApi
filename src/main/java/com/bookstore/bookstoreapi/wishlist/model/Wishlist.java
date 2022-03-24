@@ -4,6 +4,7 @@ package com.bookstore.bookstoreapi.wishlist.model;
 
 
 import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
 
 
 import javax.persistence.*;
@@ -15,6 +16,7 @@ import javax.persistence.*;
 @Table(name = "wishlist")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
+@DynamicInsert
 public class Wishlist {
 
 /*
@@ -52,9 +54,15 @@ public class Wishlist {
     @Column(name="wid")
     private long wid;
 
+
+
     @Column(unique = true)
     private long mid;
+
+    @Column(columnDefinition = "varchar(200) default '나의 보관함'")
     private String wishlistTitle;
+
+    @Column(unique = true)
     private long bid;
     private String bookTitle;
     private String bookAuthor;
