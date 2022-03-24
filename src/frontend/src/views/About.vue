@@ -495,7 +495,6 @@ v-container{
 }
 
 
-
 .footer-chip span{
   font-size: 22px;
   font-weight: bolder;
