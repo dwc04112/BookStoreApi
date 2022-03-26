@@ -58,6 +58,7 @@ public class Wishlist {
 
     @Column(unique = true)
     private long mid;
+    private int titleNum;
 
     @Column(columnDefinition = "varchar(200) default '나의 보관함'")
     private String wishlistTitle;
@@ -71,6 +72,7 @@ public class Wishlist {
 
     public Wishlist(long wid,
                     long mid,
+                    int titleNum,
                     String wishlistTitle,
                     long bid,
                     String bookTitle,
@@ -80,6 +82,7 @@ public class Wishlist {
                     ){
         this.wid = wid;
         this.mid = mid;
+        this.titleNum = titleNum;
         this.wishlistTitle = wishlistTitle;
         this.bid = bid;
         this.bookTitle = bookTitle;

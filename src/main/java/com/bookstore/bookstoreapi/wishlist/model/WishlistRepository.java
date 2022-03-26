@@ -15,6 +15,8 @@ public interface WishlistRepository extends JpaRepository<Wishlist, Long> {
 
     List<Wishlist> findWishlistByMid(long mid);
 
+    List<Wishlist> findWishlistByMidAndTitleNumOrderByWidAsc(long mid, int tilteNum);
+
     Wishlist findTopByOrderByWidDesc();
 
     boolean existsWishlistByMidAndWishlistTitleAndBid(long mid, String wishlistTitle, long bid);
@@ -24,6 +26,6 @@ public interface WishlistRepository extends JpaRepository<Wishlist, Long> {
     @Transactional
     void deleteWishlistByWid(long wid);
 
-    @Query("Select wishlistTitle as wishlistTitle, count(wishlistTitle) as countTitle from Wishlist where mid=?1 group by wishlistTitle")
+    @Query("Select titleNum as titleNum ,wishlistTitle as wishlistTitle, count(wishlistTitle) as countTitle from Wishlist where mid=?1 group by wishlistTitle")
     List<WishListTitleInterface> getWishListTitle(long mid);
 }

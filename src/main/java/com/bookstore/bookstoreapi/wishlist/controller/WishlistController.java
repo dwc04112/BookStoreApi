@@ -27,6 +27,11 @@ public class WishlistController {
         return wishlistService.getWishListTitle();
     }
 
+    @GetMapping("/{titleNum}")
+    public List<Wishlist> getWishListByTitle(@PathVariable int titleNum){
+        return wishlistService.getWishListByTitle(titleNum);
+    }
+
     @GetMapping("/")
     public List<Wishlist> getWishList(){
         return wishlistService.getWishList();

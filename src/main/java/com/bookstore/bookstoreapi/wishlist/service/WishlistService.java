@@ -30,6 +30,11 @@ public class WishlistService {
         return memberRepository.getMemberIdByEmail(email);
     }
 
+
+    public List<Wishlist> getWishListByTitle(int titleNum) {
+        return wishlistRepository.findWishlistByMidAndTitleNumOrderByWidAsc(getMemberId(),titleNum);
+    }
+
     public List<WishListTitleInterface> getWishListTitle() {
         return wishlistRepository.getWishListTitle(getMemberId());
     }
@@ -105,6 +110,5 @@ public class WishlistService {
         }
         return true;
     }
-
 
 }
