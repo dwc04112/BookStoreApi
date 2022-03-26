@@ -26,6 +26,6 @@ public interface WishlistRepository extends JpaRepository<Wishlist, Long> {
     @Transactional
     void deleteWishlistByWid(long wid);
 
-    @Query("Select titleNum as titleNum ,wishlistTitle as wishlistTitle, count(wishlistTitle) as countTitle from Wishlist where mid=?1 group by wishlistTitle")
+    @Query("Select titleNum as titleNum ,wishlistTitle as wishlistTitle, count(titleNum) as countTitle from Wishlist where mid=?1 group by titleNum")
     List<WishListTitleInterface> getWishListTitle(long mid);
 }
