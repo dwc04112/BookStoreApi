@@ -60,12 +60,25 @@ const routes = [
     {
         path: '/infoNavi',
         name: 'InfoNavi',
-        component: () =>  import('@/views/mypage/InfoNavi')
+        component: () =>  import('@/views/mypage/InfoNavi'),
+        props: true
     },
     {
         path: '/infoWishList',
         name: 'InfoWishList',
         component: () =>  import('@/views/mypage/InfoWishList')
+    },
+
+    //wishlist item
+    {
+        path: '/wishList',
+        name: 'WishList',
+        component: () =>  import('@/views/wishlist/WishList')
+    },
+    {
+        path: '/addWishList',
+        name: 'AddWishList',
+        component: () =>  import('@/views/wishlist/AddWishList')
     },
 ]
 

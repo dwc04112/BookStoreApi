@@ -85,7 +85,7 @@
 <script>
 export default {
   name: "InfoNavi",
-
+  props:["AboutTab"],
   data () {
     return {
       selectedItem : null,
@@ -107,12 +107,18 @@ export default {
   },
   methods : {
     pushLink(tab){
-      console.log('push : ' + tab)
-      this.tab= tab
+      if(tab == null){
+        console.log("tab is null")
+      }else {
+        this.tab = tab
+      }
     },
     logout(){
       console.log("logout!!")
     },
+  },
+  mounted() {
+    this.pushLink(this.AboutTab)
   }
 }
 </script>

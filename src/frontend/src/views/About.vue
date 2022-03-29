@@ -57,7 +57,9 @@
             </v-col>
           </v-row>
 
-          <v-layout wrap row justify-center>
+
+          <!-- 리스트 목록록 -->
+         <v-layout wrap row justify-center>
             <v-flex
                 class="pb-4 pl-4"
                 xs12 sm6 md6
@@ -100,7 +102,6 @@
                         </v-chip>
                     </v-chip-group>
 
-
                     <v-divider></v-divider>
                     <v-card-actions>
                       <v-tooltip top color="pink">
@@ -109,7 +110,7 @@
                             v-bind="attrs"
                             v-on="on"
                             icon
-                            @click.stop="getWishTitle(book.bid)"
+                            @click.stop="setComponentData(book.bid)"
                         >
                           <v-icon color="pink">
                             mdi-heart
@@ -127,73 +128,54 @@
           </v-layout>
 
 
+          <!--      컴포넌트 호출      -->
           <v-container fluid>
           <v-dialog
               class="align-center justify-center align-content-center"
               v-model="dialog"
-              max-width="700"
+              max-width="600"
           >
             <v-card color="#FDF6EC">
-              <v-card-title class="text-h5">
-                Select Wish List
-              </v-card-title>
-              <v-card-text>해당 도서를 담을 카테고리를 선택해주세요.</v-card-text>
-              <div class="d-flex flex-column align-center">
-                <v-row
-                    align="center" justify="center"
-                    style="width: 75%; background-color: #F3E9DD; text-align: center;"
-                    class="pt-2"
-                    dense
-                >
-                  <v-col
-                      cols="6" sm="4" md="4"
-                      class="pa-3 fill-height d-flex flex-column justify-center align-center"
-                      v-for="(wishCategory,index) in wishlistTitle"
-                      :key="index"
-                  >
-                        <v-card
-                            class="book mb-2"
-                            height="140"
-                            width="100"
-                            elevation="2"
-                            tile
-                            @click.stop="setWishData(wishCategory.wishlistTitle)"
-                        >
-                          <v-card-text>( {{wishCategory.countTitle}} /100)</v-card-text>
-                        </v-card>
-                        <a class="wish-a">{{wishCategory.wishlistTitle}}</a>
-                  </v-col>
+              <v-toolbar
+                  elevation="0"
+                  class="white--text"
+                  color="rgb(33,33,33)"
+              >
+                <v-card-title>나의 위시리스트</v-card-title>
+              </v-toolbar>
 
-                  <v-col
-                      cols="6" sm="4" md="4"
-                      class="pa-3 fill-height d-flex flex-column justify-center align-center">
-                    <v-card
-                        class="mb-2 d-flex align-center justify-center"
-                        height="140"
-                        width="100"
-                        elevation="2"
-                        tile
-                        color="rgba(100,100,100,0.1)"
-                    >
-                        <font-awesome-icon class="plus-icon" icon="fa-solid fa-plus"/>
-                    </v-card>
-                    <a class="wish-a">위시리스트 추가</a>
-                  </v-col>
-                </v-row>
-              </div>
+              <component
+                  v-bind:selectBid="setBid"
+                  :key="componentKey"
+                  :is="component"
+                  @childKey="updateComponentKey"
+                  @pushTab="setWishTab"
+              ></component>
 
-              <v-divider class="mt-8"></v-divider>
+
+              <v-card-text>
+                <div>
+                  <ul>
+                    <li>카테고리 추가는 메인페이지 > 책 등록시 가능합니다</li>
+                    <li>새로 만들어진 카테고리는 자동으로 공개처리됩니다.</li>
+                    <li>카테고리 관리는 마이페이지 > 위시리스트 > 나의 찜목록 으로 이동하시면 가능합니다.</li>
+                  </ul>
+                </div>
+              </v-card-text>
+              <v-divider></v-divider>
               <v-card-actions>
+
 
                 <v-spacer></v-spacer>
                 <v-btn
-                    color="green darken-1"
+                    color=rgb(33,33,33)
                     text
+                    @click="pushInfoWishList('InfoWishList')"
                 >
                   <h4>내 보관함으로 이동</h4>
                 </v-btn>
                 <v-btn
-                    color="green darken-1"
+                    color=rgb(33,33,33)
                     text
                     @click="dialog = false"
                 >
@@ -205,37 +187,8 @@
         </v-container>
 
 
-        <v-container fluid>
-          <v-dialog
-              class="align-center justify-center align-content-center"
-              v-model="commitDialog"
-              max-width="300"
-          >
-            <v-card color="#FDF6EC">
-              <v-card-title>등록하시겠습니까?</v-card-title>
 
-              <v-divider/>
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn
-                    color="green darken-1"
-                    text
-                    @click="pushWishData()"
-                >
-                  등록
-                </v-btn>
-                <v-btn
-                    color="green darken-1"
-                    text
-                    @click="commitDialog = false"
-                >
-                  취소
-                </v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
-         </v-container>
-
+        <!-- 하단바 -->
           <v-footer
               padless
               fixed
@@ -292,18 +245,19 @@
 </template>
 
 <script>
+import WishList from "@/views/wishlist/WishList";
 export default {
   name: "About",
+  components: {WishList},
   data: function (){
     return{
 
       bookDatas : [],
       keywords : [],
       selection : [],
-
       selectTag : '',
-      tab : null,
 
+      tab : null,
       absolute: true,
       overlay: false,
 
@@ -497,14 +451,19 @@ export default {
       selectedMainTag : [],
       selectedSubTag : '',
 
-      show: [],             // expand transition
-      wishlistTitle : [],   // wishTitle & count
-      wishData : [],        //bid & wishlistTItle
-      // group: null,
+
+      show: [],             //book expand transition
       dialog: false,        //wishlist Dialog
-      commitDialog : false, //wishlist post commit/close
 
 
+
+      // = 컴포넌트 관련 Data
+      componentKey: 0,             // reload component
+      wishTab :'WishList',         // 보여줄 컴포넌트 값
+      setBid : '',                 // push to component
+
+
+      //rules
       rules:{
         max : v => (v && v.length <5) || '최대 5개 키워드까지 선택 가능합니다',
       },
@@ -516,7 +475,8 @@ export default {
     },
   },
   methods: {
-    //전체 책
+
+    //전체 책 불러오기
     getBookInfo(){
       this.$axios.get('book/info')
       .then(response=>{
@@ -532,12 +492,13 @@ export default {
       })
     },
 
+    //footer Chip 삭제
     removeChip(index){
       this.selection.splice(index,1)
     },
 
 
-
+    // == 검색관련 ==
     //키워드로 검색
     searchBook(){
       this.selectTag=null     //선택된 detailTag 초기화
@@ -562,7 +523,7 @@ export default {
         })
       }
     },
-
+    //카테고리로 검색
     byCategory(num){
       this.selectTag=null
       if(num==null){
@@ -581,60 +542,35 @@ export default {
       }
     },
 
-    getWishTitle(bid){
-      this.dialog = true
-      this.wishData.bid = bid
-      this.$axios.get("wish/title/")
-          .then(response=>{
-            this.wishlistTitle = response.data
-          }).catch(error =>{
-        console.log(error.response);
-      })
-    },
-    setWishData(wishlistTitle){
-      this.commitDialog = true
-      this.wishData.wishlistTitle = wishlistTitle;
+
+    // 컴포넌트 관련
+    setComponentData(bid){
+      this.dialog =true;
+      this.setBid = bid             //선택한 책 id를 child 컴포넌트에 보내기위해
+      this.setWishTab("WishList")   // 디폴트 페이지는 항상 WishList
+      this.updateComponentKey()     // 컴포넌트를 리로드 하기위해
     },
 
-    pushWishData(){
-      let data = {}
-      data.wishlistTitle = this.wishData.wishlistTitle;
-      data.bid = this.wishData.bid;
-      this.$axios.post("wish/",JSON.stringify(data),{
-        headers: {
-          "Content-Type": `application/json`,
-        },
-      }).then(response=>{
-        console.log(response.data.message)
-        if(response.data.success === true){
-          alert(this.wishData.wishlistTitle+" 에 성공적으로 등록했습니다!")
-          this.dialog = false
-        }else{
-          alert("이미 해당 책이 등록되어 있습니다. 다른 보관함을 이용해주세요.")
-        }
-        this.commitDialog=false
-      }).catch(error =>{
-        console.log(error.response);
-      })
-
+    updateComponentKey(){
+      this.componentKey +=1         //컴포넌트 리로드
     },
 
-
-    //add wishList
-    addWish(index){
-      alert("wishList" + index)
+    setWishTab(data){
+      this.wishTab = data
     },
+
+    //마이페이지 위시리스트 수정으로 넘어가기
+    pushInfoWishList(pushName){
+      console.log(pushName)
+      this.$router.push({name: 'InfoNavi', params: {AboutTab:pushName}})
+    }
 
   },
-  created() {
-    this.$eventBus.$on('mainKeyword',(payload)=> {
-      let index = this.selection.indexOf(payload);
-      if(index===-1) {
-        this.selection.push(payload)
-      }else{
-        this.selection.splice(index,1)
-      }
-    })
+  computed:{
+    component() {
+      const wishTab = this.wishTab;
+      return () => import(`@/views/wishlist/${wishTab}`);
+    }
   },
 
   mounted() {
@@ -697,15 +633,9 @@ v-container{
 .inner-chip span{
   font-size: 10px
 }
+li{
+  font-size: 12px;
+}
 
-.plus-icon{
-  font-size: 40px;
-  color: rgba(100,100,100,0.3);
-}
-.wish-a{
-  font-size: 14px;
-  color : rgba(40,40,40,0.5);
-  font-weight: bold;
-}
 
 </style>
