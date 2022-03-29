@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,18 +46,25 @@ public class WishlistService {
         return wishlistRepository.findWishlistByMid(getMemberId());
     }
 
-
-
     public ApiResponse<Wishlist> saveWishList(WishListDTO wishListDTO) {
+
+        // 로그인 id의 해당 위시리스트에 해당 책이 있는지 확인
         boolean result = wishlistRepository.existsWishlistByMidAndWishlistTitleAndBid(getMemberId() ,wishListDTO.getWishlistTitle() ,wishListDTO.getBid());
 
         if(!result) {
-            long newWishIdValue = this.getnewWishIdValue(wishlistRepository);
+            // 로그인 id에 해당 위시리스트가 있는지 확인
+            Integer getTitleNum = wishlistRepository.findTitleNum(getMemberId(),wishListDTO.getWishlistTitle());
+            if(getTitleNum==null){
+               getTitleNum = getNewTitleNumber(wishlistRepository);
+            }
+            long newWishIdValue = this.getNewWishIdValue(wishlistRepository);
+            //책정보 받아오기
             Book data = getWishBookData(bookRepository, wishListDTO.getBid());
 
             Wishlist postData = Wishlist.builder()
                     .wid(newWishIdValue)
                     .mid(getMemberId())
+                    .titleNum(getTitleNum)
                     .wishlistTitle(wishListDTO.getWishlistTitle())
                     .bid(wishListDTO.getBid())
                     .bookTitle(data.getBookTitle())
@@ -65,17 +73,20 @@ public class WishlistService {
                     .bookThumb(data.getBookThumb())
                     .build();
             wishlistRepository.save(postData);
-            return new ApiResponse<>(true,data.getBookTitle() +" is successfully save for" + wishListDTO.getWishlistTitle(), postData);
+            return new ApiResponse<>(true, data.getBookTitle() + " is successfully save for" + wishListDTO.getWishlistTitle(), postData);
+
         }else{
             return new ApiResponse<>(false, "이미 등록된 책입니다",null);
         }
+
     }
 
     private Book getWishBookData(BookRepository bookRepository, long bid) {
         return bookRepository.getWishBook(bid);
     }
 
-    private long getnewWishIdValue(WishlistRepository wishlistRepository) {
+    private long getNewWishIdValue(WishlistRepository wishlistRepository) {
+        //새로운 Wish id를 정하는 로직
         long result;
         Wishlist wishOfMaxId = wishlistRepository.findTopByOrderByWidDesc();
         if (wishOfMaxId == null) {
@@ -89,6 +100,23 @@ public class WishlistService {
         return result;
     }
 
+    private Integer getNewTitleNumber(WishlistRepository wishlistRepository){
+        //새로운 TitleNum을 정하는 로직
+        int result;
+        Wishlist TitleOfMaxId = wishlistRepository.findTopByOrderByTitleNumDesc();
+        if (TitleOfMaxId == null) {
+            result = 1;
+            log.debug("no Title data, maxId is 1");
+        } else {
+            result = TitleOfMaxId.getTitleNum() + 1;
+            log.debug("maxIdFromTitleNum=" + TitleOfMaxId.getTitleNum());
+        }
+        log.debug("new Title Num=" + result);
+        return result;
+    }
+
+
+    //DELETE
     public ApiResponse<Wishlist> deleteWishList(int wid) {
         Optional<Wishlist> wishData = wishlistRepository.findWishlistByWid(wid);
         Wishlist data = wishData.orElseThrow(() -> new RuntimeException("no data"));
@@ -111,4 +139,15 @@ public class WishlistService {
         return true;
     }
 
+    //Delete Title
+    public ApiResponse<Wishlist> deleteWishListTitle(int titleNum) {
+        List<Long> ids = wishlistRepository.findWidList(getMemberId(),titleNum);
+        log.debug("Wid list : " + ids);
+        if(ids.size()==0){
+            return new ApiResponse<>(false,"no data");
+        }else {
+            wishlistRepository.deleteWishlistsByWidIn(ids);
+            return new ApiResponse<>(true, "title Number : " + titleNum + " is successfully deleted");
+        }
+    }
 }
