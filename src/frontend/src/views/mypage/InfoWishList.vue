@@ -73,7 +73,7 @@
                     <td>
                       <v-icon
                           small
-                          @click="setDeleteDialog(item.titleNum,item.wishlistTitle)"
+                          @click="setDeleteDialog(item.titleNum,item.wishlistTitle, 1)"
                       >
                         mdi-delete
                       </v-icon>
@@ -120,7 +120,7 @@
               <div
                   style="color: rgb(220,220,220); font-size: 15px"
                   class="pt-6 d-flex flex-column align-center"
-              >"{{deleteTitle}}" 위시리스트를 삭제하시겠습니까?
+              >{{deleteTitleMsg}}
               </div>
             </v-card-text>
 
@@ -131,7 +131,7 @@
                   color=white
                   text
                   style="font-size: 16px"
-                  @click="deleteWishList()"
+                  @click="titleOrBook()"
               >
                 삭제
               </v-btn>
@@ -183,7 +183,6 @@
 
 
 
-
       <v-card-text>
         <v-layout wrap row justify-center>
           <v-flex
@@ -232,7 +231,7 @@
                 <v-btn
                     small
                     outlined
-                    @click="deleteItem(item.wid)"
+                    @click="setDeleteDialog(item.wid, item.bookTitle, 2)"
                     text
                     class="mt-2"
                     width="80"
@@ -246,6 +245,8 @@
           </v-flex>
         </v-layout>
       </v-card-text>
+
+
 
 
       <v-divider></v-divider>
@@ -293,13 +294,15 @@ export default {
     editWishData : '',
 
     //삭제창 관련
-    deleteTitle : '',
+    deleteType : null,
+    deleteTitleMsg : '',
     deleteNum : null,
     deleteDialog : false,
 
     //삭제 결과 관련
     resultMsg : '',
     msgDialog : false,
+
 
 
     headers: [
@@ -314,7 +317,6 @@ export default {
       { text: '판매 가격', value: 'bookSalePrice', width : 150 , align: 'start' },
       { test: '책 선택' ,value: 'wid' ,width : 100 , align: 'center'},
     ],
-
 
   }),
   methods: {
@@ -340,20 +342,32 @@ export default {
     },
 
     //delete Dialog 열고 삭제할 값 세팅
-    setDeleteDialog(titleNum, wishlistTitle){
-      this.deleteTitle = wishlistTitle
-      this.deleteNum = titleNum
+    setDeleteDialog(numId, title, deleteType){
+      if(deleteType === 1) {
+        this.deleteTitleMsg = "\"" + title + "\" 위시리스트를 삭제하시겠습니까?"
+      }else{
+        this.deleteTitleMsg =  "\"" + title + "\" 책을 위시리스트에서 삭제하시겠습니까?"
+      }
+      this.deleteType = deleteType
+      this.deleteNum = numId
       this.deleteDialog = true
+    },
+    // 책을 삭제? 카테고리를 삭제?
+    titleOrBook(){
+      if(this.deleteType ===1) {
+        this.deleteWishList()
+      }else {
+        this.deleteItem()
+      }
     },
 
     //삭제. 수행후 delete Dialog 닫기
     deleteWishList(){
       let titleNum = this.deleteNum
-      alert("delete : "  + titleNum + " and " + this.deleteTitle)
       this.$axios.delete("wish/title/"+titleNum)
           .then(response=>{
             console.log(response.data)
-            this.resultMsg ="\""+this.deleteTitle + "\"위시리스트가 성공적으로 삭제되었습니다."
+            this.resultMsg ="위시리스트가 성공적으로 삭제되었습니다."
             this.msgDialog = true
           }).catch(error =>{
             console.log(error.response);
@@ -366,24 +380,44 @@ export default {
     // 삭제 결과 메시지 닫기
     closeMsg(){
       this.msgDialog = false
+      this.updateComponentKey()   // 컴포넌트 업데이트를 위해 리 렌더링
       this.resetDeleteData()
     },
 
     // 삭제 수행중 세팅된 데이터 초기화
     resetDeleteData(){
       this.deleteNum = null
-      this.deleteTitle = ''
+      this.deleteTitleMsg = ''
+      this.deleteType = null
     },
 
-
+    
     infoEdit(){
       console.log("hi")
     },
     editItem(bid){
       alert("edit : "+bid)
     },
-    deleteItem(bid){
-      alert("delete : "+bid)
+
+    //책 삭제
+    deleteItem(){
+      let bid = this.deleteNum
+      this.$axios.delete("wish/"+bid)
+          .then(response=>{
+            console.log(response.data)
+            this.resultMsg ="선택한 책이 성공적으로 삭제되었습니다."
+            this.msgDialog = true
+          }).catch(error =>{
+            console.log(error.response);
+            this.resultMsg = "선택한 책 삭제를 실패했습니다."
+            this.msgDialog = true
+      })
+      this.deleteDialog = false
+    },
+
+    // 리 렌더링을 위해 부모 컴포넌트 Data 변경
+    updateComponentKey(){
+      this.$emit('updateChildKey')
     }
   },
 

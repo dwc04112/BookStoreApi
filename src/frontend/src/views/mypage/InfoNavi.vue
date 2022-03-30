@@ -69,9 +69,13 @@
             cols="12"
         >
           <v-card height="100vh" elevation="0">
-            <keep-alive>
-              <component :is="component"></component>
-            </keep-alive>
+
+              <component
+                  :is="component"
+                  :key="componentKey"
+                  @updateChildKey="updateComponentKey"
+              ></component>
+
           </v-card>
         </v-col>
       </v-row>
@@ -83,9 +87,11 @@
 
 
 <script>
+import InfoWishList from "@/views/mypage/InfoWishList";
 export default {
   name: "InfoNavi",
   props:["AboutTab"],
+  components: {InfoWishList},
   data () {
     return {
       selectedItem : null,
@@ -96,26 +102,37 @@ export default {
         ['mdi-delete', '위시리스트', 'InfoWishList'],
         ['mdi-alert-octagon', '위시리스트', 'InfoWishList'],
       ],
-      tab : "InfoMain"
-    }
-  },
-  computed:{
-    component() {
-      const tab = this.tab;
-      return () => import(`@/views/mypage/${tab}`);
+      moveTab : "InfoMain",
+
+      // 리 렌더링을 위해 부모 컴포넌트 Data 변경
+      componentKey : 0,
     }
   },
   methods : {
-    pushLink(tab){
-      if(tab == null){
+
+    pushLink(data){
+      if(data == null){
         console.log("tab is null")
       }else {
-        this.tab = tab
+        this.moveTab = data
       }
     },
     logout(){
       console.log("logout!!")
     },
+
+
+    // 리 렌더링을 위해 부모 컴포넌트 Data 변경
+    updateComponentKey() {
+      console.log("update reload")
+      this.componentKey +=1
+    }
+  },
+  computed:{
+    component() {
+      const moveTab = this.moveTab;
+      return () => import(`@/views/mypage/${moveTab}`);
+    }
   },
   mounted() {
     this.pushLink(this.AboutTab)
