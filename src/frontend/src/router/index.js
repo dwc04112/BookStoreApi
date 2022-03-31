@@ -7,6 +7,7 @@ Vue.use(VueRouter)
 
 const routes = [
     // Book
+
     {
         path: '/about',
         name: 'About',
@@ -32,7 +33,7 @@ const routes = [
         component: () =>  import('@/views/book/DetailView')
     },
 
-    
+
     {
         path: '/',
         name: 'Home',

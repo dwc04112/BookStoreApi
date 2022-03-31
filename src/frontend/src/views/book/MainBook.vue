@@ -118,7 +118,6 @@ export default {
     getBookInfo(){
       this.$axios.get('book/main')
           .then(response=>{
-            console.log(response.data);
             this.bookDatas = response.data
             for(let i =0; i<response.data.length; i++){
               this.keywords.push(response.data[i].bookKeyword.split(','))

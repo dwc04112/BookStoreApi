@@ -117,7 +117,23 @@
                           </v-icon>
                         </v-btn>
                         </template>
-                        <span>ADD Wish List</span>
+                        <span>위시리스트에 추가</span>
+                      </v-tooltip>
+
+                      <v-tooltip top color="green">
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-btn
+                              v-bind="attrs"
+                              v-on="on"
+                              icon
+                              @click.stop="detailView(book.bid)"
+                          >
+                            <v-icon color="green">
+                              mdi-book-open-variant
+                            </v-icon>
+                          </v-btn>
+                        </template>
+                        <span>책 보러가기</span>
                       </v-tooltip>
                     </v-card-actions>
 
@@ -563,7 +579,12 @@ export default {
     pushInfoWishList(pushName){
       console.log(pushName)
       this.$router.push({name: 'InfoNavi', params: {AboutTab:pushName}})
-    }
+    },
+
+    //책 보러가기
+    detailView(bid){
+      this.$router.push({name: 'DetailView' ,query: {bid}});
+    },
 
   },
   computed:{
