@@ -5,14 +5,16 @@
       <v-layout wrap row>
         <v-flex>
           <v-row justify="center">
-            <v-col cols="12" sm="8" class="mt-8">
+            <v-col cols="12" sm="9" class="mt-8">
               <v-tabs
                   v-model="tab"
-                  class="mb-2"
+                  class="mb-2 main-tabs"
                   background-color="transparent"
                   color="#6B4F4F"
+                  style="margin-top: -2%"
                   grow
                   centered
+
               >
                 <v-tab
                     v-for="(item,index) in detailTag"
@@ -20,7 +22,7 @@
                     class="category-tab"
                     @click="byCategory(item.num)"
                 >
-                  {{ item.main }}
+                  <span style="font-size: 14px">{{ item.main }}</span>
                 </v-tab>
               </v-tabs>
 
@@ -45,6 +47,7 @@
                           color="#6B4F4F"
                           class="top-chip"
                           @click="byCategory(subData.num)"
+                          small
                       ><span>{{subData.subMain}}</span>
                       </v-chip>
                     </v-chip-group>
@@ -54,7 +57,9 @@
             </v-col>
           </v-row>
 
-          <v-layout wrap row justify-center>
+
+          <!-- 리스트 목록록 -->
+         <v-layout wrap row justify-center>
             <v-flex
                 class="pb-4 pl-4"
                 xs12 sm6 md6
@@ -63,51 +68,132 @@
                 :key="index"
             >
               <v-card
-                  width="250px"
+                  width="160px"
                   elevation="2"
                   color="rgba(244, 223, 186, 0.5)"
               >
                 <v-img
                     :src="book.bookThumb"
-                    width="250px" height="390px"
+                    width="160px" height="250px"
                     @click="show[index].data = !show[index].data"
                 ></v-img>
 
                 <v-expand-transition>
                   <div v-show="show[index].data" style="text-align: center">
                     <v-divider></v-divider>
-                    <h3 class="pt-4" style="color: #505050"> {{book.bookTitle}} </h3>
-                    <v-card-text style="margin-top: -6%">
-                      <v-card-subtitle>{{book.bookAuthor}} | {{book.bookPublisher}}</v-card-subtitle>
-                      <v-chip-group
+                    <h5 class="pt-4" style="color: #505050"> {{book.bookTitle}} </h5>
+
+                      <v-card-subtitle class="expand-font">{{book.bookAuthor}} | {{book.bookPublisher}}</v-card-subtitle>
+
+                    <v-chip-group
                           active-class="primary--text"
                           multiple
                           column
                           v-model="selection"
                       >
                         <v-chip
+                            class="inner-chip"
                             v-for="keyword in keywords[index]"
                             :key="keyword"
                             :value="keyword"
                             outlined
                             small
-                        >{{keyword}}
+                        ><span>{{keyword}}</span>
                         </v-chip>
-                      </v-chip-group>
-                    </v-card-text>
+                    </v-chip-group>
+
+                    <v-divider></v-divider>
+                    <v-card-actions>
+                      <v-tooltip top color="pink">
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-btn
+                            v-bind="attrs"
+                            v-on="on"
+                            icon
+                            @click.stop="setComponentData(book.bid)"
+                        >
+                          <v-icon color="pink">
+                            mdi-heart
+                          </v-icon>
+                        </v-btn>
+                        </template>
+                        <span>ADD Wish List</span>
+                      </v-tooltip>
+                    </v-card-actions>
+
                   </div>
                 </v-expand-transition>
-
               </v-card>
             </v-flex>
           </v-layout>
 
 
+          <!--      컴포넌트 호출      -->
+          <v-container fluid>
+          <v-dialog
+              class="align-center justify-center align-content-center"
+              v-model="dialog"
+              max-width="600"
+          >
+            <v-card color="#FDF6EC">
+              <v-toolbar
+                  elevation="0"
+                  class="white--text"
+                  color="rgb(33,33,33)"
+              >
+                <v-card-title>나의 위시리스트</v-card-title>
+              </v-toolbar>
+
+              <component
+                  v-bind:selectBid="setBid"
+                  :key="componentKey"
+                  :is="component"
+                  @childKey="updateComponentKey"
+                  @pushTab="setWishTab"
+              ></component>
+
+
+              <v-card-text>
+                <div>
+                  <ul>
+                    <li>카테고리 추가는 메인페이지 > 책 등록시 가능합니다</li>
+                    <li>새로 만들어진 카테고리는 자동으로 공개처리됩니다.</li>
+                    <li>카테고리 관리는 마이페이지 > 위시리스트 > 나의 찜목록 으로 이동하시면 가능합니다.</li>
+                  </ul>
+                </div>
+              </v-card-text>
+              <v-divider></v-divider>
+              <v-card-actions>
+
+
+                <v-spacer></v-spacer>
+                <v-btn
+                    color=rgb(33,33,33)
+                    text
+                    @click="pushInfoWishList('InfoWishList')"
+                >
+                  <h4>내 보관함으로 이동</h4>
+                </v-btn>
+                <v-btn
+                    color=rgb(33,33,33)
+                    text
+                    @click="dialog = false"
+                >
+                  Close
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+        </v-container>
+
+
+
+        <!-- 하단바 -->
           <v-footer
               padless
               fixed
-              height="150%"
-              color="rgba(255,255,255,0.3)"
+              height="110%"
+              color="rgba(255,255,255,0.1)"
           >
             <v-layout
                 wrap row
@@ -120,14 +206,14 @@
               >
                 <v-btn
                     class="footer-btn"
-                    width="90px"
-                    height="90px"
+                    width="60px"
+                    height="60px"
                     @click="searchBook"
                     elevation="2"
                     absolute
                     icon
                 >
-                  <v-icon size="60">mdi-magnify</v-icon>
+                  <v-icon size="40">mdi-magnify</v-icon>
                 </v-btn>
               </v-flex>
               <v-flex
@@ -143,7 +229,7 @@
                         close
                         @click:close="removeChip(index)"
                         outlined
-                        large
+                        small
                     >
                       <span>{{tag}}</span>
                     </v-chip>
@@ -159,18 +245,19 @@
 </template>
 
 <script>
-
+import WishList from "@/views/wishlist/WishList";
 export default {
   name: "About",
+  components: {WishList},
   data: function (){
     return{
+
       bookDatas : [],
       keywords : [],
       selection : [],
-
       selectTag : '',
-      tab : null,
 
+      tab : null,
       absolute: true,
       overlay: false,
 
@@ -361,17 +448,26 @@ export default {
         },
 
       ],
-
       selectedMainTag : [],
       selectedSubTag : '',
 
 
+      show: [],             //book expand transition
+      dialog: false,        //wishlist Dialog
+
+
+
+      // = 컴포넌트 관련 Data
+      componentKey: 0,             // reload component
+      wishTab :'WishList',         // 보여줄 컴포넌트 값
+      setBid : '',                 // push to component
+
+
+      //rules
       rules:{
         max : v => (v && v.length <5) || '최대 5개 키워드까지 선택 가능합니다',
       },
 
-      show: [],
-      group: null,
     }},
   watch:{
     group () {
@@ -379,7 +475,8 @@ export default {
     },
   },
   methods: {
-    //전체 책
+
+    //전체 책 불러오기
     getBookInfo(){
       this.$axios.get('book/info')
       .then(response=>{
@@ -395,12 +492,13 @@ export default {
       })
     },
 
+    //footer Chip 삭제
     removeChip(index){
       this.selection.splice(index,1)
     },
 
 
-
+    // == 검색관련 ==
     //키워드로 검색
     searchBook(){
       this.selectTag=null     //선택된 detailTag 초기화
@@ -425,7 +523,7 @@ export default {
         })
       }
     },
-
+    //카테고리로 검색
     byCategory(num){
       this.selectTag=null
       if(num==null){
@@ -444,16 +542,35 @@ export default {
       }
     },
 
+
+    // 컴포넌트 관련
+    setComponentData(bid){
+      this.dialog =true;
+      this.setBid = bid             //선택한 책 id를 child 컴포넌트에 보내기위해
+      this.setWishTab("WishList")   // 디폴트 페이지는 항상 WishList
+      this.updateComponentKey()     // 컴포넌트를 리로드 하기위해
+    },
+
+    updateComponentKey(){
+      this.componentKey +=1         //컴포넌트 리로드
+    },
+
+    setWishTab(data){
+      this.wishTab = data
+    },
+
+    //마이페이지 위시리스트 수정으로 넘어가기
+    pushInfoWishList(pushName){
+      console.log(pushName)
+      this.$router.push({name: 'InfoNavi', params: {AboutTab:pushName}})
+    }
+
   },
-  created() {
-    this.$eventBus.$on('mainKeyword',(payload)=> {
-      let index = this.selection.indexOf(payload);
-      if(index===-1) {
-        this.selection.push(payload)
-      }else{
-        this.selection.splice(index,1)
-      }
-    })
+  computed:{
+    component() {
+      const wishTab = this.wishTab;
+      return () => import(`@/views/wishlist/${wishTab}`);
+    }
   },
 
   mounted() {
@@ -481,6 +598,7 @@ v-container{
 
 .footer-btn{
   margin-right: 50px;
+
   background-color: rgba(191, 146, 112, 0.5);
 }
 .footer-col{
@@ -494,19 +612,26 @@ v-container{
   color: #6B4F4F;
 }
 
-
 .footer-chip span{
-  font-size: 22px;
-  font-weight: bolder;
+  font-size: 15px;
 }
 .footer-chip.v-chip--outlined{
-  border-width: 3px;
+  border-width: 1.5px;
 }
 
 .top-chip span{
-  font-size: 16px;
+  margin-top: 2%;
+  font-size: 12px;
+  font-weight: bold;
 }
 
+
+.inner-chip span{
+  font-size: 10px
+}
+li{
+  font-size: 12px;
+}
 
 
 </style>

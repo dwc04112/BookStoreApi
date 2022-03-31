@@ -3,29 +3,39 @@ import axios from "axios";
 
 const memberStore = {
     state: {
+        mid : '',
         email: '',
         token: '',
+        nickName: '',
+        fullName: '',
     },
 
     mutations: {
-        login: function (state, data) {
+        loginData: function (state, data) {
             state.email = data.email
             state.token = data.token
             console.log("after email? : ", state.email)
         },
         resetState: function (state){
             console.log(state)
-        }
+        },
+        putUserInfo: function (state, data){
+            state.fullName = data.fullName
+            state.nickName = data.nickName
+            state.mid = data.mid
+            console.log(state)
+        },
+
     },
 
     actions: {
-        login ({commit}, payload){
+        login ({commit, dispatch}, payload){
             console.log("store :: "+payload)
             let data = {};
             data.email = JSON.parse(atob(payload.token.split('.')[1])).jti;
             data.token = payload.token
-            commit('login', data)
-
+            commit('loginData', data)
+            dispatch('getUserInfo', data.email)
         },
 
         logout({commit}){
@@ -39,6 +49,25 @@ const memberStore = {
                 })
         },
 
+        getUserInfo({commit}, context){
+            let data={};
+            data.email = context
+            axios.post('/user/info', JSON.stringify({"email":data.email}), {
+                headers: {
+                    "Content-Type": `application/json`,
+                },
+            })
+                .then((res) => {
+                    console.log(res.data)
+                    data.nickName = res.data.nickName
+                    data.fullName = res.data.fullName
+                    data.mid = res.data.mid
+                    commit('putUserInfo', data)
+                })
+                .catch((error)=>{
+                    console.log(error.res)
+                })
+        }
 
     },
 }

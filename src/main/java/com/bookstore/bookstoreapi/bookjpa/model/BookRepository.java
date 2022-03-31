@@ -1,10 +1,7 @@
 package com.bookstore.bookstoreapi.bookjpa.model;
 
 
-import com.bookstore.bookstoreapi.bookjpa.dto.BookDTO;
-import com.bookstore.bookstoreapi.bookjpa.dto.BookMainDTO;
-import com.bookstore.bookstoreapi.bookjpa.dto.BookMainDetailDTO;
-import com.bookstore.bookstoreapi.bookjpa.dto.BookMainDetailInterface;
+import com.bookstore.bookstoreapi.bookjpa.dto.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -25,6 +22,9 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 
     @Query("select mid From Book where bid= ?1")
     Long getMemberIdByBid(long bid);
+
+    @Query("select b From Book b where b.bid= ?1 and b.isDel='N'")
+    Book getWishBook(long bid);
 
     @Transactional
     @Modifying

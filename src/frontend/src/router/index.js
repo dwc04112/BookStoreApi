@@ -46,9 +46,39 @@ const routes = [
         component: () =>  import('@/views/exam')
     },
     {
-        path: '/MainBook',
+        path: '/mainBook',
         name: 'MainBook',
         component: () =>  import('@/views/MainBook')
+    },
+
+    // myPage
+    {
+        path: '/infoMain',
+        name: 'InfoMain',
+        component: () =>  import('@/views/mypage/InfoMain')
+    },
+    {
+        path: '/infoNavi',
+        name: 'InfoNavi',
+        component: () =>  import('@/views/mypage/InfoNavi'),
+        props: true
+    },
+    {
+        path: '/infoWishList',
+        name: 'InfoWishList',
+        component: () =>  import('@/views/mypage/InfoWishList')
+    },
+
+    //wishlist item
+    {
+        path: '/wishList',
+        name: 'WishList',
+        component: () =>  import('@/views/wishlist/WishList')
+    },
+    {
+        path: '/addWishList',
+        name: 'AddWishList',
+        component: () =>  import('@/views/wishlist/AddWishList')
     },
 ]
 

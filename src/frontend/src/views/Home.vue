@@ -1,15 +1,16 @@
-<template>
+<template >
     <v-container fluid  class="grid-list-sm pa-0">
           <v-row>
             <v-col>
+              <!--
               <nav class="nav" style="position: fixed; z-index: 6;">
                   <ul class="nav-menu">
                     <v-card
                         class = "menu-card"
-                        height=300px
-                        width=30px
-                        style="margin-left: 50%; background-color: rgba(255,255,255,0.4); margin-top: 35vh"
-                        elevation="3"
+                        height=120px
+                        width=15px
+                        style="margin-left: 50%; background-color: rgba(255,255,255,0.4); margin-top: 40vh"
+                        elevation="1"
                     >
                       <li @click="('li1')"><a id="li1" href="#home"><div class="div-menu-1"></div></a></li>
                       <li @click="('li2')"><a id="li2" href="#about"><div class="div-menu-2"></div></a></li>
@@ -17,12 +18,14 @@
                     </v-card>
                   </ul>
               </nav>
+              -->
             </v-col>
+
           </v-row>
 
 
           <div class="section">
-            <section id="home" style="background-color: #FBF8F1">
+            <section id="home" style="background-color: rgb(40,40,40);">
               <MainBook/>
             </section>
           </div>
@@ -142,7 +145,7 @@ div{
   z-index: 3;
 }
 .div-menu-1,.div-menu-2,.div-menu-3{
-  height: 100px;
+  height: 40px;
 }
 .div-menu-1{
   background-color: rgba(255,178,166,0.3);

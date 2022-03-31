@@ -68,8 +68,8 @@ export default {
   name: "Login.vue",
   data () {
     return {
-      email: 'kakao@admin.com',
-      password: 'kakao1111',
+      email: 'test@gmail.com',
+      password: '1234',
       userInfoData:[],
     }
   },
