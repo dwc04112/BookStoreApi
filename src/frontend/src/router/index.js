@@ -6,6 +6,7 @@ import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 
 const routes = [
+    // Book
     {
         path: '/about',
         name: 'About',
@@ -15,6 +16,23 @@ const routes = [
         component: () => import(/* webpackChunkName: "about" */ '../views/book/About.vue'),
         props: true,
     },
+    {
+        path: '/mainBook',
+        name: 'MainBook',
+        component: () =>  import('@/views/book/MainBook')
+    },
+    {
+        path: '/post',
+        name: 'PostBook',
+        component: () =>  import('@/views/book/PostBook')
+    },
+    {
+        path: '/detailView',
+        name: 'DetailView',
+        component: () =>  import('@/views/book/DetailView')
+    },
+
+    
     {
         path: '/',
         name: 'Home',
@@ -31,11 +49,6 @@ const routes = [
         component: () =>  import('@/views/Menu')
     },
     {
-        path: '/post',
-        name: 'PostBook',
-        component: () =>  import('@/views/book/PostBook')
-    },
-    {
         path: '/login',
         name: 'Login',
         component: () =>  import('@/views/Login')
@@ -44,11 +57,6 @@ const routes = [
         path: '/exam',
         name: 'exam',
         component: () =>  import('@/views/exam')
-    },
-    {
-        path: '/mainBook',
-        name: 'MainBook',
-        component: () =>  import('@/views/book/MainBook')
     },
 
     // myPage

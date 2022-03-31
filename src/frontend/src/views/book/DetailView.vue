@@ -1,10 +1,19 @@
 <template>
-
+<div>
+  Detail View
+</div>
 </template>
 
 <script>
 export default {
-  name: "DetailView"
+  name: "DetailView",
+  data: function (){
+    return{
+
+    }},
+  methods: {
+
+  },
 }
 </script>
 
