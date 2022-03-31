@@ -618,6 +618,9 @@ v-container{
 .footer-chip.v-chip--outlined{
   border-width: 1.5px;
 }
+.expand-font{
+  font-size: 10px;
+}
 
 .top-chip span{
   margin-top: 2%;
