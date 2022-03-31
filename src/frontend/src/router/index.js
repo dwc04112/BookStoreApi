@@ -12,7 +12,7 @@ const routes = [
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
-        component: () => import(/* webpackChunkName: "about" */ '../views/About.vue'),
+        component: () => import(/* webpackChunkName: "about" */ '../views/book/About.vue'),
         props: true,
     },
     {
@@ -33,7 +33,7 @@ const routes = [
     {
         path: '/post',
         name: 'PostBook',
-        component: () =>  import('@/views/PostBook')
+        component: () =>  import('@/views/book/PostBook')
     },
     {
         path: '/login',
@@ -48,7 +48,7 @@ const routes = [
     {
         path: '/mainBook',
         name: 'MainBook',
-        component: () =>  import('@/views/MainBook')
+        component: () =>  import('@/views/book/MainBook')
     },
 
     // myPage

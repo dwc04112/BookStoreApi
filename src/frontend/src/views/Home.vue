@@ -45,8 +45,8 @@
 import $ from 'jquery'
 
 import BestSeller from "@/views/BestSeller";
-import About from "@/views/About";
-import MainBook from "@/views/MainBook";
+import About from "@/views/book/About";
+import MainBook from "@/views/book/MainBook";
 
 
 export default {
