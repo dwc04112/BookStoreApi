@@ -1,7 +1,8 @@
-<template>
+<template >
     <v-container fluid  class="grid-list-sm pa-0">
           <v-row>
             <v-col>
+              <!--
               <nav class="nav" style="position: fixed; z-index: 6;">
                   <ul class="nav-menu">
                     <v-card
@@ -17,12 +18,14 @@
                     </v-card>
                   </ul>
               </nav>
+              -->
             </v-col>
+
           </v-row>
 
 
           <div class="section">
-            <section id="home" style="background-color: #FBF8F1">
+            <section id="home" style="background-color: rgb(40,40,40);">
               <MainBook/>
             </section>
           </div>

@@ -193,7 +193,7 @@
               padless
               fixed
               height="110%"
-              color="rgba(255,255,255,0.3)"
+              color="rgba(255,255,255,0.1)"
           >
             <v-layout
                 wrap row
