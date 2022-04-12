@@ -1,7 +1,6 @@
 <template>
   <v-container fluid style="padding: 0">
     <v-row>
-
         <v-col>
           <div class="pl-12">
             <div
@@ -27,14 +26,12 @@
         </v-col>
 
 
-
       <transition name="sub-slide" mode="in-out">
         <v-col
-            cols="5" sm="4" md="4"
+            cols="6" sm="4" md="4"
             color="grey lighten-3"
             v-show="show.data"
         >
-
           <div
               style="background-color: rgb(40,40,40); text-align: center; height: 100vh;">
 

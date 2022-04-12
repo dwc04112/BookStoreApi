@@ -54,11 +54,7 @@ const routes = [
         name: 'Login',
         component: () =>  import('@/views/Login')
     },
-    {
-        path: '/exam',
-        name: 'exam',
-        component: () =>  import('@/views/exam')
-    },
+
 
     // myPage
     {
@@ -88,6 +84,19 @@ const routes = [
         path: '/addWishList',
         name: 'AddWishList',
         component: () =>  import('@/views/wishlist/AddWishList')
+    },
+
+
+    //ex
+    {
+        path: '/exam',
+        name: 'exam',
+        component: () =>  import('@/views/exam')
+    },
+    {
+        path: '/exam2',
+        name: 'exam2',
+        component: () =>  import('@/views/exam2')
     },
 ]
 
