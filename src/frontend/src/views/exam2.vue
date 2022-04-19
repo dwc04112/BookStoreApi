@@ -1,9 +1,10 @@
 <template>
   <v-container fluid style="padding: 0">
 
+
     <!-- 상단 카테고리 검색 -->
-    <v-row justify="center" style="height: 120px;">
-      <v-col cols="12" sm="9" class="mt-8">
+    <v-row justify="center">
+      <v-col cols="12" md="8" style="height: 60px" >
         <v-tabs
             v-model="tab"
             class="mb-2 main-tabs"
@@ -22,12 +23,13 @@
             <span style="font-size: 14px">{{ item.main }}</span>
           </v-tab>
         </v-tabs>
-
-        <v-layout justify-center>
+      </v-col>
+      <v-col  cols="12" md="8"
+              style="height: 50px"
+              class="align-center justify-center d-flex mb-4"
+      >
           <v-tabs-items
               v-model="tab"
-              style="background-color: transparent;"
-              class="mb-3"
           >
             <v-tab-item
                 v-for="(item,index) in detailTag"
@@ -50,10 +52,94 @@
               </v-chip-group>
             </v-tab-item>
           </v-tabs-items>
-        </v-layout>
       </v-col>
     </v-row>
 
+
+    <!-- 상단 키워드 -->
+    <v-row  class="high-row">
+      <v-col cols="2" md="2">
+        <v-card style="z-index: 1" elevation="0" width="200px">
+          <v-list-group>
+            <template v-slot:activator>
+              <v-list-item-title>{{detailTag[selectedMainTag].main}} {{selectedSubTag}}</v-list-item-title>
+            </template>
+
+          <v-list>
+            <v-list-group
+                v-for="(item,index) in detailTag"
+                :key="index"
+                no-action
+                @click="selectedMainTag=index; selectedSubTag=null;"
+            >
+              <template v-slot:activator>
+                <v-list-item-content>
+                  <v-list-item-title
+                      v-text="item.main"
+                  ></v-list-item-title>
+                </v-list-item-content>
+              </template>
+
+              <v-list-item
+                  dense
+                  link
+                  v-for="(child, childIndex) in item.sub"
+                  :key="childIndex"
+                  @click="selectedSubTag=child.subMain"
+              >
+                <v-list-item-content>
+                  <v-list-item-title v-text="child.subMain"></v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+
+            </v-list-group>
+          </v-list>
+
+          </v-list-group>
+
+        </v-card>
+      </v-col>
+
+      <v-col cols="3" md="3">
+        <v-text-field
+            class="pl-8"
+            filled
+            rounded
+            dense
+            color="rgb(40,40,40)"
+            outlined
+        ></v-text-field>
+      </v-col>
+
+      <v-col cols="2" md="1">
+        <v-btn
+            class="high-icon"
+            @click="searchBook"
+            absolute
+            icon
+            outlined
+            width="40"
+            height="40"
+            color="rgb(40,40,40)"
+        >
+          <v-icon size="30">mdi-magnify</v-icon>
+        </v-btn>
+      </v-col>
+
+      <v-col cols="6">
+        <v-chip
+            class="high-chip ml-3 mt-1"
+            v-for="(tag,index) in searchByChip"
+            :key="tag"
+            color="rgb(40,40,40)"
+            close
+            @click:close="removeChip(index)"
+            outlined
+        >
+          <span>{{tag}}</span>
+        </v-chip>
+      </v-col>
+    </v-row>
 
     <!-- 중간부분 책 리스트 -->
     <v-row>
@@ -116,23 +202,20 @@
 
               <v-card-subtitle style="color: rgb(220,220,220)">{{selectBook.bookAuthor}} | {{selectBook.bookPublisher}}</v-card-subtitle>
 
-              <v-chip-group
-                  active-class="primary--text"
-                  multiple
-                  column
-                  v-model="selection"
-              >
+              <div>
                 <v-chip
-                    class="inner-chip"
+                    class="inner-chip ma-1"
                     v-for="keyword in selectKeywords"
                     :key="keyword"
-                    :value="keyword.data"
+                    :value="keyword"
                     outlined
                     color="rgb(220,220,220)"
                     small
-                ><span>{{keyword}}</span>
+                    @click="insertChip(keyword)"
+                >
+                  <span>{{keyword}}</span>
                 </v-chip>
-              </v-chip-group>
+              </div>
 
 
               <v-divider></v-divider>
@@ -245,7 +328,7 @@ export default {
   data: () => ({
     //메인 데이터
     bookDatas : [],
-    selection : [], //chip
+    searchByChip : [], //chip
     selectTag : '', //tag
 
     //선택된 책 보기
@@ -258,7 +341,7 @@ export default {
     tab : null,
     detailTag : [
       {
-        main: '전체'
+        main : '전체'
       },
       {
         main: '소설',
@@ -276,7 +359,7 @@ export default {
           {num: '0009', subMain: '기타나라소설'},
           {num: '0010', subMain: '고전소설'},
           {num: '0011', subMain: '장르소설'},
-        ]
+        ],
       },
       {
         main : '시/에세이',
@@ -287,7 +370,7 @@ export default {
           {num: '0102', subMain: '나라별 에세이'},
           {num: '0103', subMain: '인물/자전적에세이'},
           {num: '0104', subMain: '청소년 시/에세이'}
-        ]
+        ],
       },
       {
         main : '자기계발',
@@ -297,7 +380,7 @@ export default {
           {num: '0201', subMain: '비즈니스'},
           {num: '0202', subMain: '능력개발'},
           {num: '0203', subMain: '화술/협상'},
-        ]
+        ],
       },
       {
         main : '인문',
@@ -426,8 +509,15 @@ export default {
       },
 
     ],
-    selectedMainTag : [],
-    selectedSubTag : '',
+    selectedMainTag : 0,
+    selectedSubTag : null,
+
+
+    //상단 chip바 관련
+    admins: [
+      ['Management', 'mdi-account-multiple-outline'],
+      ['Settings', 'mdi-cog-outline'],
+    ],
 
 
     //컴포넌트 관련 데이터 (Dialog)
@@ -465,6 +555,30 @@ export default {
       this.selectKeywords = book.bookKeyword.split(',')
     },
 
+    // == 검색관련 ==
+    //키워드로 검색
+    searchBook(){
+      if(this.searchByChip.length>5){
+        alert("키워드는 5개 까지 선택 가능합니다")
+        this.searchByChip = []          //선택된 detailTag 초기화
+      }else{
+        let data = {}
+        data.bookKeyword = this.searchByChip.toString()
+        this.$axios.post("book/keyword",JSON.stringify(data),{
+          headers: {
+            "Content-Type": `application/json`,
+          },
+        }).then(response=>{
+          this.bookDatas = response.data
+          this.keywords = []
+          for(let i =0; i<response.data.length; i++){
+            this.keywords.push(response.data[i].bookKeyword.split(','))
+          }
+        }).catch(error =>{
+          console.log(error.response);
+        })
+      }
+    },
 
     //카테고리로 검색
     byCategory(num){
@@ -479,6 +593,19 @@ export default {
           console.log(error.response);
         })
       }
+    },
+
+    //상단 Chip 추가 & 삭제
+    insertChip(data){
+      if (this.searchByChip.indexOf(data) !== -1){
+        this.searchByChip.splice(this.searchByChip.indexOf(data),1)
+      }else {
+        this.searchByChip.push(data)
+      }
+    },
+    removeChip(index){
+      console.log(index)
+      this.searchByChip.splice(index,1)
     },
 
 
@@ -540,10 +667,26 @@ export default {
   color: #6B4F4F;
 }
 .top-chip span{
-  margin-top: 2%;
   font-size: 12px;
   font-weight: bold;
 }
+/* 상단 chip */
+.high-row{
+  height: 65px;
+  background-color: rgba(80,80,80,0.1);
+}
+.high-icon{
+  border-width: 1.5px;
+}
+.high-chip span{
+  color: black;
+}
+
+
+.high-chip.v-chip--outlined{
+  border-width: 1.5px;
+}
+
 /* 2.책 리스트 영역 */
 
 
