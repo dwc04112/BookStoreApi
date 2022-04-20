@@ -1,35 +1,78 @@
 <template>
-  <v-container fluid style="padding: 0">
+  <v-container fluid class="pa-0 ma-0">
+      <v-app-bar
+          fixed
+          color="#6A76AB"
+          dark
+          shrink-on-scroll
+          prominent
+          fade-img-on-scroll
+      >
+
+        <!-- 상단 키워드 -->
+        <v-spacer></v-spacer>
+        <v-col cols="8" md="5" class="pa-0 ma-0">
+          <v-autocomplete
+              class="pt-1"
+              v-model="searchByChip"
+              :items="searchByChip"
+              chips
+              full-width
+              hide-details
+              hide-no-data
+              hide-selected
+              outlined
+              multiple
+              dense
+              filled
+              rounded
+              single-line
+          ></v-autocomplete>
+        </v-col>
+        <v-btn
+            class="ml-2"
+            @click="searchBook"
+            icon
+        >
+          <v-icon>mdi-magnify</v-icon>
+        </v-btn>
+
+        <v-btn icon>
+          <v-icon>mdi-heart</v-icon>
+        </v-btn>
+        <v-btn icon>
+          <v-icon>mdi-dots-vertical</v-icon>
+        </v-btn>
+      </v-app-bar>
 
 
     <!-- 상단 카테고리 검색 -->
-    <v-row justify="center">
-      <v-col cols="12" md="8" style="height: 60px" >
-        <v-tabs
-            v-model="tab"
-            class="mb-2 main-tabs"
-            background-color="transparent"
-            color="#6B4F4F"
-            style="margin-top: -1%"
-            grow
-            centered
-        >
-          <v-tab
-              v-for="(item,index) in detailTag"
-              :key="index"
-              class="category-tab"
-              @click="byCategory(item.num)"
+    <div style="height: 150px"/>
+    <v-row justify="center" align="center">
+      <v-col cols="12" md="9">
+        <v-card elevation="0">
+          <v-tabs
+              v-model="tab"
+              class="mb-2 main-tabs"
+              background-color="transparent"
+              color="#6B4F4F"
+              style="margin-top: -1%"
+              grow
+              centered
           >
-            <span style="font-size: 14px">{{ item.main }}</span>
-          </v-tab>
-        </v-tabs>
-      </v-col>
-      <v-col  cols="12" md="8"
-              style="height: 50px"
-              class="align-center justify-center d-flex mb-4"
-      >
+            <v-tab
+                v-for="(item,index) in detailTag"
+                :key="index"
+                class="category-tab"
+                @click="byCategory(item.num)"
+            >
+              <span style="font-size: 14px">{{ item.main }}</span>
+            </v-tab>
+          </v-tabs>
+
           <v-tabs-items
               v-model="tab"
+              class="align-center justify-center d-flex"
           >
             <v-tab-item
                 v-for="(item,index) in detailTag"
@@ -52,100 +95,16 @@
               </v-chip-group>
             </v-tab-item>
           </v-tabs-items>
-      </v-col>
-    </v-row>
-
-
-    <!-- 상단 키워드 -->
-    <v-row  class="high-row">
-      <v-col cols="2" md="2">
-        <v-card style="z-index: 1" elevation="0" width="200px">
-          <v-list-group>
-            <template v-slot:activator>
-              <v-list-item-title>{{detailTag[selectedMainTag].main}} {{selectedSubTag}}</v-list-item-title>
-            </template>
-
-          <v-list>
-            <v-list-group
-                v-for="(item,index) in detailTag"
-                :key="index"
-                no-action
-                @click="selectedMainTag=index; selectedSubTag=null;"
-            >
-              <template v-slot:activator>
-                <v-list-item-content>
-                  <v-list-item-title
-                      v-text="item.main"
-                  ></v-list-item-title>
-                </v-list-item-content>
-              </template>
-
-              <v-list-item
-                  dense
-                  link
-                  v-for="(child, childIndex) in item.sub"
-                  :key="childIndex"
-                  @click="selectedSubTag=child.subMain"
-              >
-                <v-list-item-content>
-                  <v-list-item-title v-text="child.subMain"></v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-
-            </v-list-group>
-          </v-list>
-
-          </v-list-group>
-
         </v-card>
       </v-col>
-
-      <v-col cols="3" md="3">
-        <v-text-field
-            class="pl-8"
-            filled
-            rounded
-            dense
-            color="rgb(40,40,40)"
-            outlined
-        ></v-text-field>
-      </v-col>
-
-      <v-col cols="2" md="1">
-        <v-btn
-            class="high-icon"
-            @click="searchBook"
-            absolute
-            icon
-            outlined
-            width="40"
-            height="40"
-            color="rgb(40,40,40)"
-        >
-          <v-icon size="30">mdi-magnify</v-icon>
-        </v-btn>
-      </v-col>
-
-      <v-col cols="6">
-        <v-chip
-            class="high-chip ml-3 mt-1"
-            v-for="(tag,index) in searchByChip"
-            :key="tag"
-            color="rgb(40,40,40)"
-            close
-            @click:close="removeChip(index)"
-            outlined
-        >
-          <span>{{tag}}</span>
-        </v-chip>
-      </v-col>
     </v-row>
 
+
     <!-- 중간부분 책 리스트 -->
-    <v-row>
+    <v-row  style="background-color: #00b0ff;">
       <!--List Card-->
-      <v-col>
-        <div style="text-align: center">
+      <v-col style="background-color: #00c853" class="no-gutters">
+        <div style="text-align: center" >
           <div
               style="display: inline-block;"
               class="pa-3"
@@ -169,89 +128,90 @@
           </div>
         </div>
       </v-col>
-
+    
       <!--Transition Select-->
-      <transition name="sub-slide" mode="in-out">
+      <transition name="sub-slide" mode="in-out" >
         <v-col
-            style="padding: 0"
+            class="pa-0 ma-0"
             cols="6" sm="4" md="4"
             color="grey lighten-3"
             v-show="show.data"
         >
           <div
-              style="background-color: rgb(40,40,40); text-align: center; height: calc(100vh - 109px);">
-
-            <v-card-actions class="pr-5 pt-5">
-              <v-spacer></v-spacer>
-              <v-btn
-                  icon
-                  color="rgb(220,220,220)"
-                  @click.stop="show.data =false"
-              >
-                <v-icon size="40px">mdi-close</v-icon>
-              </v-btn>
-            </v-card-actions>
-
-            <div class="align-center d-flex flex-column pt-8">
-              <v-img
-                  :src="selectBook.bookThumb"
-                  style=" width: 200px"
-              ></v-img>
-
-              <h4 class="pt-4" style="color: rgb(220,220,220)"> {{selectBook.bookTitle}} </h4>
-
-              <v-card-subtitle style="color: rgb(220,220,220)">{{selectBook.bookAuthor}} | {{selectBook.bookPublisher}}</v-card-subtitle>
-
-              <div>
-                <v-chip
-                    class="inner-chip ma-1"
-                    v-for="keyword in selectKeywords"
-                    :key="keyword"
-                    :value="keyword"
-                    outlined
+            class="select-book"
+          >
+            <div class="inner-select-book">
+              <v-card-actions class="pr-5 pt-5">
+                <v-spacer></v-spacer>
+                <v-btn
+                    icon
                     color="rgb(220,220,220)"
-                    small
-                    @click="insertChip(keyword)"
+                    @click.stop="show.data =false"
                 >
-                  <span>{{keyword}}</span>
-                </v-chip>
-              </div>
-
-
-              <v-divider></v-divider>
-              <v-card-actions>
-                <v-tooltip top color="pink">
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn
-                        v-bind="attrs"
-                        v-on="on"
-                        icon
-                        @click.stop="setComponentData(selectBook.bid)"
-                    >
-                      <v-icon color="pink">
-                        mdi-heart
-                      </v-icon>
-                    </v-btn>
-                  </template>
-                  <span>위시리스트에 추가</span>
-                </v-tooltip>
-
-                <v-tooltip top color="green">
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn
-                        v-bind="attrs"
-                        v-on="on"
-                        icon
-                        @click.stop="detailView(selectBook.bid)"
-                    >
-                      <v-icon color="green">
-                        mdi-book-open-variant
-                      </v-icon>
-                    </v-btn>
-                  </template>
-                  <span>책 보러가기</span>
-                </v-tooltip>
+                  <v-icon size="40px">mdi-close</v-icon>
+                </v-btn>
               </v-card-actions>
+
+              <div class="align-center d-flex flex-column pt-8">
+                <v-img
+                    :src="selectBook.bookThumb"
+                    style=" width: 200px"
+                ></v-img>
+
+                <h4 class="pt-4" style="color: rgb(220,220,220)"> {{selectBook.bookTitle}} </h4>
+
+                <v-card-subtitle style="color: rgb(220,220,220)">{{selectBook.bookAuthor}} | {{selectBook.bookPublisher}}</v-card-subtitle>
+
+                <div>
+                  <v-chip
+                      class="inner-chip ma-1"
+                      v-for="keyword in selectKeywords"
+                      :key="keyword"
+                      :value="keyword"
+                      outlined
+                      color="rgb(220,220,220)"
+                      small
+                      @click="insertChip(keyword)"
+                  >
+                    <span>{{keyword}}</span>
+                  </v-chip>
+                </div>
+
+                <v-divider></v-divider>
+                <v-card-actions>
+                  <v-tooltip top color="pink">
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-btn
+                          v-bind="attrs"
+                          v-on="on"
+                          icon
+                          @click.stop="setComponentData(selectBook.bid)"
+                      >
+                        <v-icon color="pink">
+                          mdi-heart
+                        </v-icon>
+                      </v-btn>
+                    </template>
+                    <span>위시리스트에 추가</span>
+                  </v-tooltip>
+
+                  <v-tooltip top color="green">
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-btn
+                          v-bind="attrs"
+                          v-on="on"
+                          icon
+                          @click.stop="detailView(selectBook.bid)"
+                      >
+                        <v-icon color="green">
+                          mdi-book-open-variant
+                        </v-icon>
+                      </v-btn>
+                    </template>
+                    <span>책 보러가기</span>
+                  </v-tooltip>
+                </v-card-actions>
+              </div>
             </div>
           </div>
         </v-col>
@@ -259,7 +219,7 @@
 
 
       <!--      컴포넌트 호출      -->
-      <v-container fluid>
+      <v-container fluid class="pa-0 ma-0">
         <v-dialog
             class="align-center justify-center align-content-center"
             v-model="dialog"
@@ -313,10 +273,7 @@
         </v-dialog>
       </v-container>
 
-
     </v-row>
-
-
   </v-container>
 </template>
 
@@ -509,8 +466,8 @@ export default {
       },
 
     ],
-    selectedMainTag : 0,
-    selectedSubTag : null,
+    topSelected : [],
+    items: ['Trevor Handsen', 'Alex Nelson'],
 
 
     //상단 chip바 관련
@@ -560,7 +517,7 @@ export default {
     searchBook(){
       if(this.searchByChip.length>5){
         alert("키워드는 5개 까지 선택 가능합니다")
-        this.searchByChip = []          //선택된 detailTag 초기화
+       // this.searchByChip = []          //선택된 detailTag 초기화
       }else{
         let data = {}
         data.bookKeyword = this.searchByChip.toString()
@@ -649,6 +606,21 @@ export default {
       return () => import(`@/views/wishlist/${wishTab}`);
     }
   },
+  created() {
+    const content = document.querySelector('.book-list');
+    const wing = document.querySelector('.select-book');
+
+    // 컨텐츠 영역부터 브라우저 최상단까지의 길이 구하기
+    const contentTop = content.getBoundingClientRect().top + window.scrollY;
+
+    window.addEventListener('scroll', function(){
+      if(window.scrollY >= contentTop){
+        wing.classList.add('fixed');
+      }else{
+        wing.classList.remove('fixed');
+      }
+    });
+  },
 
   mounted() {
     this.getBookInfo()
@@ -670,11 +642,23 @@ export default {
   font-size: 12px;
   font-weight: bold;
 }
-/* 상단 chip */
-.high-row{
-  height: 65px;
-  background-color: rgba(80,80,80,0.1);
+
+.top-slide-enter{
+  transform: translateY(-50px);
+  opacity: 1;
 }
+.top-slide-enter-active,
+.top-slide-leave-active {
+  transition: all 0.5s ease;
+}
+.top-slide-leave-to {
+  transform: translateY(-50px);
+  opacity: 1;
+}
+
+
+/* 상단 chip */
+
 .high-icon{
   border-width: 1.5px;
 }
@@ -691,10 +675,18 @@ export default {
 
 
 /* 선택한 책 영역 */
-.right-section{
-  display: block;
-  position: relative;
+.select-book{
+  background-color: rgb(40,40,40);
+  text-align: center;
+  height: 100vh;
+  position: sticky;
+  top: 55px;
 }
+.inner-select-book{
+  position: sticky;
+  top: 55px;
+}
+
 .sub-slide-enter{
   transform: translateX(400px);
   opacity: 1;
