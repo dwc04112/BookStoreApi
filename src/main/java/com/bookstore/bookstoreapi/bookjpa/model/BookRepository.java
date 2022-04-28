@@ -2,6 +2,7 @@ package com.bookstore.bookstoreapi.bookjpa.model;
 
 
 import com.bookstore.bookstoreapi.bookjpa.dto.*;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -19,6 +20,13 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     Optional<Book> findBookByBidAndIsDel(long bid, String isDel);
 
     Book findTopByOrderByBidDesc();
+
+    // List<BookMainDTO> findBookByBookTitleContainingAndIsDel(String searchTitle, String IsDel);
+    //List<BookMainDTO> findBookByBookTitleRegexAndIsDel(String searchTitle, String IsDel);
+
+    @Query(value = "select b.bid, b.bookThumb ,b.bookTitle ,b.bookKeyword, b.bookAuthor, b.bookPublisher From Book b where (b.bookTitle REGEXP :searchTitle)", nativeQuery = true)
+    List<BookMainInterface> searchByRegExp(@Param("searchTitle") String searchTitle);
+
 
     @Query("select mid From Book where bid= ?1")
     Long getMemberIdByBid(long bid);

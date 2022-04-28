@@ -1,34 +1,76 @@
 <template>
   <v-container fluid class="pa-0 ma-0">
+
+    <!-- 상단 검색바 -->
       <v-app-bar
           fixed
-          color="#6A76AB"
+          color="rgb(40,40,40)"
           dark
           shrink-on-scroll
-          prominent
-          fade-img-on-scroll
       >
-
-        <!-- 상단 키워드 -->
         <v-spacer></v-spacer>
-        <v-col cols="8" md="5" class="pa-0 ma-0">
-          <v-autocomplete
-              class="pt-1"
-              v-model="searchByChip"
-              :items="searchByChip"
-              chips
-              full-width
-              hide-details
-              hide-no-data
-              hide-selected
-              outlined
-              multiple
-              dense
+        <v-col cols="10" md="5" class="pa-0 ma-0 pt-1" v-click-outside="onClickOutside">
+          <v-text-field
+              v-model="inputMsg"
               filled
+              outlined
               rounded
-              single-line
-          ></v-autocomplete>
+              dense
+              @focus="autoSearchList = true"
+          >
+          </v-text-field>
+          <transition name="top-slide" mode="in-out">
+            <div
+                class="justify-center align-center flex-column d-flex"
+            >
+            <v-list class="pa-0 ma-0 search-list" v-show="autoSearchList" light>
+              <v-list-item-group>
+
+                <v-hover v-slot="{ hover }"
+                         v-for="(item,index) in completeData"
+                         :key="index"
+                >
+
+                  <v-list-item
+                      class="pa-3 pl-5 top-list"
+                      :class="{ 'on-hover': hover }"
+                      @click="inputMsg=item.bookTitle"
+                  >
+                    <v-card
+                        class="search-list-img"
+                        elevation="1"
+                        tile
+                    >
+                      <img
+                          :src="item.bookThumb"
+                          alt="bookThumb"
+                          height="100%"
+                          @click="detailView(item.bid)"
+                      >
+                    </v-card>
+
+                    <v-list-item-content class="pl-8">
+                      <v-list-item-title
+                      >
+                        <span class="search-list-title" @click="detailView(item.bid)"> {{item.bookTitle}} </span>
+                      </v-list-item-title>
+
+                      <v-list-item-subtitle class="pt-2">
+                        <span class="search-list-subtitle"> {{ item.bookAuthor }} | {{item.bookPublisher}}</span>
+                      </v-list-item-subtitle>
+                    </v-list-item-content>
+
+
+                  </v-list-item>
+                </v-hover>
+
+              </v-list-item-group>
+            </v-list>
+            </div>
+          </transition>
         </v-col>
+
+
         <v-btn
             class="ml-2"
             @click="searchBook"
@@ -37,26 +79,25 @@
           <v-icon>mdi-magnify</v-icon>
         </v-btn>
 
-        <v-btn icon>
+        <v-btn class="top-icon" icon>
           <v-icon>mdi-heart</v-icon>
         </v-btn>
         <v-btn icon>
           <v-icon>mdi-dots-vertical</v-icon>
         </v-btn>
+
       </v-app-bar>
 
 
     <!-- 상단 카테고리 검색 -->
-    <div style="height: 150px"/>
-    <v-row justify="center" align="center">
-      <v-col cols="12" md="9">
-        <v-card elevation="0">
+    <div style="height: 150px"></div>
+    <v-row class="justify-center align-center">
+      <v-col cols="12" md="9" class="pa-0 ma-0">
           <v-tabs
               v-model="tab"
               class="mb-2 main-tabs"
               background-color="transparent"
-              color="#6B4F4F"
-              style="margin-top: -1%"
+              color="rgb(40,40,40)"
               grow
               centered
           >
@@ -81,12 +122,13 @@
               <v-chip-group
                   active-class="primary--text"
                   v-model="selectTag"
+                  class="mb-1"
               >
                 <v-chip
                     v-for="(subData,subIndex) in item.sub"
                     :key="subIndex"
                     outlined
-                    color="#6B4F4F"
+                    color="rgb(40,40,40)"
                     class="top-chip"
                     @click="byCategory(subData.num)"
                     small
@@ -95,15 +137,13 @@
               </v-chip-group>
             </v-tab-item>
           </v-tabs-items>
-        </v-card>
       </v-col>
     </v-row>
 
-
     <!-- 중간부분 책 리스트 -->
-    <v-row  style="background-color: #00b0ff;">
+    <v-row >
       <!--List Card-->
-      <v-col style="background-color: #00c853" class="no-gutters">
+      <v-col class="no-gutters">
         <div style="text-align: center" >
           <div
               style="display: inline-block;"
@@ -128,7 +168,7 @@
           </div>
         </div>
       </v-col>
-    
+
       <!--Transition Select-->
       <transition name="sub-slide" mode="in-out" >
         <v-col
@@ -278,7 +318,7 @@
 </template>
 
 <script>
-
+import vClickOutside from 'v-click-outside'
 export default {
   name: "exam2",
 
@@ -466,15 +506,10 @@ export default {
       },
 
     ],
-    topSelected : [],
-    items: ['Trevor Handsen', 'Alex Nelson'],
+    completeData : [],
+    inputMsg : '',
+    autoSearchList : false,
 
-
-    //상단 chip바 관련
-    admins: [
-      ['Management', 'mdi-account-multiple-outline'],
-      ['Settings', 'mdi-cog-outline'],
-    ],
 
 
     //컴포넌트 관련 데이터 (Dialog)
@@ -483,10 +518,27 @@ export default {
     wishTab :'WishList',         // 보여줄 컴포넌트 값
     setBid : '',                 // push to component
 
-  }),
 
+  }),
+  props: ["itemData"],
+  watch: {
+    inputMsg(val) {
+      if (!val) {
+        this.completeData=[]
+      }
+      this.fetchEntriesDebounced()
+    },
+  },
+
+  directives: {
+    clickOutside: vClickOutside.directive
+  },
 
   methods: {
+    onClickOutside () {
+      this.autoSearchList = false
+    },
+
     //Get Main Book Info
     getBookInfo(){
       this.$axios.get('book/info')
@@ -537,6 +589,40 @@ export default {
       }
     },
 
+
+    /*
+    * 자동완성
+    * */
+    //DB에 불필요한 데이터 입력 방지위해 입력 기다리기
+    fetchEntriesDebounced() {
+      this.completeData = null;
+      // cancel pending call
+      clearTimeout(this._timerId)
+      // delay new call 500ms
+      this._timerId = setTimeout(() => {
+        // maybe : this.fetch_data()
+        this.completeSearch()
+      }, 500)
+    },
+    //자동완성 기능
+    completeSearch(){
+      let str = this.inputMsg
+      str = str.trim()                                             //양끝 공백 제거
+      str = str.replace(/\s/g,'+')            //스페이스바 +로 치환
+      const reg = /[^가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9|+]/.test(str);         //특문검사 정규식
+      if(!reg && str !== ""){
+          this.$axios.get("book/complete/" + str)
+            .then(response => {
+              this.completeData = response.data
+            }).catch(error => {
+          console.log(error.response);
+        })
+      }
+    },
+
+
+
+
     //카테고리로 검색
     byCategory(num){
       this.selectTag=null
@@ -566,6 +652,8 @@ export default {
     },
 
 
+
+
     /*
     * 컴포넌트 관련 메소드
     *
@@ -590,6 +678,7 @@ export default {
       console.log(pushName)
       this.$router.push({name: 'InfoNavi', params: {AboutTab:pushName}})
     },
+
     //책 보러가기
     detailView(bid){
       this.$router.push({name: 'DetailView' ,query: {bid}});
@@ -605,21 +694,6 @@ export default {
       const wishTab = this.wishTab;
       return () => import(`@/views/wishlist/${wishTab}`);
     }
-  },
-  created() {
-    const content = document.querySelector('.book-list');
-    const wing = document.querySelector('.select-book');
-
-    // 컨텐츠 영역부터 브라우저 최상단까지의 길이 구하기
-    const contentTop = content.getBoundingClientRect().top + window.scrollY;
-
-    window.addEventListener('scroll', function(){
-      if(window.scrollY >= contentTop){
-        wing.classList.add('fixed');
-      }else{
-        wing.classList.remove('fixed');
-      }
-    });
   },
 
   mounted() {
@@ -642,20 +716,30 @@ export default {
   font-size: 12px;
   font-weight: bold;
 }
-
-.top-slide-enter{
-  transform: translateY(-50px);
-  opacity: 1;
-}
-.top-slide-enter-active,
-.top-slide-leave-active {
-  transition: all 0.5s ease;
-}
-.top-slide-leave-to {
-  transform: translateY(-50px);
-  opacity: 1;
+.top-list.on-hover {
+  background-color: rgba(0, 85, 85, 0.1);
 }
 
+
+.search-list{
+  transform: translateY(-22px);
+  width: 95%;
+  outline: rgb(40,40,40) solid 2px;
+}
+.search-list-title{
+  color: rgb(40,40,40);
+  font-weight: bold;
+}
+.search-list-title:hover{
+  text-decoration: underline;
+}
+.search-list-subtitle{
+  color: rgb(60,60,60);
+}
+.search-list-img{
+  height: 90px;
+  overflow: hidden;
+}
 
 /* 상단 chip */
 
@@ -700,6 +784,26 @@ export default {
   opacity: 1;
 }
 @media screen and (max-width: 768px){
+  /* 최상단 검색 */
+  .search-list{
+    transform: translateY(-22px);
+    width: 87%;
+  }
+  .top-icon{
+    display: none;
+  }
+  .search-list-title{
+    font-size: 14px;
+  }
+  .search-list-subtitle{
+    font-size: 12px;
+  }
+  .search-list-img{
+    height: 60px;
+  }
+
+
+
   .right-section{
     display: none;
     position: absolute;

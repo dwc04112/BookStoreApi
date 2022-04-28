@@ -1,10 +1,7 @@
 package com.bookstore.bookstoreapi.bookjpa.service;
 
 
-import com.bookstore.bookstoreapi.bookjpa.dto.BookDTO;
-import com.bookstore.bookstoreapi.bookjpa.dto.BookMainDTO;
-import com.bookstore.bookstoreapi.bookjpa.dto.BookMainDetailDTO;
-import com.bookstore.bookstoreapi.bookjpa.dto.BookMainDetailInterface;
+import com.bookstore.bookstoreapi.bookjpa.dto.*;
 import com.bookstore.bookstoreapi.bookjpa.model.Book;
 import com.bookstore.bookstoreapi.bookjpa.model.BookRepository;
 import com.bookstore.bookstoreapi.common.ApiResponse;
@@ -44,6 +41,13 @@ public class BookJpaService {
     public Book getBookId(long bid) {
         Optional<Book> bookData = bookRepository.findBookByBidAndIsDel(bid, "N");
         return bookData.orElseThrow(() -> new RuntimeException("no data"));
+    }
+
+    //자동완성 : 입력한 값 like 책 가져오기
+    public List<BookMainInterface> getBookListByComplete(String searchTitle) {
+        searchTitle = searchTitle.replace('+','|');
+        //return bookRepository.findBookByBookTitleRegexAndIsDel(searchTitle, "N");
+        return bookRepository.searchByRegExp(searchTitle);
     }
 
     //책 등록
@@ -140,4 +144,5 @@ public class BookJpaService {
 
         return bookRepository.findBookByBookTagStartingWithAndIsDel(bookTag, "N");
     }
+
 }
