@@ -12,7 +12,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 
@@ -43,12 +45,6 @@ public class BookJpaService {
         return bookData.orElseThrow(() -> new RuntimeException("no data"));
     }
 
-    //자동완성 : 입력한 값 like 책 가져오기
-    public List<BookMainInterface> getBookListByComplete(String searchTitle) {
-        searchTitle = searchTitle.replace('+','|');
-        //return bookRepository.findBookByBookTitleRegexAndIsDel(searchTitle, "N");
-        return bookRepository.searchByRegExp(searchTitle);
-    }
 
     //책 등록
     public ApiResponse<Book> postBook(BookDTO bookDTO) {
@@ -119,25 +115,37 @@ public class BookJpaService {
         }
     }
 
-    public List<BookMainDTO> searchBookByKeyword(String keyword) {
-        String[] keywords = keyword.split(",");
-        log.debug("keywords : " +keywords.length);
+    //여기서부터 책 검색
+    public List<BookMainInterface> searchBook(String searchData) {
+        searchData = searchData.replace('+','|');
+        //타이틀로 검색
+        return bookRepository.searchByTitleAndKeyword(searchData,"N");
+
+        /*
+        List<BookMainInterface> searchByTitle = bookRepository.searchByRegExp( searchData , "N") ;
+        //키워드로 검색
+        List<BookMainInterface> searchByKeyword = bookRepository.searchByRegExpKeyword( searchData , "N");
 
 
 
-        if(keywords.length == 1){
-            return bookRepository.findBookByBookKeywordContainingAndIsDel(keyword, "N");
-        }else if(keywords.length == 2){
-            return bookRepository.findBookByBookKeywordContainingAndBookKeywordContainingAndIsDel(keywords[0], keywords[1], "N");
-        }else if(keywords.length == 3){
-            return bookRepository.findBookByBookKeywordContainingAndBookKeywordContainingAndBookKeywordContainingAndIsDel(keywords[0], keywords[1], keywords[2], "N");
-        }else if(keywords.length == 4){
-            return bookRepository.findBookByBookKeywordContainingAndBookKeywordContainingAndBookKeywordContainingAndBookKeywordContainingAndIsDel(keywords[0], keywords[1], keywords[2], keywords[3], "N");
-        }else if(keywords.length == 5){
-            return bookRepository.findBookByBookKeywordContainingAndBookKeywordContainingAndBookKeywordContainingAndBookKeywordContainingAndBookKeywordContainingAndIsDel(keywords[0], keywords[1], keywords[2], keywords[3], keywords[4], "N");
-        }else{
-            return null;
-        }
+
+        Map<String , List<BookMainInterface> > searchMap = new HashMap<String, List<BookMainInterface>>();
+        searchMap.put("title",searchByTitle);
+        searchMap.put("keyword",searchByKeyword);
+
+        return searchMap;
+
+         */
+    }
+
+    //자동완성 : 입력한 값 like 책 가져오기
+    public List<BookMainInterface> getBookListByComplete(String searchTitle) {
+        searchTitle = searchTitle.replace('+','|');
+        return bookRepository.searchByRegExp(searchTitle,"N");
+    }
+
+    public List<BookMainInterface> searchBookByKeyword(String selectKeyword) {
+        return bookRepository.searchByRegExpKeyword(selectKeyword,"N");
     }
 
     public List<BookMainDTO> searchByMainTag(String bookTag) {

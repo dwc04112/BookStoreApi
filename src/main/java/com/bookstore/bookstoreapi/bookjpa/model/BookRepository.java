@@ -21,12 +21,19 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 
     Book findTopByOrderByBidDesc();
 
-    // List<BookMainDTO> findBookByBookTitleContainingAndIsDel(String searchTitle, String IsDel);
-    //List<BookMainDTO> findBookByBookTitleRegexAndIsDel(String searchTitle, String IsDel);
 
-    @Query(value = "select b.bid, b.bookThumb ,b.bookTitle ,b.bookKeyword, b.bookAuthor, b.bookPublisher From Book b where (b.bookTitle REGEXP :searchTitle)", nativeQuery = true)
-    List<BookMainInterface> searchByRegExp(@Param("searchTitle") String searchTitle);
 
+    //책 제목으로 검색
+    @Query(value = "select b.bid, b.bookThumb ,b.bookTitle ,b.bookKeyword, b.bookAuthor, b.bookPublisher From Book b where replace (b.bookTitle,' ','') REGEXP :searchTitle and b.isDel=:isDel", nativeQuery = true)
+    List<BookMainInterface> searchByRegExp(@Param("searchTitle") String searchTitle, @Param("isDel") String isDel);
+
+    //책 키워드로 검색
+    @Query(value = "select b.bid, b.bookThumb ,b.bookTitle ,b.bookKeyword, b.bookAuthor, b.bookPublisher From Book b where (b.bookKeyword REGEXP :searchKeyword) and b.isDel=:isDel ", nativeQuery = true)
+    List<BookMainInterface> searchByRegExpKeyword(@Param("searchKeyword") String searchKeyword, @Param("isDel") String isDel);
+
+    //책 제목과 키워드로 검색 (책 제목으로 검색한 결과를 우선순위로)
+    @Query(value = "select b.bid, b.bookThumb ,b.bookTitle ,b.bookKeyword, b.bookAuthor, b.bookPublisher From Book b where replace (b.bookTitle,' ','') REGEXP :searchData or (b.bookKeyword REGEXP :searchData) and b.isDel=:isDel order by replace (b.bookTitle,' ','') REGEXP :searchData DESC ", nativeQuery = true)
+    List<BookMainInterface> searchByTitleAndKeyword(@Param("searchData") String searchData, @Param("isDel") String isDel);
 
     @Query("select mid From Book where bid= ?1")
     Long getMemberIdByBid(long bid);

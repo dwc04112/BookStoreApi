@@ -60,7 +60,6 @@
                       </v-list-item-subtitle>
                     </v-list-item-content>
 
-
                   </v-list-item>
                 </v-hover>
 
@@ -73,7 +72,7 @@
 
         <v-btn
             class="ml-2"
-            @click="searchBook"
+            @click="mainSearch"
             icon
         >
           <v-icon>mdi-magnify</v-icon>
@@ -169,6 +168,7 @@
         </div>
       </v-col>
 
+
       <!--Transition Select-->
       <transition name="sub-slide" mode="in-out" >
         <v-col
@@ -211,7 +211,7 @@
                       outlined
                       color="rgb(220,220,220)"
                       small
-                      @click="insertChip(keyword)"
+                      @click="keywordSearch(keyword)"
                   >
                     <span>{{keyword}}</span>
                   </v-chip>
@@ -324,9 +324,11 @@ export default {
 
   data: () => ({
     //메인 데이터
-    bookDatas : [],
-    searchByChip : [], //chip
-    selectTag : '', //tag
+    bookDatas : [],         //메인 데이터 (타이틀로 검색)
+    bookDataByKeyword : [], //키워드로 검색된 데이터
+    searchByChip : [],      //chip
+    selectTag : '',         //tag
+
 
     //선택된 책 보기
     show : {data:false , bid: null},
@@ -535,9 +537,6 @@ export default {
   },
 
   methods: {
-    onClickOutside () {
-      this.autoSearchList = false
-    },
 
     //Get Main Book Info
     getBookInfo(){
@@ -565,28 +564,34 @@ export default {
     },
 
     // == 검색관련 ==
-    //키워드로 검색
-    searchBook(){
-      if(this.searchByChip.length>5){
-        alert("키워드는 5개 까지 선택 가능합니다")
-       // this.searchByChip = []          //선택된 detailTag 초기화
+    mainSearch(){
+      let str = this.inputMsg
+      str = str.trim()                                             //양끝 공백 제거
+      str = str.replace(/\s/g,'+')            //스페이스바 +로 치환
+      const reg = /[^가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9|+]/.test(str);         //특문검사 정규식
+      if(!reg && str !== "") {
+        this.$axios.get("book/search/" + str)
+            .then(response => {
+              console.log(response.data)
+
+              this.bookDatas = response.data;
+
+            }).catch(error => {
+          console.log(error.response);
+        })
       }else{
-        let data = {}
-        data.bookKeyword = this.searchByChip.toString()
-        this.$axios.post("book/keyword",JSON.stringify(data),{
-          headers: {
-            "Content-Type": `application/json`,
-          },
-        }).then(response=>{
+        alert("검색어를 입력해주세요")
+        this.inputMsg="";
+      }
+    },
+    //키워드로 검색
+    keywordSearch(data){
+      this.$axios.get("book/keyword/"+data)
+        .then(response=>{
           this.bookDatas = response.data
-          this.keywords = []
-          for(let i =0; i<response.data.length; i++){
-            this.keywords.push(response.data[i].bookKeyword.split(','))
-          }
         }).catch(error =>{
           console.log(error.response);
         })
-      }
     },
 
 
@@ -619,9 +624,10 @@ export default {
         })
       }
     },
-
-
-
+    //자동검색 리스트에서 바깥부분 클릭시 리스트 닫음
+    onClickOutside () {
+      this.autoSearchList = false
+    },
 
     //카테고리로 검색
     byCategory(num){

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -42,12 +43,6 @@ public class BookJpaController {
         return bookJpaService.getBookId(bid);
     }
 
-    // 자동완성
-    @GetMapping("/complete/{searchTitle}")
-    public List<BookMainInterface> getBookListByComplete(@PathVariable String searchTitle){
-        log.debug(searchTitle);
-        return bookJpaService.getBookListByComplete(searchTitle);
-    }
 
 
     @PostMapping("/")
@@ -63,12 +58,29 @@ public class BookJpaController {
         return bookJpaService.updateIsDelBookById(bid);
     }
 
-    //책 검색
-    @PostMapping("/keyword")
-    public List<BookMainDTO> searchBookList(@RequestBody BookDTO bookDTO){
-        String keyword = bookDTO.getBookKeyword();
-        log.debug("keyword : " + keyword);
-        return bookJpaService.searchBookByKeyword(keyword);
+
+    /*
+     * 여기서부터 책 검색
+     */
+    //메인 책 검색 ( 타이틀 || 키워드 )
+    @GetMapping("/search/{searchData}")
+    public List<BookMainInterface> searchBook(@PathVariable String searchData){
+        log.debug("title? : "  + searchData);
+        return bookJpaService.searchBook(searchData);
+    }
+
+    // 자동완성
+    @GetMapping("/complete/{searchTitle}")
+    public List<BookMainInterface> getBookListByComplete(@PathVariable String searchTitle){
+        log.debug(searchTitle);
+        return bookJpaService.getBookListByComplete(searchTitle);
+    }
+
+    //키워드 클릭
+    @GetMapping("/keyword/{selectKeyword}")
+    public List<BookMainInterface> searchBookByKeyword(@PathVariable String selectKeyword){
+        log.debug("keyword : " + selectKeyword);
+        return bookJpaService.searchBookByKeyword(selectKeyword);
     }
 
     @GetMapping("/category/{bookTag}")
