@@ -26,16 +26,18 @@ public class WishlistService {
    final MemberRepository memberRepository;
    final BookRepository bookRepository;
 
+    //로그인된 정보에서 member id 가져오기
     public long getMemberId(){
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         return memberRepository.getMemberIdByEmail(email);
     }
 
-
+    //member id와 title num 으로 데이터 가져옴
     public List<Wishlist> getWishListByTitle(int titleNum) {
         return wishlistRepository.findWishlistByMidAndTitleNumOrderByWidAsc(getMemberId(),titleNum);
     }
 
+    //전체 위시리스트 목록 이름만 불러오기
     public List<WishListTitleInterface> getWishListTitle() {
         return wishlistRepository.getWishListTitle(getMemberId());
     }
@@ -116,18 +118,24 @@ public class WishlistService {
     }
 
 
-    //DELETE
-    public ApiResponse<Wishlist> deleteWishList(int wid) {
-        Optional<Wishlist> wishData = wishlistRepository.findWishlistByWid(wid);
-        Wishlist data = wishData.orElseThrow(() -> new RuntimeException("no data"));
+    //DELETE Wid Array List
+    public ApiResponse<Wishlist> deleteWishList(List<Long> widArr) {
 
-        boolean matchInfo= this.matchInfo(wishlistRepository, data.getMid());
-        if(!matchInfo){
-            return new ApiResponse<>(false, "failed to delete board id " + wid);
-        }else{
-            wishlistRepository.deleteWishlistByWid(wid);
-            return new ApiResponse<>(true,"wid " + wid +" is successfully deleted");
+        for (long wid : widArr) {
+            //해당 Wish id 와 일치하는 책이 있는지 확인. 없으면 Exception
+            Optional<Wishlist> wishData = wishlistRepository.findWishlistByWid(wid);
+            Wishlist data = wishData.orElseThrow(() -> new RuntimeException("no data"));
+
+            //해당 Wish id를 등록한 사용자가 맞는지 확인.
+            boolean matchInfo = this.matchInfo(wishlistRepository, data.getMid());
+            if(!matchInfo) {
+                return new ApiResponse<>(false, "failed to delete board id List " + widArr);
+            }
         }
+
+        wishlistRepository.deleteWishlistsByWidIn(widArr);
+        return new ApiResponse<>(true,"wid List : " + widArr +" is successfully deleted");
+
     }
 
     private boolean matchInfo(WishlistRepository wishlistRepository, long targetMid){

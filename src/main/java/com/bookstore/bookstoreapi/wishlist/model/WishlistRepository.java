@@ -40,7 +40,9 @@ public interface WishlistRepository extends JpaRepository<Wishlist, Long> {
     Optional<Wishlist> findWishlistByWid(long wid);
 
     @Transactional
+    @Modifying
     void deleteWishlistByWid(long wid);
+
 
 
     // 위시리스트 카테고리 삭제

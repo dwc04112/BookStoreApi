@@ -62,9 +62,9 @@ public class WishlistController {
     }
 
     //위시리스트속 책 삭제
-    @DeleteMapping("/{wid}")
-    public ApiResponse<Wishlist> deleteWishList(@PathVariable int wid){
-        log.debug("delete data : " + wid);
-        return wishlistService.deleteWishList(wid);
+    @DeleteMapping("/{widArr}")
+    public ApiResponse<Wishlist> deleteWishList(@PathVariable List<Long> widArr){
+        log.debug("delete data : " + widArr);
+        return wishlistService.deleteWishList(widArr);
     }
 }
