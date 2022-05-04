@@ -34,24 +34,18 @@
               <About/>
             </section>
           </div>
-          <div class="section">
-            <section id="bestSeller" style="background-color: #FFE4C0">
-              <BestSeller/>
-            </section>
-          </div>
     </v-container>
 </template>
 <script>
 import $ from 'jquery'
 
-import BestSeller from "@/views/BestSeller";
 import About from "@/views/book/About";
 import MainBook from "@/views/book/MainBook";
 
 
 export default {
   name: "Home",
-  components: {MainBook, About, BestSeller},
+  components: {MainBook, About},
   data () {
     return {
 

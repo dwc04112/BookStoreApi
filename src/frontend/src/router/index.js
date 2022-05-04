@@ -33,6 +33,13 @@ const routes = [
         component: () =>  import('@/views/book/DetailView')
     },
 
+    //Menu
+    {
+        path: '/SearchMenu',
+        name: 'SearchMenu',
+        component: () =>  import('@/views/SearchMenu')
+    },
+
 
     {
         path: '/',
