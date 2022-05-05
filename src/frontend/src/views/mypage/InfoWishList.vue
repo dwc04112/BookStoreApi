@@ -1,10 +1,10 @@
 <template>
   <v-container fluid class="pa-0 ma-0 align-center">
     <v-row class=" pa-0 ma-0 justify-center align-center" style="background-color: rgb(24,24,24)">
-      <v-col cols="11" md="8" class="no-gutters pa-0 ma-0 mt-10" >
+      <v-col cols="11" md="7" class="no-gutters pa-0 ma-0 mt-10" >
         <span class="main-title">나의 찜목록</span>
       </v-col>
-      <v-col cols="11" md="8" class="pa-0 ma-0 mt-6">
+      <v-col cols="11" md="7" class="pa-0 ma-0 mt-6">
         <v-chip-group
             class="ma-0 pa-0 pb-1"
             active-class="primary"
@@ -30,7 +30,7 @@
         </v-chip-group>
       </v-col>
 
-      <v-col cols="12" md="8" class="pa-0 ma-0 pl-1 pr-1 mt-6">
+      <v-col cols="12" md="7" class="pa-0 ma-0 pl-1 pr-1 mt-6">
         <!-- 중간부분 책 리스트 -->
         <v-row style="background-color: rgb(40,40,40)">
           <v-col cols="4" class="white--text mt-2 pl-8">
@@ -100,7 +100,7 @@
 
 
 
-      <v-col cols="11" md="8" class="pa-0 ma-0 mt-12">
+      <v-col cols="11" md="7" class="pa-0 ma-0 mt-12">
         <span class="main-title">관심 키워드</span>
         <v-chip-group
             class="mt-6 pb-4"
