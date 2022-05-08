@@ -69,7 +69,7 @@ export default {
   data () {
     return {
       email: 'test@gmail.com',
-      password: '1234',
+      password: '',
       userInfoData:[],
     }
   },

@@ -69,7 +69,7 @@
           <v-icon>mdi-magnify</v-icon>
         </v-btn>
 
-        <v-btn class="top-icon" icon @click="pushInfoWishList('InfoWishList')">
+        <v-btn class="top-icon" icon @click="pushInfoWishList(3)">
           <v-icon>mdi-heart</v-icon>
         </v-btn>
 
@@ -154,11 +154,22 @@ export default {
     drawMenu(){
       this.$emit('drawMenu', true )
     },
+
     //마이페이지 위시리스트 수정으로 넘어가기
-    pushInfoWishList(pushName){
-      console.log(pushName)
-      this.$router.push({name: 'InfoNavi', params: {AboutTab:pushName}})
+    pushInfoWishList(pushNum){
+      // num 0 ~ 3
+      console.log("push num : "+ pushNum)
+      //현재 페이지
+      let nowPage = this.$router.history.current.name
+      //만약 현재 위시리스트 페이지라면?
+      if(nowPage === 'InfoNavi') {
+        this.$emit('moveTabNum',pushNum)
+      }else{
+        this.$router.push({name: 'InfoNavi', params: {AboutTab: pushNum}})
+      }
     },
+
+
     //책 보러가기
     detailView(bid){
       this.$router.push({name: 'DetailView' ,query: {bid}});

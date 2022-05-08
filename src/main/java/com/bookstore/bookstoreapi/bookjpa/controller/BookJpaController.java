@@ -37,7 +37,7 @@ public class BookJpaController {
     public List<BookMainDetailInterface> getBookListMain(){
         return bookJpaService.getBookListMain();
     }
-    //책 Detail
+    //책 상세화면
     @GetMapping("/{bid}")
     public Book getBookId(@PathVariable long bid){
         return bookJpaService.getBookId(bid);
@@ -45,6 +45,7 @@ public class BookJpaController {
 
 
 
+    //책 등록
     @PostMapping("/")
     public ApiResponse<Book> postBook(@RequestBody BookDTO bookDTO){
 
@@ -53,6 +54,7 @@ public class BookJpaController {
         return bookJpaService.postBook(bookDTO);
     }
 
+    //책 삭제
     @DeleteMapping("/{bid}")
     public ApiResponse<Book> updateIsDelBookById(@PathVariable long bid){
         return bookJpaService.updateIsDelBookById(bid);

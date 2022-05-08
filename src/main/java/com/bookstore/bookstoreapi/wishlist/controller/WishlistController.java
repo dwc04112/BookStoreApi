@@ -22,11 +22,6 @@ public class WishlistController {
 
     final WishlistService wishlistService;
 
-    /*
-    출력 데이터 numPlusWid 는 titleNum + wid 두 컬럼값이 합쳐진 값입니다.
-    numPlusWid 의 제일 왼쪽 숫자는 titleNum , 나머지 오른쪽 숫자는 wid
-    078 : titleNum = 0 , wid = 78
-     */
 
     //전체 위시리스트 목록 이름만 불러오기
     @GetMapping("/title")

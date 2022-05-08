@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid class="pa-0 ma-0">
+  <v-container fluid class="pa-0 ma-0" style="background-color: rgb(24,24,24)">
 
     <SearchMenu
       @searchData="searchComponent"
