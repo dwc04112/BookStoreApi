@@ -245,7 +245,7 @@
               <v-btn
                   color=rgb(33,33,33)
                   text
-                  @click="pushInfoWishList('InfoWishList')"
+                  @click="pushInfoWishList(3)"
               >
                 <h4>내 보관함으로 이동</h4>
               </v-btn>
@@ -632,9 +632,10 @@ export default {
     },
 
     //마이페이지 위시리스트 수정으로 넘어가기
-    pushInfoWishList(pushName){
-      console.log(pushName)
-      this.$router.push({name: 'InfoNavi', params: {AboutTab:pushName}})
+    pushInfoWishList(pushNum){
+      // num 0 ~ 3
+      console.log("push num : "+ pushNum)
+      this.$router.push({name: 'InfoNavi', params: {AboutTab: pushNum}})
     },
 
     //책 보러가기
