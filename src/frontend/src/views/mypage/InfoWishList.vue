@@ -1,10 +1,14 @@
 <template>
-  <v-container fluid class="pa-0 ma-0 align-center">
-    <v-row class=" pa-0 ma-0 justify-center align-center" style="background-color: rgb(24,24,24)">
-      <v-col cols="11" md="7" class="no-gutters pa-0 ma-0 mt-10" >
+  <v-container fluid class="pa-0 ma-0 align-center" style="background-color: rgb(24,24,24)">
+
+    <v-row class=" pa-0 ma-0 justify-center align-center">
+      <v-col cols="11" md="6" class="no-gutters pa-0 ma-0 mt-10" >
         <span class="main-title">나의 찜목록</span>
       </v-col>
-      <v-col cols="11" md="7" class="pa-0 ma-0 mt-6">
+    </v-row>
+
+    <v-row class=" pa-0 ma-0 justify-center align-center">
+      <v-col cols="11" md="6" class="pa-0 ma-0 mt-6">
         <v-chip-group
             class="ma-0 pa-0 pb-1"
             active-class="primary"
@@ -29,9 +33,13 @@
           </v-chip>
         </v-chip-group>
       </v-col>
+    </v-row>
 
-      <v-col cols="12" md="7" class="pa-0 ma-0 pl-1 pr-1 mt-6">
-        <!-- 중간부분 책 리스트 -->
+
+    <!-- 중간부분 책 리스트 -->
+    <v-row class=" pa-0 ma-0 justify-center align-center">
+      <v-col cols="12" md="6" class="pa-0 ma-0 pl-1 pr-1 mt-6">
+
         <v-row style="background-color: rgb(40,40,40)">
           <v-col cols="4" class="white--text mt-2 pl-8">
             <div v-show="showSelect" >
@@ -54,7 +62,7 @@
           </v-col>
           <!--List Card-->
           <v-col cols="12"
-                 class="book-list-col no-gutters pl-6 pr-6"
+                 class="book-list-col no-gutters offset-md-1 pl-4"
                  style="min-height: 57vh"
           >
             <div
@@ -94,13 +102,15 @@
             </div>
           </v-col>
         </v-row>
+
       </v-col>
+    </v-row>
 
 
 
 
-
-      <v-col cols="11" md="7" class="pa-0 ma-0 mt-12">
+    <v-row class=" pa-0 ma-0 justify-center align-center">
+      <v-col cols="11" md="6" class="pa-0 ma-0 mt-12">
         <span class="main-title">관심 키워드</span>
         <v-chip-group
             class="mt-6 pb-4"
@@ -297,8 +307,8 @@
 
     // on off Footer
     <v-footer color="rgb(40,40,40)" fixed style="z-index: 5" v-show="showSelect">
-      <v-row class="pa-0 ma-0 mt-1 mb-1 no-gutters justify-center d-flex" >
-        <v-col cols="12" md="10" class="justify-center align-center d-flex">
+      <v-row class="pa-0 ma-0 mt-2 mb-2 no-gutters justify-center d-flex" >
+        <v-col cols="12" md="9" class="justify-center align-center d-flex">
           <v-chip
               @click="addToCart"
               color="blue lighten-1 white--text"

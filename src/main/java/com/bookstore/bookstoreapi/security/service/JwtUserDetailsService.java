@@ -4,6 +4,7 @@ package com.bookstore.bookstoreapi.security.service;
 import com.bookstore.bookstoreapi.member.Member;
 import com.bookstore.bookstoreapi.member.MemberRepository;
 import com.bookstore.bookstoreapi.member.Role;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.GrantedAuthority;
@@ -19,6 +20,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Service
+@Slf4j
 public class JwtUserDetailsService implements UserDetailsService {
 
     @Autowired
@@ -46,4 +48,5 @@ public class JwtUserDetailsService implements UserDetailsService {
         }
         return member;
     }
+
 }

@@ -32,4 +32,12 @@ public interface MemberRepository extends CrudRepository<Member , Long> {
     @Modifying
     @Query("update Member m set m.fullName =?1  where m.mid=?2")
     void EditMemberName(String fullName, Long id);
+
+    //비밀번호 변경
+    //1. 비밀번호 체크
+    @Transactional
+    @Modifying
+    @Query("update Member m set m.password =?1  where m.mid=?2")
+    void EditNewPassword(String newPass, Long id);
+
 }

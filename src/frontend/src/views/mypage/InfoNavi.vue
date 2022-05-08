@@ -1,25 +1,27 @@
 <template>
   <v-app>
-    <SearchMenu @drawMenu="drawMenu"></SearchMenu>
-    <div style="height: 85px"></div>
-    <v-row class="justify-center align-center" style="background-color: rgb(40,40,40);">
-      <v-col cols="9" md="6" class="d-flex align-center justify-center">
-          <v-tabs
-              grow
-              background-color="transparent"
-              class="top-chip"
-              color="white darken-1"
-              dark
-          >
-            <v-tab
-                v-for="(data,index) in links"
-                :key="index"
-                @click="pushLink(data.link)"
-            >
-              <span>{{data.name}}</span>
-            </v-tab>
+    <SearchMenu @drawMenu="drawMenu" @moveTabNum="pushLink"></SearchMenu>
+    <div style="height: 80px"></div>
 
-          </v-tabs>
+    <v-row class="ma-0 pa-0 justify-center align-center" style="height: fit-content; background-color: rgb(40,40,40);">
+      <v-col cols="9" md="6" class="ma-0 pa-0" >
+        <v-tabs
+            grow
+            v-show="links[this.moveTabNum].show"
+            v-model="moveTabNum"
+            background-color="transparent"
+            class="top-chip"
+            :color="links[this.moveTabNum].color"
+            dark
+        >
+          <v-tab
+              v-for="(data,index) in links"
+              :key="index"
+              @click="pushLink(index)"
+          >
+            <span>{{data.name}}</span>
+          </v-tab>
+        </v-tabs>
       </v-col>
     </v-row>
 
@@ -87,14 +89,15 @@
     </v-navigation-drawer>
     -->
 
-    <v-container fluid class="ma-0 pa-0">
+    <!-- update child 삭제? -->
+    <v-container fluid class="ma-0 pa-0" style="height: calc(100vh - 80px); background-color: rgb(24,24,24)">
       <v-row class="ma-0 pa-0">
         <v-col cols="12" class="ma-0 pa-0">
             <component
-                style="background-color: rgb(24,24,24)"
                 :is="component"
                 :key="componentKey"
                 @updateChildKey="updateComponentKey"
+                @pushLink="pushLink"
             ></component>
         </v-col>
       </v-row>
@@ -112,15 +115,17 @@ export default {
   components: {SearchMenu, InfoWishList},
   data () {
     return {
-      selectedItem : null,
-      drawer: false,
+    //  selectedItem : null,
+    //  drawer: false,
       links: [
-        {icon:'mdi-inbox-arrow-down', name:'마이페이지', link:'InfoMain'},
-        {icon:'mdi-inbox-arrow-down', name:'나의활동', link:'InfoWishList'},
-        {icon:'mdi-inbox-arrow-down', name:'나의찜목록', link:'InfoWishList'},
-        {icon:'mdi-inbox-arrow-down', name:'관심키워드', link:'InfoWishList'},
+        {icon:'mdi-home', name:'My Page', link:'InfoMain', color:'red lighten-1', show:false},
+        {icon:'mdi-pencil', name:'Edit Info', link:'InfoEdit', color:'red lighten-1', show:true},
+        {icon:'mdi-cart', name:'Cart', link:'InfoWishList', color:'orange lighten-1', show:true},
+        {icon:'mdi-library', name:'Wish List', link:'InfoWishList', color:'green lighten-1', show:true},
+        {icon:'mdi-book', name:'Keyword', link:'InfoWishList', color:'blue lighten-1', show:true},
       ],
-      moveTab : "InfoMain",
+      //Tab model
+      moveTabNum : 0,
 
       // 리 렌더링을 위해 부모 컴포넌트 Data 변경
       componentKey : 0,
@@ -128,13 +133,15 @@ export default {
   },
   methods : {
 
-    pushLink(data){
-      if(data == null){
+    pushLink(data) {
+      if (data == null) {
         console.log("tab is null")
-      }else {
-        this.moveTab = data
+      }else{
+        //tab 이동
+        this.moveTabNum = data
       }
     },
+
     logout(){
       console.log("logout!!")
     },
@@ -150,9 +157,10 @@ export default {
       this.drawer = false
     },
   },
+
   computed:{
     component() {
-      const moveTab = this.moveTab;
+      const moveTab = this.links[this.moveTabNum].link;
       return () => import(`@/views/mypage/${moveTab}`);
     }
   },

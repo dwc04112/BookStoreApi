@@ -65,23 +65,45 @@ const routes = [
 
     // myPage
     {
-        path: '/infoMain',
-        name: 'InfoMain',
-        component: () =>  import('@/views/mypage/InfoMain')
-    },
-    {
         path: '/infoNavi',
         name: 'InfoNavi',
         component: () =>  import('@/views/mypage/InfoNavi'),
         props: true
+    },
+
+    {
+        path: '/infoMain',
+        name: 'InfoMain',
+        component: () =>  import('@/views/mypage/InfoMain')
     },
     {
         path: '/infoWishList',
         name: 'InfoWishList',
         component: () =>  import('@/views/mypage/InfoWishList')
     },
+    {
+        path: '/infoEdit',
+        name: 'InfoEdit',
+        component: () =>  import('@/views/mypage/InfoEdit')
+    },
 
-    //wishlist item
+
+
+    //Info Component ( MyPage , Sign )
+    {
+        path: '/infoEditComponent',
+        name: 'InfoEditComponent',
+        component: () =>  import('@/views/infoComponents/InfoEditComponent')
+    },
+    {
+        path: '/passwordEditComponent',
+        name: 'PasswordEditComponent',
+        component: () =>  import('@/views/infoComponents/PasswordEditComponent')
+    },
+
+
+
+    //wishlist component
     {
         path: '/wishList',
         name: 'WishList',
