@@ -1,10 +1,11 @@
 <template>
   <v-container fluid class="pa-0 ma-0" style="background-color: rgb(24,24,24)">
-
+    <!-- 상단 검색바 -->
     <SearchMenu
       @searchData="searchComponent"
     ></SearchMenu>
-    <!-- 상단 검색바 -->
+
+    <!-- chip -->
     <div style="height: 85px"></div>
     <v-row class="justify-center align-center" style="background-color: rgb(40,40,40);">
       <v-col cols="10" md="12" class="d-flex align-center justify-center">

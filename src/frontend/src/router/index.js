@@ -32,6 +32,17 @@ const routes = [
         name: 'DetailView',
         component: () =>  import('@/views/book/DetailView')
     },
+    //Book Component ( detail )
+    {
+        path: '/bookDetailComponent',
+        name: 'BookDetailComponent',
+        component: () =>  import('@/views/book/bookComponents/BookDetailComponent')
+    },
+
+
+
+
+
 
     //Menu
     {
