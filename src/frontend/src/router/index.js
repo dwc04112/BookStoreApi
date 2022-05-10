@@ -38,8 +38,11 @@ const routes = [
         name: 'BookDetailComponent',
         component: () =>  import('@/views/book/bookComponents/BookDetailComponent')
     },
-
-
+    {
+        path: '/commentComponent',
+        name: 'CommentComponent',
+        component: () =>  import('@/views/book/bookComponents/CommentComponent')
+    },
 
 
 
@@ -56,11 +59,6 @@ const routes = [
         path: '/',
         name: 'Home',
         component: () =>  import('@/views/Home')
-    },
-    {
-        path: '/bestseller',
-        name: 'BestSeller',
-        component: () =>  import('@/views/BestSeller')
     },
     {
         path: '/Menu',
