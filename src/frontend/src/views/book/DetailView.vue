@@ -5,9 +5,20 @@
 
     <v-container fluid class="ma-0 pa-0" style="height: 100%; background-color: rgb(24,24,24)">
       <v-row class="ma-0 pa-0 justify-center">
-        <v-col cols="12" md="6" class="ma-0 pa-0">
+
+        <v-col cols="12" md="6"  class="ma-0 pa-0">
           <BookDetailComponent/>
         </v-col>
+
+        <v-row class="nav-btn" style="position:absolute; right: 8%">
+          <v-col cols="12" class="ma-8">
+            <v-btn fab elevation="0" width="50px" height="50px" color="yellow darken-2" style="position: fixed; bottom: 5%" @click="$vuetify.goTo(0)">
+              <v-icon color="rgb(60,60,60)" size="40">mdi-chevron-up</v-icon>
+            </v-btn>
+          </v-col>
+        </v-row>
+
+
       </v-row>
     </v-container>
   </v-app>
@@ -47,6 +58,13 @@ export default {
 </script>
 
 <style scoped>
-
+.nav-btn{
+  display: none;
+}
+@media screen and (max-width: 768px){
+  .nav-btn{
+    display: block;
+  }
+}
 
 </style>

@@ -125,7 +125,7 @@ export default {
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap');
-#home,#bestSeller ,#about{
+#home ,#about{
   height: 100vh;
   width: 100%;
 }
