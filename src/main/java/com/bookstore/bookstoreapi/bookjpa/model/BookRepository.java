@@ -45,6 +45,7 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     @Modifying
     @Query("UPDATE Book SET isDel = ?1 WHERE mid=?2")
     void updateIsDel(String isDel, Long mid);
+
     List<BookMainDTO> findBookBy();
 
     //bookThumb ,bookTitle ,bookKeyword, bookAuthor, bookPublisher,bookContent ,bookPreview

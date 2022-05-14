@@ -2,7 +2,7 @@
     <v-container fluid  class="grid-list-sm pa-0">
           <v-row>
             <v-col>
-              <!--
+
               <nav class="nav" style="position: fixed; z-index: 6;">
                   <ul class="nav-menu">
                     <v-card
@@ -14,11 +14,10 @@
                     >
                       <li @click="('li1')"><a id="li1" href="#home"><div class="div-menu-1"></div></a></li>
                       <li @click="('li2')"><a id="li2" href="#about"><div class="div-menu-2"></div></a></li>
-                      <li @click="('li3')"><a id="li3" href="#bestSeller"><div class="div-menu-3"></div></a></li>
                     </v-card>
                   </ul>
               </nav>
-              -->
+
             </v-col>
 
           </v-row>
@@ -60,10 +59,10 @@ export default {
       const $menu_a = $("a", $(".nav-menu"));
 
       $menu_a.click(function () {
-          $("html").animate(
-              {scrollTop: $($(this).attr("href")).offset().top},
-              {duration: 900, complete: $(this).attr("href")}
-          );
+        $("html").animate(
+            {scrollTop: $($(this).attr("href")).offset().top},
+            {duration: 900, complete: $(this).attr("href")}
+        );
       });
 
 
