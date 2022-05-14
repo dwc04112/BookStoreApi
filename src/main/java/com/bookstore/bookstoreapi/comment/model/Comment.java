@@ -27,12 +27,14 @@ public class Comment {
     private int ratings;
     private String nickName;
     private String content;
-    private int cPopularity;
-    private LocalDate cDate;
-    private LocalTime cTime;
+    private int popularity;
+    private LocalDate commentDate;
+    private LocalTime commentTime;
     private String isDel;
 
-
+    public void updateIsDel(String isDel){
+        this.isDel = isDel;
+    }
 
     public Comment(Long cid,
                    Long bid,
@@ -40,9 +42,9 @@ public class Comment {
                    int ratings,
                    String nickName,
                    String content,
-                   int cPopularity,
-                   LocalDate cDate,
-                   LocalTime cTime,
+                   int popularity,
+                   LocalDate commentDate,
+                   LocalTime commentTime,
                    String isDel){
         this.cid = cid;
         this.bid = bid;
@@ -50,9 +52,9 @@ public class Comment {
         this.ratings = ratings;
         this.nickName = nickName;
         this.content = content;
-        this.cPopularity = cPopularity;
-        this.cDate = cDate;
-        this.cTime = cTime;
+        this.popularity = popularity;
+        this.commentDate = commentDate;
+        this.commentTime = commentTime;
         this.isDel = isDel;
     }
 }

@@ -61,7 +61,7 @@ export default {
 .nav-btn{
   display: none;
 }
-@media screen and (max-width: 768px){
+@media screen and (max-width: 960px){
   .nav-btn{
     display: block;
   }

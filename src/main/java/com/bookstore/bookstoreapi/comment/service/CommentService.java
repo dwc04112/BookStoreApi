@@ -2,17 +2,24 @@ package com.bookstore.bookstoreapi.comment.service;
 
 
 
+import com.bookstore.bookstoreapi.bookjpa.model.Book;
 import com.bookstore.bookstoreapi.comment.dto.CommentDTO;
+import com.bookstore.bookstoreapi.comment.dto.PopCountInterface;
+import com.bookstore.bookstoreapi.comment.dto.PopularityDTO;
+import com.bookstore.bookstoreapi.comment.dto.SortDTO;
 import com.bookstore.bookstoreapi.comment.model.Comment;
 import com.bookstore.bookstoreapi.comment.model.CommentRepository;
 import com.bookstore.bookstoreapi.common.ApiResponse;
+import com.bookstore.bookstoreapi.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -20,18 +27,52 @@ import java.util.List;
 public class CommentService {
 
     final CommentRepository commentRepository;
+    final MemberRepository memberRepository;
 
-    //전체
+    //1. 전체
     public List<Comment> getCommentList() {
         return commentRepository.findCommentByIsDel("N");
     }
 
-    //해당 Book id 댓글만
-    public List<Comment> getCommentById(long bid) {
-        return commentRepository.findCommentByBidAndIsDel(bid,"N");
+    //2. 해당 Book id 댓글만
+    public List<Comment> getCommentById(SortDTO sortDTO) {
+        //최신순
+        if(sortDTO.getSortType() == 0) {
+            return commentRepository.findCommentByBidAndIsDelOrderByCommentDateDescCommentTimeDesc(sortDTO.getBid(), "N");
+        }
+        //추천순
+        if(sortDTO.getSortType() == 1) {
+            return commentRepository.findCommentByBidAndIsDelOrderByPopularityDesc(sortDTO.getBid(), "N");
+        }
+        //별점순
+        if(sortDTO.getSortType() == 2) {
+            return commentRepository.findCommentByBidAndIsDelOrderByRatingsDesc(sortDTO.getBid(), "N");
+        }
+        return null;
+    }
+    //2-1. 추천수 get
+    public List<PopCountInterface> getPopularity(long bid) {
+        return commentRepository.getPopCount(bid,"N");
     }
 
-    //댓글쓰기
+    //2-2. 추천수 update
+    public ApiResponse<Comment> updatePopularity(PopularityDTO popularityDTO) {
+        Optional<Comment> commentData = commentRepository.findCommentByCidAndIsDel(popularityDTO.getCid(), "N");
+        Comment data = commentData.orElseThrow(() -> new RuntimeException("no data"));
+        int update = 0;
+        if(popularityDTO.getUpdate().equals("up")){
+            update = 1;
+        }else if(popularityDTO.getUpdate().equals("down")){
+            update = -1;
+        }else{
+            return new ApiResponse<>(false,"failed to update Popularity");
+        }
+        commentRepository.updatePop(update, popularityDTO.getCid());
+        return new ApiResponse<>(true,"success to update Popularity up, cid = "+data.getCid() );
+    }
+
+
+    //3. 댓글쓰기
     public ApiResponse<Comment> postComment(CommentDTO commentDTO) {
         long newCidValue = this.getNewCidValue(commentRepository);
 
@@ -42,9 +83,9 @@ public class CommentService {
                 .ratings(commentDTO.getRatings())
                 .nickName(commentDTO.getNickName())
                 .content(commentDTO.getContent())
-                .cPopularity(commentDTO.getCPopularity())
-                .cDate(LocalDate.now())
-                .cTime(LocalTime.now())
+                .popularity(0)
+                .commentDate(LocalDate.now())
+                .commentTime(LocalTime.now())
                 .isDel("N")
                 .build();
         commentRepository.save(postData);
@@ -66,4 +107,30 @@ public class CommentService {
         log.debug("new Comment Id Value=" + result);
         return result;
     }
+
+
+    //4. 삭제
+    public ApiResponse<Comment> updateIsDelByCid(long cid) {
+        Optional<Comment> commentData = commentRepository.findCommentByCidAndIsDel(cid, "N");
+        Comment data = commentData.orElseThrow(() -> new RuntimeException("no data"));
+        //북 오너 정보와 매치 필요
+        long midByLoginInfo = getMemberIdByEmail(memberRepository);
+
+        if (data.getMid() == midByLoginInfo) {
+            data.updateIsDel("Y");
+            commentRepository.save(data);
+            return new ApiResponse<>(true, "comment id " + cid +" is successfully deleted", data);
+        } else {
+            return new ApiResponse<>(false, "failed to delete comment id " + cid);
+        }
+    }
+
+    //SecurityContextHolder 저장된 사용자 Email 통해 사용자 Mid 가져오는 로직
+    private Long getMemberIdByEmail(MemberRepository memberRepository) {
+        log.debug("data : " + SecurityContextHolder.getContext());
+        String memberEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        return memberRepository.getMemberIdByEmail(memberEmail);
+    }
+
+
 }

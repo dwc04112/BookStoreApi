@@ -14,8 +14,8 @@ public class CommentDTO {
     private int ratings;
     private String nickName;
     private String content;
-    private int cPopularity;
-    private LocalDate cDate;
-    private LocalTime cTime;
+    private int popularity;
+    private LocalDate commentDate;
+    private LocalTime commentTime;
     private String isDel;
 }

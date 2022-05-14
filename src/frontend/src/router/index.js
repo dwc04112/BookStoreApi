@@ -36,12 +36,14 @@ const routes = [
     {
         path: '/bookDetailComponent',
         name: 'BookDetailComponent',
-        component: () =>  import('@/views/book/bookComponents/BookDetailComponent')
+        component: () =>  import('@/views/book/bookComponents/BookDetailComponent'),
+        props: true,
     },
     {
         path: '/commentComponent',
         name: 'CommentComponent',
-        component: () =>  import('@/views/book/bookComponents/CommentComponent')
+        component: () =>  import('@/views/book/bookComponents/CommentComponent'),
+
     },
 
 

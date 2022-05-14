@@ -10,6 +10,7 @@
     <!-- 우측 Nav -->
     <v-row>
       <v-col cols="2" md="2" class="pt-8 mt-8" style="position: absolute; right: 8%; top:90px;">
+
         <v-card elevation="0" color="transparent" class="ma-8 nav-menu" height="350px" width="300px" style="position: fixed;" tile>
           <v-row class="pa-0 ma-1">
             <v-col @click="$vuetify.goTo(0)" cols="12" class="nav-menu-main-text">1. {{bookData.bookTitle}}</v-col>
@@ -22,6 +23,7 @@
               <v-col class="pa-1">
                 책 소개
                 <v-icon class="pb-1 pl-3" size="18" color="yellow darken-2">mdi-book</v-icon>
+
               </v-col>
               <v-col class="pa-1">
                 책 목차
@@ -143,7 +145,7 @@
         <!-- 이미지와 메인정보 끝-->
 
         <!-- 세부정보 -->
-        <v-row>
+        <v-row class="yellow darken-2">
           <v-col
               cols="3" md="2"
               class="yellow darken-2 align-center justify-center d-flex flex-column"
@@ -171,7 +173,7 @@
             </v-card>
           </v-timeline-item>
 
-          <div style="height: 120px"></div>
+          <div style="height: 120px" ></div>
 
           <v-timeline-item color="yellow darken-2" fill-dot>
             <v-card class="elevation-2" elevation="0" width="95%" color="rgb(40,40,40)">
@@ -207,25 +209,19 @@
 
 
         <!-- 댓글 및 별점 -->
-        <v-row class="yellow darken-2 justify-center">
-          <v-col cols="4" class="justify-end">
-            <br>
-            <v-icon size="140" color="white">mdi-star</v-icon>
-          </v-col>
-          <v-col cols="6">
-            <div
-                v-for="(data,index) in ratings"
-                :key="index"
-            >
-              <v-progress-linear
-                  class="ma-4"
-                  v-model="data.value"
-                  color="white"
-                  height="25"
-              ><strong>{{data.value}} %</strong></v-progress-linear>
-            </div>
-          </v-col>
-        </v-row>
+        <v-lazy
+            :options="{threshold: .5}"
+            transition="fade-transition"
+        >
+          <v-row>
+            <v-col>
+              <CommentComponent
+                v-bind:selectBid="bid"
+              >
+              </CommentComponent>
+            </v-col>
+          </v-row>
+        </v-lazy>
         <!-- 댓글 끝 -->
         <v-row style="height: 500px">
 
@@ -237,8 +233,10 @@
 </template>
 
 <script>
+import CommentComponent from "@/views/book/bookComponents/CommentComponent";
 export default {
   name: "BookDetailComponent",
+  components: {CommentComponent},
   data: function (){
     return{
       //책 정보
@@ -264,16 +262,6 @@ export default {
         {icon: "mdi-barcode", text: 'ISBN-13'},
         {icon: "mdi-calendar", text: 'Publication date'},
       ],
-
-
-      interval: {},
-      ratings:[
-        {value: 0, star: 30},
-        {value: 0, star: 50},
-        {value: 0, star: 20},
-        {value: 0, star: 70},
-      ],
-
     }
   },
   beforeDestroy () {
@@ -281,6 +269,7 @@ export default {
   },
 
   methods: {
+
     getBookDetail(){
       this.$axios.get('book/'+this.bid)
           .then(response=>{
@@ -308,23 +297,10 @@ export default {
             console.log(error.response);
           })
     },
-    startBuffer () {
-      //clearInterval(this.interval)
-      for(let i = 0 ; i<4; i++) {
-        this.interval = setInterval(() => {
-          if (this.ratings[i].value === this.ratings[i].star) {
-            return (this.ratings[i].star)
-          }
-          this.ratings[i].value += 1
-        }, 100)
-      }
-    },
   },
   mounted() {
     this.getBookDetail()
     window.scrollTo(0, 0);
-
-    this.startBuffer()
   }
 }
 
@@ -361,7 +337,7 @@ export default {
 }
 
 
-@media screen and (max-width: 768px){
+@media screen and (max-width: 960px){
   .title-br{
     display: block;
   }
