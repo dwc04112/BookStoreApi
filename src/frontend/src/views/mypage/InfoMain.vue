@@ -45,7 +45,7 @@
 
           <v-col cols="6" class="text-center">
             <v-btn class="col-12 main-card-4 blue lighten-1" height="80px" @click="pushLink(4)">
-              <span class="main-card-inner">Keyword</span>
+              <span class="main-card-inner">Activity</span>
               <v-icon class="pl-2 main-card-inner" color="rgb(240,240,240)">mdi-book</v-icon>
             </v-btn>
           </v-col>

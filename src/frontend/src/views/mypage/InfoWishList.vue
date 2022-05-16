@@ -39,9 +39,8 @@
     <!-- 중간부분 책 리스트 -->
     <v-row class=" pa-0 ma-0 justify-center align-center">
       <v-col cols="12" md="6" class="pa-0 ma-0 pl-1 pr-1 mt-6">
-
-        <v-row style="background-color: rgb(40,40,40)">
-          <v-col cols="4" class="white--text mt-2 pl-8">
+        <v-row style="background-color: rgb(40,40,40)" class="pb-4">
+          <v-col cols="4" class="white--text mt-2">
             <div v-show="showSelect" >
               <v-icon color="white" size="20">mdi-check</v-icon>
               <span class="pl-1"> {{this.selectWidList.length}}권 선택</span>
@@ -62,7 +61,7 @@
           </v-col>
           <!--List Card-->
           <v-col cols="12"
-                 class="book-list-col no-gutters offset-md-1 pl-4"
+                 class="book-list-col no-gutters pl-md-6 ml-md-6"
                  style="min-height: 57vh"
           >
             <div
@@ -102,7 +101,6 @@
             </div>
           </v-col>
         </v-row>
-
       </v-col>
     </v-row>
 
@@ -110,47 +108,6 @@
 
 
     <v-row class=" pa-0 ma-0 justify-center align-center">
-      <v-col cols="11" md="6" class="pa-0 ma-0 mt-12">
-        <span class="main-title">관심 키워드</span>
-        <v-chip-group
-            class="mt-6 pb-4"
-            v-model="selectKeyword"
-            active-class="deep-purple accent-4 white--text"
-            column
-        >
-          <v-chip>5:30PM</v-chip>
-
-          <v-chip>7:30PM</v-chip>
-
-          <v-chip>8:00PM</v-chip>
-
-          <v-chip>9:00PM</v-chip>
-        </v-chip-group>
-
-        <v-btn
-            color="deep-purple lighten-2"
-            @click="infoEdit"
-        >
-          회원정보 수정
-        </v-btn>
-        <div style="height: 1800px"></div>
-      </v-col>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         <!-- 위시리스트 수정 -->
         <v-container fluid>
@@ -342,7 +299,7 @@ export default {
 
     wishlistTitle :[],
     wishBooks: [],
-    selectKeyword: 1, //선택된 키워드
+    selectKeyword: 1,
 
     //책 선택
     showSelect : false, //책 선택 보여줄건지?
@@ -500,16 +457,6 @@ export default {
       this.deleteTitleMsg = ''
       this.deleteType = null
     },
-
-
-
-    infoEdit(){
-      console.log("hi")
-    },
-    editItem(bid){
-      alert("edit : "+bid)
-    },
-
 
     //책 삭제
     deleteItem(){

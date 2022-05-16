@@ -70,7 +70,7 @@
           <v-col cols="12" md="4" class="justify-center align-center d-flex" >
             <div style="display: inline-block;" class="ma-4">
               <v-card
-                  style="height: 360px;overflow: hidden; position:relative"
+                  style="height: 340px;overflow: hidden; position:relative"
                   elevation="2"
                   class="fill-height"
                   width=""

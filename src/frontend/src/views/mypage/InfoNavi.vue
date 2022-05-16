@@ -122,7 +122,7 @@ export default {
         {icon:'mdi-pencil', name:'Edit Info', link:'InfoEdit', color:'red lighten-1', show:true},
         {icon:'mdi-cart', name:'Cart', link:'InfoWishList', color:'orange lighten-1', show:true},
         {icon:'mdi-library', name:'Wish List', link:'InfoWishList', color:'green lighten-1', show:true},
-        {icon:'mdi-book', name:'Keyword', link:'InfoWishList', color:'blue lighten-1', show:true},
+        {icon:'mdi-book', name:'Activity', link:'InfoActivity', color:'blue lighten-1', show:true},
       ],
       //Tab model
       moveTabNum : 0,

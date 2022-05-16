@@ -97,6 +97,11 @@ const routes = [
         name: 'InfoEdit',
         component: () =>  import('@/views/mypage/InfoEdit')
     },
+    {
+        path: '/infoActivity',
+        name: 'InfoActivity',
+        component: () =>  import('@/views/mypage/InfoActivity')
+    },
 
 
 

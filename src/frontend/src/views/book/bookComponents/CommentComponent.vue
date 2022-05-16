@@ -300,7 +300,6 @@ export default {
       //clearInterval(this.interval)
       this.$axios.get("comment/pop/" + this.selectBid)
           .then(response=>{
-            console.log(response.data)
             let totalCount = 0;
             let sumMulti = 0;
             for(let i = 0; i< response.data.length; i++) {
