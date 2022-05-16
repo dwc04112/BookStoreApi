@@ -1,13 +1,13 @@
 package com.bookstore.bookstoreapi.comment.model;
 
+import com.bookstore.bookstoreapi.bookjpa.model.Book;
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -15,10 +15,13 @@ import java.time.LocalTime;
 @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
-public class Comment {
+public class Comment implements Serializable {
+
+
 
     @Id
     @Column(name = "cid")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long cid;
 
     @Column(unique = true)
@@ -31,6 +34,8 @@ public class Comment {
     private LocalDate commentDate;
     private LocalTime commentTime;
     private String isDel;
+
+
 
     public void updateIsDel(String isDel){
         this.isDel = isDel;
@@ -45,7 +50,8 @@ public class Comment {
                    int popularity,
                    LocalDate commentDate,
                    LocalTime commentTime,
-                   String isDel){
+                   String isDel)
+                   {
         this.cid = cid;
         this.bid = bid;
         this.mid = mid;

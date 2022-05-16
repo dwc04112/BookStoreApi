@@ -2,6 +2,7 @@ package com.bookstore.bookstoreapi.bookjpa.model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDate;
 
 @Entity
@@ -10,10 +11,13 @@ import java.time.LocalDate;
 @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
-public class Book {
+public class Book implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Id
     @Column(name = "bid")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long bid;
 
     @Column(unique = true)

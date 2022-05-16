@@ -2,12 +2,10 @@ package com.bookstore.bookstoreapi.comment.service;
 
 
 
-import com.bookstore.bookstoreapi.bookjpa.model.Book;
-import com.bookstore.bookstoreapi.comment.dto.CommentDTO;
-import com.bookstore.bookstoreapi.comment.dto.PopCountInterface;
-import com.bookstore.bookstoreapi.comment.dto.PopularityDTO;
-import com.bookstore.bookstoreapi.comment.dto.SortDTO;
+import com.bookstore.bookstoreapi.comment.dto.*;
 import com.bookstore.bookstoreapi.comment.model.Comment;
+import com.bookstore.bookstoreapi.comment.model.CommentBook;
+import com.bookstore.bookstoreapi.comment.model.CommentBookRepository;
 import com.bookstore.bookstoreapi.comment.model.CommentRepository;
 import com.bookstore.bookstoreapi.common.ApiResponse;
 import com.bookstore.bookstoreapi.member.MemberRepository;
@@ -27,10 +25,12 @@ import java.util.Optional;
 public class CommentService {
 
     final CommentRepository commentRepository;
+    final CommentBookRepository commentBookRepository;
     final MemberRepository memberRepository;
 
     //1. 전체
     public List<Comment> getCommentList() {
+        // return commentRepository.findCommentByIsDel("N");
         return commentRepository.findCommentByIsDel("N");
     }
 
@@ -108,8 +108,14 @@ public class CommentService {
         return result;
     }
 
+    //4. 내가 쓴 모든 댓글 불러오기
+    public List<CommentBookMapping> getMyCommentList() {
+        //Mid 가져오기
+        long midByLoginInfo = getMemberIdByEmail(memberRepository);
+        return commentBookRepository.findAllByBidAndIsDel(midByLoginInfo ,"N");
+    }
 
-    //4. 삭제
+    //5. 삭제
     public ApiResponse<Comment> updateIsDelByCid(long cid) {
         Optional<Comment> commentData = commentRepository.findCommentByCidAndIsDel(cid, "N");
         Comment data = commentData.orElseThrow(() -> new RuntimeException("no data"));
@@ -131,6 +137,5 @@ public class CommentService {
         String memberEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         return memberRepository.getMemberIdByEmail(memberEmail);
     }
-
 
 }

@@ -1,5 +1,6 @@
 package com.bookstore.bookstoreapi.comment.model;
 
+
 import com.bookstore.bookstoreapi.comment.dto.PopCountInterface;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,6 +14,7 @@ import java.util.Optional;
 
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {
+
 
     //전체 댓글
     List<Comment> findCommentByIsDel(String isDel);
@@ -29,8 +31,6 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     @Query(value = "select c.ratings, count(c.ratings) as count FROM Comment c where c.bid=:bid and c.isDel=:isDel group by c.ratings order by c.ratings DESC ", nativeQuery = true)
     List<PopCountInterface> getPopCount(@Param("bid") Long bid, @Param("isDel") String isDel);
 
-
-
     //pop update
     @Transactional
     @Modifying
@@ -39,6 +39,11 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     //post 시 cid 정하는 로직
     Comment findTopByOrderByCidDesc();
+
+
+    //내가 쓴 댓글
+    List<Comment> findCommentByMidAndIsDel(Long mid, String isDel);
+
 
     //댓글 삭제
     Optional<Comment> findCommentByCidAndIsDel(long cid, String isDel);

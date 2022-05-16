@@ -2,11 +2,9 @@ package com.bookstore.bookstoreapi.comment.controller;
 
 
 
-import com.bookstore.bookstoreapi.comment.dto.CommentDTO;
-import com.bookstore.bookstoreapi.comment.dto.PopCountInterface;
-import com.bookstore.bookstoreapi.comment.dto.PopularityDTO;
-import com.bookstore.bookstoreapi.comment.dto.SortDTO;
+import com.bookstore.bookstoreapi.comment.dto.*;
 import com.bookstore.bookstoreapi.comment.model.Comment;
+import com.bookstore.bookstoreapi.comment.model.CommentBook;
 import com.bookstore.bookstoreapi.comment.service.CommentService;
 import com.bookstore.bookstoreapi.common.ApiResponse;
 import lombok.RequiredArgsConstructor;
@@ -25,9 +23,8 @@ public class CommentController {
 
     //1. 전체
     @GetMapping(value = "/")
-    public ApiResponse<Comment> getCommentList(){
-        List<Comment> data = commentService.getCommentList();
-        return new ApiResponse(true, data);
+    public List<Comment> getCommentList(){
+        return commentService.getCommentList();
     }
 
     //2. 해당 Book id 댓글. sort by ( 0-default 최신순 , 1-추천순 , 2-인기순 )
@@ -57,7 +54,13 @@ public class CommentController {
         return commentService.postComment(commentDTO);
     }
 
-    //4. 댓글 삭제
+    //4. 내가 쓴 모든 댓글 불러오기
+    @GetMapping(value = "/myComment")
+    public List<CommentBookMapping> getPopularity(){
+        return commentService.getMyCommentList();
+    }
+
+    //5. 댓글 삭제
     @DeleteMapping("/{cid}")
     public ApiResponse<Comment> updateIsDelByCid(@PathVariable long cid){
         return commentService.updateIsDelByCid(cid);
