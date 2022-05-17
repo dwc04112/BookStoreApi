@@ -114,9 +114,9 @@
             </v-chip-group>
           </v-col>
 
-
-          <v-divider dark class="mb-6" style="border: rgb(60,60,60) 1.5px solid;"></v-divider>
-
+          <v-col cols="12" class="pa-0">
+            <v-divider dark class="mb-6" style="border: rgb(60,60,60) 1.5px solid;"></v-divider>
+          </v-col>
 
 
           <!-- 댓글 없을때 -->
@@ -126,58 +126,56 @@
 
           <!-- 댓글 출력 -->
           <v-col
-              cols="12" class="pa-0 mt-3 mb-3"
+              cols="11" md="12" class="pa-0 mt-3 mb-5"
               v-for="(data , index) in commentData"
               :key="index"
           >
+            <v-row class="ma-0 pa-0">
+              <v-col cols="1" class="justify-center align-center text-center d-flex flex-column">
+                <v-btn color="rgb(220,220,220)" icon class="mb-2" @click="setPopularity('up',data.cid)">
+                  <v-icon size="40">mdi-chevron-up</v-icon>
+                </v-btn>
+                <span class="pop-text">{{data.popularity}}</span>
+                <v-btn color="rgb(220,220,220)" icon class="mt-2" @click="setPopularity('down',data.cid)">
+                  <v-icon size="40">mdi-chevron-down</v-icon>
+                </v-btn>
+              </v-col>
 
-            <v-card color="rgb(40,40,40)" elevation="0">
-                <v-row align="center" class="ma-0 pa-0">
-                  <v-col cols="1" class="justify-center align-center text-center d-flex flex-column">
-                    <v-btn color="rgb(220,220,220)" icon class="mb-2" @click="setPopularity('up',data.cid)">
-                      <v-icon size="40">mdi-chevron-up</v-icon>
-                    </v-btn>
-                    <span class="pop-text">{{data.popularity}}</span>
-                    <v-btn color="rgb(220,220,220)" icon class="mt-2" @click="setPopularity('down',data.cid)">
-                      <v-icon size="40">mdi-chevron-down</v-icon>
-                    </v-btn>
-                  </v-col>
+              <v-col cols="11" class="pa-5 mt-5 mb-5 ">
 
-                  <v-col cols="11" class="pa-5 mt-5 mb-5 ">
-
-                    <v-row class="pl-5 pr-5 align-center">
-                      <v-avatar
-                        size="40"
-                        color="grey"
-                      ></v-avatar>
-                      <span class="pl-3 name-text">{{data.nickName}}</span>
-                    </v-row>
-
-                    <v-row class="pl-4 pr-4 pt-3 align-center">
-                      <v-rating
-                          :value="data.ratings"
-                          color="yellow darken-2"
-                          background-color="grey darken-2"
-                          dense
-                          readonly
-                          length="4"
-                          size="24"
-                          class="pr-1"
-                      ></v-rating>
-                      <span class="date-text">{{data.commentDate}} 일에 작성됨</span>
-                    </v-row>
-
-                    <v-row class="content-text pl-5 pr-5 pt-2">
-                      <span>{{data.content}}</span>
-                    </v-row>
-
-                  </v-col>
+                <v-row class="pl-5 pr-5 align-center">
+                  <v-avatar
+                    size="40"
+                    color="grey"
+                  ></v-avatar>
+                  <span class="pl-3 name-text">{{data.nickName}}</span>
                 </v-row>
-            </v-card>
 
-            <v-divider class="mt-12 mr-16 ml-16" dark></v-divider>
+                <v-row class="pl-4 pr-4 pt-3 align-center">
+                  <v-rating
+                      :value="data.ratings"
+                      color="yellow darken-2"
+                      background-color="grey darken-2"
+                      dense
+                      readonly
+                      length="4"
+                      size="24"
+                      class="pr-1"
+                  ></v-rating>
+                  <span class="date-text">{{data.commentDate}} 일에 작성됨</span>
+                </v-row>
+
+                <v-row class="content-text pl-5 pr-5 pt-2">
+                  <span>{{data.content}}</span>
+                </v-row>
+
+              </v-col>
+            </v-row>
+
+            <v-divider class="mt-8 mr-10 ml-10 mr-md-16 ml-md-16 " dark></v-divider>
 
           </v-col>
+
         </v-row>
 
       </v-col>
@@ -267,9 +265,7 @@ export default {
           },
         }).then(response => {
           console.log(response.data)
-          this.writeComment=null;
-          this.writeRating=null;
-          this.getBookComment();
+          this.$emit('childKey')
         })
         .catch(error => {
           console.log(error.response);

@@ -133,7 +133,6 @@ public class CommentService {
 
     //SecurityContextHolder 저장된 사용자 Email 통해 사용자 Mid 가져오는 로직
     private Long getMemberIdByEmail(MemberRepository memberRepository) {
-        log.debug("data : " + SecurityContextHolder.getContext());
         String memberEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         return memberRepository.getMemberIdByEmail(memberEmail);
     }

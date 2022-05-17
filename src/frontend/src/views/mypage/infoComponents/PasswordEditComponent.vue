@@ -74,8 +74,8 @@
 
         <v-col cols="11" class="justify-center d-flex">
           <span :class="numPass ? 'blue--text text--lighten-2' : 'red--text text--lighten-2'"  class="security-text"> 숫자와 </span>
-          <span :class="smallPass ? 'blue--text text--lighten-2' : 'red--text text--lighten-2'"  class="security-text"> &nbsp; 소문자를 포함하여 </span>
-          <span :class="minPass ? 'blue--text text--lighten-2' : 'red--text text--lighten-2'" class="security-text"> &nbsp; 10 ~ 16자리 이여야 합니다. </span>
+          <span :class="smallPass ? 'blue--text text--lighten-2' : 'red--text text--lighten-2'"  class="security-text"> &nbsp;소문자를 포함하여 </span>
+          <span :class="minPass ? 'blue--text text--lighten-2' : 'red--text text--lighten-2'" class="security-text"> &nbsp;10 ~ 16자리 이여야 합니다. </span>
           <span class="security-text" style="color: rgb(240,240,240);"> &nbsp; 자세히 알아 보기</span>
         </v-col>
 
@@ -180,7 +180,7 @@ export default {
   color: rgb(240,240,240);
 }
 .security-text{
-  font-size: 13px;
+  font-size: 12px;
 }
 
 

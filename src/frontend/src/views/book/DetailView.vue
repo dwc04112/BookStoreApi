@@ -33,8 +33,6 @@ export default {
   components: {SearchMenu, BookDetailComponent},
   data: function (){
     return{
-
-
       //Tab model
       moveTabNum : 0,
     }

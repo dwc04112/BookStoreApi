@@ -15,6 +15,7 @@ public interface CommentBookMapping {
     LocalDate getCommentDate();
     LocalTime getCommentTime();
 
+    String getBookTitle();
     String getBookThumb();
     String getBookAuthor();
     String getBookPublisher();

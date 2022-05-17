@@ -105,16 +105,21 @@ const routes = [
 
 
 
-    //Info Component ( MyPage , Sign )
+    //Info Component (MY Page)
     {
         path: '/infoEditComponent',
         name: 'InfoEditComponent',
-        component: () =>  import('@/views/infoComponents/InfoEditComponent')
+        component: () =>  import('@/views/mypage/infoComponents/InfoEditComponent')
     },
     {
         path: '/passwordEditComponent',
         name: 'PasswordEditComponent',
-        component: () =>  import('@/views/infoComponents/PasswordEditComponent')
+        component: () =>  import('@/views/mypage/infoComponents/PasswordEditComponent')
+    },
+    {
+        path: '/myCommentComponent',
+        name: 'MyCommentComponent',
+        component: () =>  import('@/views/mypage/infoComponents/MyCommentComponent')
     },
 
 

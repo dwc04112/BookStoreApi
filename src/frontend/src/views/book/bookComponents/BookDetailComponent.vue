@@ -3,7 +3,7 @@
 
     <v-row style="height: 60px" class="pl-1 pb-1 pt-8 mt-8">
       <v-col cols="12"  class="pa-0">
-        <span class="grey--text text--darken-1" style="font-size: 14px">소설 > 한국소설</span>
+        <span class="grey--text text--darken-1 ml-md-0 ml-4" style="font-size: 14px">소설 > 한국소설</span>
       </v-col>
     </v-row>
 
@@ -58,9 +58,7 @@
         </v-card>
       </v-col>
     </v-row>
-    <!-- 우측 Nav -->
-
-
+    <!-- 우측 Nav 끝-->
 
     <v-row>
       <v-col cols="12" style="background-color: rgb(40,40,40)">
@@ -75,10 +73,26 @@
                   class="fill-height"
                   width=""
                   tile>
-                <img
+                <v-img
                     :src="bookData.bookThumb"
+                    :lazy-src="bookData.bookThumb"
                     alt="bookThumb"
-                    height="100%">
+                    height="100%"
+                    max-width="230px"
+                ><template v-slot:placeholder>
+                  <v-row
+                      class="fill-height ma-0"
+                      align="center"
+                      justify="center"
+                  >
+                    <v-progress-circular
+                        indeterminate
+                        color="black lighten-5"
+                    ></v-progress-circular>
+                  </v-row>
+                </template>
+
+                </v-img>
               </v-card>
             </div>
           </v-col>
@@ -88,15 +102,14 @@
           <v-col cols="12" md="8" class="mt-8">
 
             <v-row>
-              <v-col cols="12">
-                <span class="white--text" style="font-size: 27px">{{bookData.bookTitle}}</span>
-                <br class="title-br">
-                <span class="grey--text" style="font-size: 22px"> {{bookData.bookSubTitle}}</span>
+              <v-col cols="12" class="ml-md-0 ml-4">
+                <span class="white--text" style="font-size: 25px">{{bookData.bookTitle}}</span>
+                <span class="grey--text" style="font-size: 20px"> {{bookData.bookSubTitle}}</span>
               </v-col>
             </v-row>
 
             <v-row class="ma-0 pa-0">
-              <v-col cols="12" class="ma-0 pa-0">
+              <v-col cols="12" class="ma-0 pa-0 ml-md-0 ml-4">
                 <div>
                   <span class="grey--text" style="font-size: 14px">{{bookData.bookAuthor}}</span>
                   <span class="grey--text" style="font-size: 14px">&nbsp;&nbsp;|&nbsp;&nbsp;{{bookData.bookPublisher}}</span>
@@ -105,10 +118,10 @@
               </v-col>
             </v-row>
 
-            <v-divider class="mt-10 mb-7 mr-9 grey darken-3" style="border: 0.5px solid"></v-divider>
+            <v-divider class="mt-7 mb-7 mr-md-10 grey darken-3" style="border: 0.5px solid"></v-divider>
 
             <v-row>
-              <v-col cols="4" md="3">
+              <v-col cols="4" md="3" class="ml-4 ml-md-0">
                 <span class="white--text" style="font-size: 13px">판매 가격</span>
                 <v-btn color="rgb(40,40,40)" height="60px" class="price-card d-flex flex-column">
                   <span v-html="bookData.bookSalePrice" class="white--text" style="font-size: 20px"></span>
@@ -117,10 +130,10 @@
               </v-col>
             </v-row>
 
-            <v-divider class="mt-7 mb-7 mr-10 grey darken-3" style="border: 0.5px solid"></v-divider>
+            <v-divider class="mt-7 mb-7 mr-md-10 grey darken-3" style="border: 0.5px solid"></v-divider>
 
-            <v-row class="pb-6">
-              <v-col cols="12">
+            <v-row>
+              <v-col cols="12" class="ml-4 ml-md-0 mb-6">
                 <v-chip
                     class="ma-1 yellow darken-2">
                   <v-icon left color="rgb(45,45,45)" size="18">mdi-key-variant</v-icon>
@@ -139,7 +152,6 @@
                 </v-chip>
               </v-col>
             </v-row>
-
           </v-col>
         </v-row>
         <!-- 이미지와 메인정보 끝-->
@@ -217,6 +229,8 @@
             <v-col>
               <CommentComponent
                 v-bind:selectBid="bid"
+                :key="componentKey"
+                @childKey="componentKey++"
               >
               </CommentComponent>
             </v-col>
@@ -244,6 +258,8 @@ export default {
       bookData : [],
       keyword : '',
 
+      componentKey: 0, // reload component
+
       //좌측 리스트
       items: [
         { text: '맨 위로'},
@@ -264,10 +280,6 @@ export default {
       ],
     }
   },
-  beforeDestroy () {
-    clearInterval(this.interval)
-  },
-
   methods: {
 
     getBookDetail(){
@@ -275,12 +287,10 @@ export default {
           .then(response=>{
             this.bookData = response.data
             this.keyword = (response.data.bookKeyword.split(','))
-
             //받아온 내용 줄바꿈 적용
             this.bookData.bookContent = response.data.bookContent.replace(/(?:\r\n|\r|\n)/g, '<br />')
             this.bookData.bookIndex = response.data.bookIndex.replace(/(?:\r\n|\r|\n)/g, '<br />')
             this.bookData.bookPreview = response.data.bookPreview.replace(/(?:\r\n|\r|\n)/g, '<br />')
-
             //detail item data set
             //page
             this.$set(this.detailItem[0],'data',response.data.bookPage +' page' )

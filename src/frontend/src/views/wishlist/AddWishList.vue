@@ -49,6 +49,7 @@ export default {
           },
         }).then(response => {
           console.log(response.data)
+          this.$emit('childKey')
         }).catch(error => {
           console.log(error.response);
         })

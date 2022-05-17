@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import InfoEditComponent from "@/views/infoComponents/InfoEditComponent";
+import InfoEditComponent from "@/views/mypage/infoComponents/InfoEditComponent";
 export default {
   name: "InfoEdit",
   components: {InfoEditComponent},
@@ -68,7 +68,7 @@ export default {
     // 컴포넌트에서 페이지 변경
     component() {
       let setComponent = this.setComponent
-      return () => import(`@/views/infoComponents/${setComponent}`);
+      return () => import(`@/views/mypage/infoComponents/${setComponent}`);
     }
   },
 }

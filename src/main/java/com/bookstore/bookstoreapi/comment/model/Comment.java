@@ -21,7 +21,6 @@ public class Comment implements Serializable {
 
     @Id
     @Column(name = "cid")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long cid;
 
     @Column(unique = true)

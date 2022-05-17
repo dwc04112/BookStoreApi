@@ -18,6 +18,7 @@ public interface CommentBookRepository extends JpaRepository<CommentBook, Long> 
             "c.popularity as popularity," +
             "c.commentDate as commentDate," +
             "c.commentTime as commentTime," +
+            "c.book.bookTitle as bookTitle," +
             "c.book.bookThumb as bookThumb," +
             "c.book.bookAuthor as bookAuthor," +
             "c.book.bookPublisher as bookPublisher," +

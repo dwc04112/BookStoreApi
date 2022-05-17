@@ -17,7 +17,6 @@ public class Book implements Serializable {
 
     @Id
     @Column(name = "bid")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long bid;
 
     @Column(unique = true)
