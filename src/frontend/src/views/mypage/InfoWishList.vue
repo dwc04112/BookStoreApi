@@ -80,6 +80,7 @@
                       alt="bookThumb"
                       class="book-thumb"
                       height="100%"
+                      loading="lazy"
                   >
                   <v-overlay
                       :absolute="absolute"

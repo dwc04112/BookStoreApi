@@ -5,8 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 
 @Repository
@@ -22,6 +20,6 @@ public interface CommentBookRepository extends JpaRepository<CommentBook, Long> 
             "c.book.bookThumb as bookThumb," +
             "c.book.bookAuthor as bookAuthor," +
             "c.book.bookPublisher as bookPublisher," +
-            "c.book.bookTag as bookTag FROM CommentBook c where c.mid = ?1 and c.isDel = ?2")
+            "c.book.bookTag as bookTag FROM CommentBook c where c.mid = ?1 and c.isDel = ?2 order by c.commentDate desc ,c.commentTime desc")
     List<CommentBookMapping> findAllByBidAndIsDel(Long mid, String isDel);
 }

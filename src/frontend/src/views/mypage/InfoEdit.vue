@@ -26,7 +26,6 @@
       </v-col>
     </v-row>
 
-    <!-- 중간부분 책 리스트 -->
     <v-row class=" pa-0 ma-0 justify-center align-center">
       <v-col cols="12" md="6" class="ma-0 pa-0 pl-1 pr-1 mt-6" >
         <component

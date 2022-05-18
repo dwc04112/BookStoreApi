@@ -34,10 +34,7 @@
     </v-row>
 
 
-
-
-    <!-- 2222222 -->
-
+    <!--my REVIEW-->
     <v-row class=" pa-0 ma-0 justify-center align-center pt-10">
       <v-col cols="11" md="6" class="no-gutters pa-0 ma-0 mt-10" >
         <span class="main-title">나의 리뷰</span>

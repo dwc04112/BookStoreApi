@@ -100,7 +100,7 @@
           >
             <v-card
                 style="height: 250px; overflow: hidden;"
-                elevation="1"
+                elevation="4"
                 min-width="120px"
                 tile
             >
@@ -109,6 +109,7 @@
                   alt="bookThumb"
                   class="book-thumb"
                   height="100%"
+                  loading="lazy"
                   @click.stop="openInfo(book)"
               />
             </v-card>
@@ -267,7 +268,7 @@
 </template>
 
 <script>
-import vClickOutside from 'v-click-outside'
+import vClickOutside from 'v-click-outside';
 import SearchMenu from "@/views/SearchMenu";
 export default {
   name: "About",
