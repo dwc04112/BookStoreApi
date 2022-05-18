@@ -9,6 +9,7 @@ import com.bookstore.bookstoreapi.comment.service.CommentService;
 import com.bookstore.bookstoreapi.common.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,7 +30,7 @@ public class CommentController {
 
     //2. 해당 Book id 댓글. sort by ( 0-default 최신순 , 1-추천순 , 2-인기순 )
     @PostMapping(value = "/")
-    public List<Comment> getCommentById(@RequestBody SortDTO sortDTO)throws Exception{
+    public Page<Comment> getCommentById(@RequestBody SortDTO sortDTO)throws Exception{
         log.debug("sortType : " + sortDTO);
         return commentService.getCommentById(sortDTO);
     }
@@ -55,9 +56,9 @@ public class CommentController {
     }
 
     //4. 내가 쓴 모든 댓글 불러오기
-    @GetMapping(value = "/myComment")
-    public List<CommentBookMapping> getPopularity(){
-        return commentService.getMyCommentList();
+    @PostMapping(value = "/myComment")
+    public Page<CommentBookMapping> getPopularity(@RequestBody SortDTO sortDTO){
+        return commentService.getMyCommentList(sortDTO);
     }
 
     //5. 댓글 삭제

@@ -3,6 +3,8 @@ package com.bookstore.bookstoreapi.comment.model;
 
 import com.bookstore.bookstoreapi.comment.dto.PopCountInterface;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -21,11 +23,11 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     //2. 해당책의 댓글
     //최신순 0
-    List<Comment> findCommentByBidAndIsDelOrderByCommentDateDescCommentTimeDesc(Long bid, String isDel);
+    Page<Comment> findCommentByBidAndIsDelOrderByCommentDateDescCommentTimeDesc(Long bid, String isDel, Pageable pageable);
     //추천순 1
-    List<Comment> findCommentByBidAndIsDelOrderByPopularityDesc(Long bid, String isDel);
+    Page<Comment> findCommentByBidAndIsDelOrderByPopularityDesc(Long bid, String isDel, Pageable pageable);
     //별점순 2
-    List<Comment> findCommentByBidAndIsDelOrderByRatingsDesc(Long bid, String isDel);
+    Page<Comment> findCommentByBidAndIsDelOrderByRatingsDesc(Long bid, String isDel, Pageable pageable);
 
     //pop count
     @Query(value = "select c.ratings, count(c.ratings) as count FROM Comment c where c.bid=:bid and c.isDel=:isDel group by c.ratings order by c.ratings DESC ", nativeQuery = true)

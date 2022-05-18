@@ -48,7 +48,7 @@
     </v-row>
 
 
-    <v-row class="justify-center" style="background-color: rgb(40,40,40)">
+    <v-row class="justify-center" style="background-color: rgb(40,40,40);">
 
       <v-col cols="12" md="11">
         <v-row class="mt-10 ma-0 pa-0 justify-center">
@@ -107,7 +107,7 @@
                   v-for="(data,index) in sortChip"
                   :key="index"
                   :value="index"
-                  @click="getBookComment(index)"
+                  @click="setSelectSort(index)"
               >
                 <span class="top-chip-text">{{data.text}}</span>
               </v-chip>
@@ -142,7 +142,6 @@
               </v-col>
 
               <v-col cols="11" class="pa-5 mt-5 mb-5 ">
-
                 <v-row class="pl-5 pr-5 align-center">
                   <v-avatar
                     size="40"
@@ -164,16 +163,28 @@
                   ></v-rating>
                   <span class="date-text">{{data.commentDate}} 일에 작성됨</span>
                 </v-row>
-
                 <v-row class="content-text pl-5 pr-5 pt-2">
                   <span>{{data.content}}</span>
                 </v-row>
-
               </v-col>
             </v-row>
-
             <v-divider class="mt-8 mr-10 ml-10 mr-md-16 ml-md-16 " dark></v-divider>
+          </v-col>
 
+          <!--페이징-->
+          <v-col cols="12" class="ma-3" v-show="!noComments">
+            <div class="text-center">
+              <v-pagination
+                  dark
+                  v-model="page"
+                  :length="totalPages"
+                  :total-visible="5"
+                  circle
+                  class="my-pagination"
+                  color="yellow darken-2 black--text"
+                  @input="getBookComment"
+              ></v-pagination>
+            </div>
           </v-col>
 
         </v-row>
@@ -190,6 +201,11 @@ export default {
   data: function (){
     return{
       commentData:[],
+      page : 1,
+      size : 5,
+      totalPages : 0,
+
+
       sortChip :
           [
             {'text' : '최신순', 'icon' : 'mdi-clock' },
@@ -223,21 +239,27 @@ export default {
       }
     },
   methods: {
-    getBookComment(index) {
-      if(index == null){
-        index = 0
-      }
+
+    //정렬 설정 후 불러오기
+    setSelectSort(index){
+      this.selectSort = index
+      this.getBookComment();
+    },
+
+    getBookComment() {
       let data = {}
       data.bid = this.selectBid
-      data.sortType = index
-
+      data.sortType = this.selectSort
+      data.page = this.page -1
+      data.size = this.size
       this.$axios.post("comment/", JSON.stringify(data) ,{
         headers: {
           "Content-Type": `application/json`,
         },
       }).then(response=>{
-        this.commentData = response.data;
-        if(response.data.length === 0){
+        this.commentData = response.data.content;
+        this.totalPages = response.data.totalPages;
+        if(response.data.content.length === 0){
           this.noComments = true;
         }
       })
@@ -285,7 +307,7 @@ export default {
         },
       }).then(response=>{
           console.log(response.data);
-          this.getBookComment(this.selectSort);
+          this.getBookComment();
       }).catch(error =>{
           console.log(error.response);
       })
@@ -342,7 +364,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" >
 
 .top-chip-text{
   font-weight: bold;
@@ -354,6 +376,18 @@ export default {
   opacity: 0.4;
 }
 
+.my-pagination {
+    /*For previous and next buttons*/
+    & .v-pagination__navigation {
+      background: rgb(60,60,60) !important;
+      width: 27px !important;
+      height: 27px !important;
+    }
+    /*For page buttons except the active one*/
+    & .v-pagination__item:not(.v-pagination__item--active) {
+      background: rgb(60,60,60) !important;
+    }
+}
 
 .pop-text{
   color: #BDBDBD;

@@ -237,9 +237,7 @@
           </v-row>
         </v-lazy>
         <!-- 댓글 끝 -->
-        <v-row style="height: 500px">
 
-        </v-row>
 
       </v-col>
     </v-row>

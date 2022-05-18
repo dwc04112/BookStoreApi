@@ -11,6 +11,8 @@ import com.bookstore.bookstoreapi.common.ApiResponse;
 import com.bookstore.bookstoreapi.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -35,18 +37,21 @@ public class CommentService {
     }
 
     //2. 해당 Book id 댓글만
-    public List<Comment> getCommentById(SortDTO sortDTO) {
+    public Page<Comment> getCommentById(SortDTO sortDTO) {
+
+        PageRequest pageRequest = PageRequest.of(sortDTO.getPage() , sortDTO.getSize());
+
         //최신순
         if(sortDTO.getSortType() == 0) {
-            return commentRepository.findCommentByBidAndIsDelOrderByCommentDateDescCommentTimeDesc(sortDTO.getBid(), "N");
+            return commentRepository.findCommentByBidAndIsDelOrderByCommentDateDescCommentTimeDesc(sortDTO.getBid(), "N", pageRequest);
         }
         //추천순
         if(sortDTO.getSortType() == 1) {
-            return commentRepository.findCommentByBidAndIsDelOrderByPopularityDesc(sortDTO.getBid(), "N");
+            return commentRepository.findCommentByBidAndIsDelOrderByPopularityDesc(sortDTO.getBid(), "N", pageRequest);
         }
         //별점순
         if(sortDTO.getSortType() == 2) {
-            return commentRepository.findCommentByBidAndIsDelOrderByRatingsDesc(sortDTO.getBid(), "N");
+            return commentRepository.findCommentByBidAndIsDelOrderByRatingsDesc(sortDTO.getBid(), "N", pageRequest);
         }
         return null;
     }
@@ -109,10 +114,12 @@ public class CommentService {
     }
 
     //4. 내가 쓴 모든 댓글 불러오기
-    public List<CommentBookMapping> getMyCommentList() {
+    public Page<CommentBookMapping> getMyCommentList(SortDTO sortDTO) {
+        PageRequest pageRequest = PageRequest.of(sortDTO.getPage() , sortDTO.getSize());
+
         //Mid 가져오기
         long midByLoginInfo = getMemberIdByEmail(memberRepository);
-        return commentBookRepository.findAllByBidAndIsDel(midByLoginInfo ,"N");
+        return commentBookRepository.findAllByBidAndIsDel(midByLoginInfo ,"N", pageRequest);
     }
 
     //5. 삭제

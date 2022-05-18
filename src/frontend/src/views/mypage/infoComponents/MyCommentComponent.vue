@@ -81,6 +81,21 @@
       <v-divider class="ma-7" dark></v-divider>
     </v-col>
 
+    <v-col cols="12" class="mt-4">
+      <div class="text-center">
+        <v-pagination
+            dark
+            v-model="page"
+            :length="totalPages"
+            :total-visible="5"
+            circle
+            class="my-pagination"
+            color="yellow darken-2 black--text"
+            @input="getBookComment"
+        ></v-pagination>
+      </div>
+    </v-col>
+
     <!--삭제 확인 메시지-->
     <v-dialog
         max-width="400"
@@ -129,6 +144,11 @@ export default {
         commentData : [],
         noComments : false,
 
+        //page
+        page : 1,
+        size : 5,
+        totalPages : 0,
+
         setCid : 0,         //삭제할 댓글 id
         dialog : false,     //삭제 확인 메시지
         snackbar : false,   //삭제 성공? 실패?
@@ -145,13 +165,20 @@ export default {
 
   methods: {
     getBookComment() {
-      this.$axios.get("comment/myComment/")
-          .then(response=>{
-            this.commentData = response.data;
-            if(response.data.length === 0){
-              this.noComments = true;
-            }
-          }).catch(error =>{
+      let data = {}
+      data.page = this.page -1
+      data.size = this.size
+      this.$axios.post("comment/myComment", JSON.stringify(data), {
+        headers: {
+          "Content-Type": `application/json`,
+        },
+      }).then(response => {
+        this.commentData = response.data.content;
+        this.totalPages = response.data.totalPages;
+        if(response.data.content.length === 0){
+          this.noComments = true;
+        }
+      }).catch(error => {
         console.log(error.response);
       })
     },
