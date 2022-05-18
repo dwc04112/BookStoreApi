@@ -3,10 +3,10 @@
     <SearchMenu @moveTabNum="pushLink"></SearchMenu>
     <div style="height: 80px"></div>
 
-    <v-container fluid class="ma-0 pa-0" style="height: 100%; background-color: rgb(24,24,24)">
-      <v-row class="ma-0 pa-0 justify-center">
+    <v-container fluid style="height: 100%; background-color: rgb(24,24,24)">
+      <v-row class="ma-0 pa-0 justify-center ">
 
-        <v-col cols="12" md="6"  class="ma-0 pa-0">
+        <v-col cols="12" md="6" class="ma-0 pa-0">
           <BookDetailComponent/>
         </v-col>
 
@@ -17,9 +17,10 @@
             </v-btn>
           </v-col>
         </v-row>
-
-
       </v-row>
+
+      <v-row style="height: 80px"></v-row>
+
     </v-container>
   </v-app>
 </template>

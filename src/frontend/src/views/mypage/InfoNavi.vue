@@ -3,11 +3,10 @@
     <SearchMenu @drawMenu="drawMenu" @moveTabNum="pushLink"></SearchMenu>
     <div style="height: 80px"></div>
 
-    <v-row class="ma-0 pa-0 justify-center align-center" style="height: fit-content; background-color: rgb(40,40,40);">
+    <v-row v-show="links[this.moveTabNum].show" class="ma-0 pa-0 justify-center align-center" style="height: fit-content; background-color: rgb(40,40,40);">
       <v-col cols="9" md="6" class="ma-0 pa-0" >
         <v-tabs
             grow
-            v-show="links[this.moveTabNum].show"
             v-model="moveTabNum"
             background-color="transparent"
             class="top-chip"
@@ -90,7 +89,7 @@
     -->
 
     <!-- update child 삭제? -->
-    <v-container fluid class="ma-0 pa-0" style="height: calc(100vh - 80px); background-color: rgb(24,24,24)">
+    <v-container fluid  style=" background-color: rgb(24,24,24)">
       <v-row class="ma-0 pa-0">
         <v-col cols="12" class="ma-0 pa-0">
             <component

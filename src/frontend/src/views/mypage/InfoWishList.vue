@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid class="pa-0 ma-0 align-center" style="background-color: rgb(24,24,24)">
+  <v-container fluid class="align-center" >
 
     <v-row class=" pa-0 ma-0 justify-center align-center">
       <v-col cols="11" md="6" class="no-gutters pa-0 ma-0 mt-10" >
@@ -263,7 +263,7 @@
         </v-container>
     </v-row>
 
-    // on off Footer
+    <!-- on off Footer -->
     <v-footer color="rgb(40,40,40)" fixed style="z-index: 5" v-show="showSelect">
       <v-row class="pa-0 ma-0 mt-2 mb-2 no-gutters justify-center d-flex" >
         <v-col cols="12" md="9" class="justify-center align-center d-flex">

@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid class="pa-0 ma-0 align-center" style="background-color: rgb(24,24,24);">
+  <v-container fluid class="align-center">
     <v-row class=" pa-0 ma-0 justify-center align-center">
       <v-col cols="11" md="6" class="no-gutters pa-0 ma-0 mt-10">
         <span class="main-title">개인정보 수정</span>
@@ -35,7 +35,7 @@
         </component>
       </v-col>
     </v-row>
-
+    <v-row style="height: 80px"></v-row>
   </v-container>
 </template>
 

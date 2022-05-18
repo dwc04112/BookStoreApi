@@ -20,7 +20,7 @@
         >
         </v-text-field>
         <transition name="top-slide" mode="in-out">
-          <div class="search-list-div" >
+          <div class="search-list-div">
             <v-list class="pa-0 ma-0 search-list" v-show="autoSearchList" light>
               <v-list-item-group>
                 <v-hover v-slot="{ hover }"
@@ -78,7 +78,6 @@
         </v-btn>
       </v-col>
     </v-row>
-    <div>{{this.inputMsg}}</div>
   </v-app-bar>
 </template>
 
@@ -103,7 +102,7 @@ export default {
       let str = this.inputMsg
       str = str.trim()                                             //양끝 공백 제거
       str = str.replace(/\s/g,'+')            //스페이스바 +로 치환
-      const reg = /^[ㄱ-ㅎ|가-힣|a-z|A-Z|0-9|+]+$/.test(str);         //특문검사 정규식
+      const reg = /^[ㄱ-ㅎ|가-힣|a-z|A-Z|0-9|+:()]+$/.test(str);         //특문검사 정규식
       if(reg) {
         this.$axios.get("book/search/" + str)
             .then(response => {
@@ -138,8 +137,8 @@ export default {
       let str = this.inputMsg
       str = str.trim()                                             //양끝 공백 제거
       str = str.replace(/\s/g,'+')            //스페이스바 +로 치환
-      const reg = /[^가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9|+]/.test(str);         //특문검사 정규식
-      if(!reg && str !== ""){
+      const reg = /^[ㄱ-ㅎ|가-힣|a-z|A-Z|0-9|+]+$/.test(str);           //특문검사 정규식
+      if(reg) {
         this.$axios.get("book/complete/" + str)
             .then(response => {
               this.completeData = response.data
@@ -170,8 +169,6 @@ export default {
         this.$router.push({name: 'InfoNavi', params: {AboutTab: pushNum}})
       }
     },
-
-
     //책 보러가기
     detailView(bid){
       this.$router.push({name: 'DetailView' ,query: {bid}});
@@ -187,7 +184,7 @@ export default {
 }
 
 .search-list-div{
-  width: 526px;
+  width: 470px;
   position : absolute;
   transform: translateY(-23px) translateX(20px);
 }

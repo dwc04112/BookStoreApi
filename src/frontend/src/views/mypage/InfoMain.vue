@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid class="pa-0 ma-0 align-center" style="background-color: rgb(24,24,24)">
+  <v-container fluid class="align-center" style="min-height: calc(100vh - 104px)">
     <v-row class=" pa-0 ma-0 justify-center align-center">
       <v-col cols="11" md="12" class="no-gutters pa-0 ma-0 mt-10">
 
@@ -53,9 +53,6 @@
         </v-row>
       </v-col>
 
-      <v-col cols="12">
-        <div style="height: 100vh"></div>
-      </v-col>
     </v-row>
 
 

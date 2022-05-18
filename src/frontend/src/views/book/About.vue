@@ -123,7 +123,7 @@
       <transition name="sub-slide" mode="in-out" >
         <v-col
             class="pa-0 ma-0"
-            cols="6" sm="4" md="4"
+            cols="5" sm="4" md="4"
             color="grey lighten-3"
             v-show="show.data"
         >
@@ -144,8 +144,8 @@
 
               <div class="align-center d-flex flex-column pt-8">
                 <v-img
+                    class="select-book-img"
                     :src="selectBook.bookThumb"
-                    style=" width: 200px"
                 ></v-img>
 
                 <h4 class="pt-4" style="color: rgb(220,220,220)"> {{selectBook.bookTitle}} </h4>
@@ -743,6 +743,9 @@ export default {
   position: sticky;
   top: 55px;
 }
+.select-book-img{
+  width: 200px;
+}
 
 .sub-slide-enter{
   transform: translateX(400px);
@@ -778,6 +781,11 @@ export default {
   }
   .search-list-img{
     height: 60px;
+  }
+
+  .select-book-img{
+    width: 130px;
+    margin-right: 13px;
   }
 
 

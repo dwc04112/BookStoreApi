@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid class="pa-0 ma-0 align-center" style="background-color: rgb(24,24,24)">
+  <v-container fluid class="align-center">
 
     <v-row class=" pa-0 ma-0 justify-center align-center">
       <v-col cols="11" md="6" class="no-gutters pa-0 ma-0 mt-10" >
@@ -50,6 +50,8 @@
         </MyCommentComponent>
       </v-col>
     </v-row>
+
+    <v-row style="height: 80px"></v-row>
   </v-container>
 </template>
 
