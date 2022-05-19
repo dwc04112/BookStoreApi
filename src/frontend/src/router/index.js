@@ -45,6 +45,12 @@ const routes = [
         component: () =>  import('@/views/book/bookComponents/CommentComponent'),
 
     },
+    {
+        path: '/paymentComponent',
+        name: 'PaymentComponent',
+        component: () =>  import('@/views/book/bookComponents/PaymentComponent'),
+
+    },
 
 
 
