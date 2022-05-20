@@ -10,6 +10,7 @@ public class BookMainDTO {
     private String bookKeyword;
     private String bookAuthor;
     private String bookPublisher;
+    private int bookSalePrice;
 
 
     public BookMainDTO(long bid,
@@ -17,12 +18,14 @@ public class BookMainDTO {
                        String bookTitle,
                        String bookKeyword,
                        String bookAuthor,
-                       String bookPublisher){
+                       String bookPublisher,
+                       int bookSalePrice){
         this.bid = bid;
         this.bookThumb = bookThumb;
         this.bookTitle = bookTitle;
         this.bookKeyword = bookKeyword;
         this.bookAuthor = bookAuthor;
         this.bookPublisher = bookPublisher;
+        this.bookSalePrice = bookSalePrice;
     }
 }

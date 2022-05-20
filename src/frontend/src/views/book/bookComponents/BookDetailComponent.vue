@@ -1,21 +1,20 @@
 <template>
   <v-container fluid class="ma-0 pa-0">
 
-    <v-row style="height: 60px" class="pl-1 pb-1 pt-8 mt-8">
-      <v-col cols="12"  class="pa-0">
-        <span class="grey--text text--darken-1 ml-md-0 ml-4" style="font-size: 14px">소설 > 한국소설</span>
-      </v-col>
-    </v-row>
-
     <!-- 우측 Nav -->
     <v-row>
-      <v-col cols="2" md="2" class="pt-8 mt-8" style="position: absolute; right: 8%; top:90px;">
+      <v-col cols="2" md="2" class="pt-8 mt-8" style="position: absolute; right: 8%; top:70px;">
 
-        <v-card elevation="0" color="transparent" class="ma-8 nav-menu" height="350px" width="300px" style="position: fixed;" tile>
-          <v-row class="pa-0 ma-1">
+        <v-card elevation="0"
+                color="transparent"
+                class="ma-8  nav-menu"
+                width="300px"
+                style="position: fixed;"
+                tile>
+          <v-row class="pa-0 ma-1 ml-3">
             <v-col @click="$vuetify.goTo(0)" cols="12" class="nav-menu-main-text">1. {{bookData.bookTitle}}</v-col>
           </v-row>
-          <v-row class="ma-0 ma-0">
+          <v-row class="ma-0 ma-0 ml-3">
             <v-col cols="1" class="ma-0 pa-0 ml-5" >
               <v-divider class="grey darken-3" style="border-width: 1.5px;" vertical></v-divider>
             </v-col>
@@ -34,10 +33,10 @@
             </v-col>
           </v-row>
 
-          <v-row class="pa-0 ma-1 mt-1">
+          <v-row class="pa-0 ma-1 ml-3 ">
             <v-col cols="12" class="nav-menu-main-text">2. 댓글 및 평점</v-col>
           </v-row>
-          <v-row class="ma-0 pa-0 ">
+          <v-row class="ma-0 pa-0 ml-3">
             <v-col cols="1" class="ma-0 pa-0 ml-5" >
               <v-divider class="grey darken-3" style="border-width: 1.5px;" vertical></v-divider>
             </v-col>
@@ -51,11 +50,25 @@
               </v-col>
             </v-col>
           </v-row>
-
-          <v-row class="pa-0 ma-1 mt-1">
+          <v-row class="pa-0 ma-1 ml-3 pb-12">
             <v-col cols="12" class="nav-menu-main-text">3. 비슷한 책 추천</v-col>
           </v-row>
+
+          <v-row
+              class="pa-0 ma-1 mb-5"
+              v-for="(item,index) in payItems"
+              :key="index"
+          >
+            <v-btn icon color="rgb(40,40,40)" height="45px" width="200px"
+                   class="pay-card align-center d-flex flex-column ml-4"
+                   @click="pushLink(item.link)"
+            >
+              <span class="white--text pl-2" style="font-size: 16px">{{ item.text }}</span>
+              <v-icon right :size="item.size" :color="item.color">{{item.icon}}</v-icon>
+            </v-btn>
+          </v-row>
         </v-card>
+
       </v-col>
     </v-row>
     <!-- 우측 Nav 끝-->
@@ -65,10 +78,10 @@
         <!-- 이미지와 메인정보 -->
         <v-row>
           <!--책 이미지 -->
-          <v-col cols="12" md="4" class="justify-center align-center d-flex" >
+          <v-col cols="12" lg="4" class="justify-center align-center d-flex" >
             <div style="display: inline-block;" class="ma-4">
               <v-card
-                  style="height: 340px;overflow: hidden; position:relative"
+                  style="overflow: hidden; position:relative"
                   elevation="2"
                   class="fill-height"
                   width=""
@@ -99,7 +112,7 @@
 
 
           <!--메인 정보-->
-          <v-col cols="12" md="8" class="mt-8">
+          <v-col cols="12" lg="8" class="mt-8">
 
             <v-row>
               <v-col cols="12" class="ml-md-0 ml-4">
@@ -120,13 +133,16 @@
 
             <v-divider class="mt-7 mb-7 mr-md-10 grey darken-3" style="border: 0.5px solid"></v-divider>
 
-            <v-row>
-              <v-col cols="4" md="3" class="ml-4 ml-md-0">
-                <span class="white--text" style="font-size: 13px">판매 가격</span>
-                <v-btn color="rgb(40,40,40)" height="60px" class="price-card d-flex flex-column">
-                  <span v-html="bookData.bookSalePrice" class="white--text" style="font-size: 20px"></span>
-                  <span class="white--text" >&nbsp;원</span>
-                </v-btn>
+            <v-row class="pl-4">
+              <v-col>
+                <v-row>
+                  <v-btn color="rgb(40,40,40)" height="60px" disabled class="price-card d-flex flex-column">
+                    <span class="white--text" style="font-size: 14px">판매가: </span>
+                    <span v-html="bookData.bookSalePrice" class="white--text pl-1" style="font-size: 20px"></span>
+                    <span class="white--text" style="font-size: 14px" >원</span>
+                  </v-btn>
+                </v-row>
+
               </v-col>
             </v-row>
 
@@ -276,6 +292,12 @@ export default {
         {icon: "mdi-barcode", text: 'ISBN-13'},
         {icon: "mdi-calendar", text: 'Publication date'},
       ],
+
+      payItems: [
+        {text:'바로구매',icon:'mdi-checkbox-multiple-marked-circle',color:'yellow darken-2',size:'26px'},
+        {text:'장바구니',icon:'mdi-cart',color:'green darken-2',size:'24px'},
+        {text:'위시리스트',icon:'mdi-heart',color:'red darken-2',size:'22px'}
+      ]
     }
   },
   methods: {
@@ -305,6 +327,11 @@ export default {
             console.log(error.response);
           })
     },
+
+    pushLink(){
+      let bid = this.bookData.bid
+      this.$router.push({name: 'Order' ,query: {bid} });
+    },
   },
   mounted() {
     this.getBookDetail()
@@ -324,8 +351,12 @@ export default {
 }
 
 .price-card{
-  outline: rgb(220,220,220) 1px solid;
+  outline: rgb(170,170,170) 1.5px solid;
   border-radius: 5px 30px 30px 30px;
+}
+.pay-card{
+  outline: rgb(170,170,170) 1.5px solid;
+  border-radius: 30px 30px 30px 30px;
 }
 .theme--light.v-timeline:before {
   background: rgb(60,60,60);

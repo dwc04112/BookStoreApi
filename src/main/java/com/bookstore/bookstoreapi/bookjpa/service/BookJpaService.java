@@ -45,6 +45,10 @@ public class BookJpaService {
         return bookData.orElseThrow(() -> new RuntimeException("no data"));
     }
 
+    public BookMainDTO getBookInfoId(long bid) {
+        return bookRepository.getBookByBidAndIsDel(bid, "N");
+    }
+
 
     //책 등록
     public ApiResponse<Book> postBook(BookDTO bookDTO) {

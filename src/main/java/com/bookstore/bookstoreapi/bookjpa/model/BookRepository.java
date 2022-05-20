@@ -47,6 +47,8 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     void updateIsDel(String isDel, Long mid);
 
     List<BookMainDTO> findBookBy();
+    BookMainDTO getBookByBidAndIsDel(Long bid, String isDel);
+
 
     //bookThumb ,bookTitle ,bookKeyword, bookAuthor, bookPublisher,bookContent ,bookPreview
     @Query(value = "select bid, bookThumb ,bookTitle ,bookKeyword, bookAuthor, bookPublisher,bookContent ,bookPreview FROM Book where bid between 1 and 5", nativeQuery = true)

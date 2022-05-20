@@ -37,12 +37,18 @@ public class BookJpaController {
     public List<BookMainDetailInterface> getBookListMain(){
         return bookJpaService.getBookListMain();
     }
+
     //책 상세화면
     @GetMapping("/{bid}")
     public Book getBookId(@PathVariable long bid){
         return bookJpaService.getBookId(bid);
     }
 
+    //책 상세화면 (info 인터페이스 사용)
+    @GetMapping("/info/{bid}")
+    public BookMainDTO getBookIdMain(@PathVariable long bid){
+        return bookJpaService.getBookInfoId(bid);
+    }
 
 
     //책 등록

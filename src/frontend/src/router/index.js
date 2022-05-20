@@ -6,8 +6,9 @@ import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 
 const routes = [
-    // Book
 
+    // *****
+    // Book
     {
         path: '/about',
         name: 'About',
@@ -45,23 +46,28 @@ const routes = [
         component: () =>  import('@/views/book/bookComponents/CommentComponent'),
 
     },
+
+    // *****
+    //Order
+    {
+        path: '/order',
+        name: 'Order',
+        component: () =>  import('@/views/order/Order'),
+    },
     {
         path: '/paymentComponent',
         name: 'PaymentComponent',
-        component: () =>  import('@/views/book/bookComponents/PaymentComponent'),
-
+        component: () =>  import('@/views/order/orderComponents/PaymentComponent'),
     },
 
 
 
-
-    //Menu
+    //mainMenu
     {
         path: '/SearchMenu',
         name: 'SearchMenu',
         component: () =>  import('@/views/SearchMenu')
     },
-
 
     {
         path: '/',
@@ -80,6 +86,9 @@ const routes = [
     },
 
 
+
+
+    // *****
     // myPage
     {
         path: '/infoNavi',
@@ -108,7 +117,6 @@ const routes = [
         name: 'InfoActivity',
         component: () =>  import('@/views/mypage/InfoActivity')
     },
-
 
 
     //Info Component (MY Page)
@@ -143,6 +151,7 @@ const routes = [
     },
 
 
+    // *****
     //ex
     {
         path: '/exam',
