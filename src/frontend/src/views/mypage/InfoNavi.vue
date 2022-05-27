@@ -119,7 +119,7 @@ export default {
       links: [
         {icon:'mdi-home', name:'My Page', link:'InfoMain', color:'red lighten-1', show:false},
         {icon:'mdi-pencil', name:'Edit Info', link:'InfoEdit', color:'red lighten-1', show:true},
-        {icon:'mdi-cart', name:'Cart', link:'InfoWishList', color:'orange lighten-1', show:true},
+        {icon:'mdi-cart', name:'Cart', link:'InfoCart', color:'orange lighten-1', show:true},
         {icon:'mdi-library', name:'Wish List', link:'InfoWishList', color:'green lighten-1', show:true},
         {icon:'mdi-book', name:'Activity', link:'InfoActivity', color:'blue lighten-1', show:true},
       ],

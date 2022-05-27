@@ -169,6 +169,22 @@
 
                 <v-divider></v-divider>
                 <v-card-actions>
+                  <v-tooltip top color="green darken-2">
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-btn
+                          v-bind="attrs"
+                          v-on="on"
+                          icon
+                          @click.stop="addCart(selectBook.bid)"
+                      >
+                        <v-icon color="green darken-2">
+                          mdi-cart
+                        </v-icon>
+                      </v-btn>
+                    </template>
+                    <span>장바구니 추가</span>
+                  </v-tooltip>
+
                   <v-tooltip top color="pink">
                     <template v-slot:activator="{ on, attrs }">
                       <v-btn
@@ -185,7 +201,7 @@
                     <span>위시리스트에 추가</span>
                   </v-tooltip>
 
-                  <v-tooltip top color="green">
+                  <v-tooltip top color="yellow darken-2">
                     <template v-slot:activator="{ on, attrs }">
                       <v-btn
                           v-bind="attrs"
@@ -193,7 +209,7 @@
                           icon
                           @click.stop="detailView(selectBook.bid)"
                       >
-                        <v-icon color="green">
+                        <v-icon color="yellow darken-2">
                           mdi-book-open-variant
                         </v-icon>
                       </v-btn>
@@ -639,6 +655,18 @@ export default {
       console.log("push num : "+ pushNum)
       this.$router.push({name: 'InfoNavi', params: {AboutTab: pushNum}})
     },
+
+    //cart에 담기
+    addCart(bid){
+      this.$axios.get("cart/"+bid
+       ).then(response=>{
+        console.log(response.data.message);
+        alert("성공적으로 장바구니에 추가했습니다")
+      }).catch(error =>{
+        console.log(error.response);
+      })
+    },
+
 
     //책 보러가기
     detailView(bid){

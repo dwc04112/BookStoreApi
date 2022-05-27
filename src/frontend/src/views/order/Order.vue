@@ -147,9 +147,6 @@
 
 
 
-
-
-
         <!--right nav-->
         <v-col cols="12" md="3" class="mt-16">
           <v-row class="pa-0 ma-0">
@@ -239,11 +236,12 @@
 import SearchMenu from "@/views/SearchMenu";
 const { IMP } = window;
 export default {
-  components: { SearchMenu},
+  components: {SearchMenu},
   name: "Order",
   data: function (){
     return{
       bid : this.$route.query.bid,
+      bookCount : 0,
       bookData : [],
 
       orderItems:[
@@ -263,7 +261,6 @@ export default {
 
       //주문관련
       impCode : 'imp85667087',
-
       orderCheck : false,
       order: {
         name : '',
@@ -274,7 +271,6 @@ export default {
         buyer_postcode: '',
         buyer_addr: '',
         buyer_detail_addr: '',
-
         buyer_extra_addr: '',
       },
 
@@ -357,7 +353,6 @@ export default {
     //유효성 검사
     orderDataCheck(){
 
-
       let nameTest = /^[가-힣a-zA-Z]+$/.test(this.order.buyer_name)
       let nameCheck = false
       let addrCheck = false
@@ -403,6 +398,24 @@ export default {
       if(nameCheck && addrCheck && phoneCheck && this.orderCheck){
         this.requestPay(this.payRadios);
       }
+    },
+
+    //주문번호 생성
+    getMerchantId(){
+      let data = {};
+      data.merchant_uid = 'merchant_' + new Date().getTime();
+      data.bid = this.bid           //책id
+
+
+      this.$axios.post("order/",JSON.stringify(data),{
+        headers: {
+          "Content-Type": `application/json`,
+        },
+      }).then(response=>{
+        console.log(response.data)
+      }).catch(error =>{
+        console.log(error.response);
+      })
     },
 
     requestPay(pgData) {

@@ -54,11 +54,7 @@ const routes = [
         name: 'Order',
         component: () =>  import('@/views/order/Order'),
     },
-    {
-        path: '/paymentComponent',
-        name: 'PaymentComponent',
-        component: () =>  import('@/views/order/orderComponents/PaymentComponent'),
-    },
+
 
 
 
@@ -117,6 +113,13 @@ const routes = [
         name: 'InfoActivity',
         component: () =>  import('@/views/mypage/InfoActivity')
     },
+    {
+        path: '/infoCart',
+        name: 'InfoCart',
+        component: () =>  import('@/views/mypage/InfoCart'),
+    },
+
+
 
 
     //Info Component (MY Page)
