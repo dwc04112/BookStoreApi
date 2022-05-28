@@ -28,6 +28,10 @@ public interface CartRepository extends JpaRepository<Cart, Long> {
             "FROM Cart c where c.mid =?1 and c.isDel=?2 order by cartId desc ")
     List<CartInterface> getMyCart(Long mid, String isDel);
 
+
+    @Query("select count(c.cartId) from Cart c where c.mid=?1 and c.book.bid=?2")
+    Integer selectByMidAndBid(Long mid, Long bid);
+
     Cart findTopByOrderByCartIdDesc();
 
     @Transactional

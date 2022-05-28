@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -26,7 +27,10 @@ public class CartService {
         return memberRepository.getMemberIdByEmail(memberEmail);
     }
 
-    //mid 에 해당하는 장바구니
+
+
+
+    //장바구니 목록 보여주기 > mid 에 해당하는 장바구니
     public List<CartInterface> getCartList() {
         Long mid = getMemberIdByEmail(memberRepository);
         return cartRepository.getMyCart(mid, "N");
@@ -34,16 +38,25 @@ public class CartService {
 
     //장바구니 담기
     public ApiResponse<CartInterface> addToCart(Long bid) {
-        long newCartIdValue = this.getNewCartIdValue(cartRepository);
         Long mid = getMemberIdByEmail(memberRepository);
-        int result =  cartRepository.addToCart(newCartIdValue,mid,bid,1,"N");
-        if(result < 1){
-            return new ApiResponse<>(false,"items don't add to cart");
+        int matchBid = cartRepository.selectByMidAndBid(mid, bid);
+
+        if(matchBid>0){
+
+            return new ApiResponse<>(false, "bid : " + bid +" already exist");
         }else{
-            return new ApiResponse<>(true,"successfully add to cart. New id : "+newCartIdValue );
+
+            long newCartIdValue = this.getNewCartIdValue(cartRepository);
+
+            int result = cartRepository.addToCart(newCartIdValue, mid, bid, 1, "N");
+            if (result < 1) {
+                return new ApiResponse<>(false, "items don't add to cart");
+            } else {
+                return new ApiResponse<>(true, "successfully add to cart. New Cart id : " + newCartIdValue);
+            }
         }
     }
-
+    //장바구니 id 생성
     private long getNewCartIdValue(CartRepository cartRepository) {
         long result;
         Cart cartOfMaxId = cartRepository.findTopByOrderByCartIdDesc();
