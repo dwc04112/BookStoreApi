@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface CartRepository extends JpaRepository<Cart, Long> {
@@ -38,4 +39,12 @@ public interface CartRepository extends JpaRepository<Cart, Long> {
     @Modifying
     @Query(value = "Insert into Cart value (:cartId,:mid,:bid,:bookCount,:isDel)", nativeQuery = true)
     Integer addToCart(@Param("cartId") Long cartId, @Param("mid") Long mid, @Param("bid") Long bid, @Param("bookCount") Integer bookCount, @Param("isDel") String isDel);
+
+    //수량변경
+    Optional<Cart> findCartByCartId(Long cartId);
+
+    //리스트 삭제
+    @Transactional
+    @Modifying
+    void deleteCartsByCartIdIn(List<Long> cartArr);
 }

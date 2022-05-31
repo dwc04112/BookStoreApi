@@ -56,4 +56,8 @@ public interface WishlistRepository extends JpaRepository<Wishlist, Long> {
     // 로그인된 아이디의 위시리스트 : 카테고리 Num & 카테고리 Title & 카테고리에 등록된 책
     @Query("Select titleNum as titleNum ,wishlistTitle as wishlistTitle, count(titleNum) as countTitle from Wishlist where mid=?1 group by titleNum")
     List<WishListTitleInterface> getWishListTitle(long mid);
+
+    //WishList -> Cart 로 이동할때 wish id로 bid 찾기
+    @Query("select bid FROM Wishlist WHERE wid = ?1")
+    Long getBidByWid(Long wid);
 }

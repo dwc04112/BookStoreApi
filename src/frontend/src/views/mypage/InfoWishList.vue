@@ -330,7 +330,6 @@ export default {
         align: 'center',
         sortable: false,
         value: 'bookThumb',
-
         class:  "grey lighten-3"
       },
       { text: '책 이름', value: 'bookTitle', align: 'start',class: "grey lighten-3"},
@@ -403,7 +402,15 @@ export default {
     },
 
     addToCart(){
-      alert(this.selectWidList + "번 책을 추가합니다")
+      let widArr = this.selectWidList
+      this.$axios.get("cart/fromWish/"+widArr)
+          .then(response=>{
+            console.log(response.data)
+            alert(response.data.data + "번 책을 장바구니에 추가했습니다")
+            this.getWishList(this.selectKeyword)  //선택된 키워드 번호로 책목록 다시받기 (리로드)
+          }).catch(error =>{
+        console.log(error.response);
+      })
     },
 
 

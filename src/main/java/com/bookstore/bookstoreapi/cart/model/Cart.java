@@ -33,6 +33,9 @@ public class Cart implements Serializable {
     private int bookCount;
     private String isDel;
 
+    public void updateCount(int bookCount){
+        this.bookCount = bookCount;
+    }
 
     public Cart(Long cartId,
                 Long mid,
