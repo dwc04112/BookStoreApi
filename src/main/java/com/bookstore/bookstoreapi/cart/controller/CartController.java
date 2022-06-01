@@ -1,5 +1,6 @@
 package com.bookstore.bookstoreapi.cart.controller;
 
+import com.bookstore.bookstoreapi.cart.dto.CartByOrder;
 import com.bookstore.bookstoreapi.cart.dto.CartDTO;
 import com.bookstore.bookstoreapi.cart.dto.CartInterface;
 import com.bookstore.bookstoreapi.cart.model.Cart;
@@ -20,13 +21,19 @@ public class CartController {
 
     public final CartService cartService;
 
+    //전체 보여주기
     @GetMapping("/")
     public List<CartInterface> getCartList(){
         return cartService.getCartList();
     }
+    //선택한 데이터만 보여주기
+    @GetMapping("/list/{cartIdArr}")
+    public List<CartByOrder> getCartList(@PathVariable List<Long> cartIdArr){
+        return cartService.getCartListByIdArr(cartIdArr);
+    }
 
     //장바구니 담기 - not list
-    @GetMapping("/{bid}")
+    @GetMapping("/add/{bid}")
     public ApiResponse<CartInterface> addToCart(@PathVariable Long bid){
         return cartService.addToCart(bid);
     }

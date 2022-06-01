@@ -658,7 +658,7 @@ export default {
 
     //cart에 담기
     addCart(bid){
-      this.$axios.get("cart/"+bid
+      this.$axios.get("cart/add/"+bid
        ).then(response=>{
         console.log(response.data.message);
         alert("성공적으로 장바구니에 추가했습니다")

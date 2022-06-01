@@ -2,7 +2,6 @@
   <v-app>
     <SearchMenu @moveTabNum="pushLink"></SearchMenu>
     <div style="height: 80px"></div>
-
     <v-container fluid style="height: 100%; background-color: rgb(24,24,24)">
       <v-row class="ma-0 pa-0 justify-center ">
         <v-col cols="12" style="height: 40px"/>
@@ -11,53 +10,74 @@
 
         <!--main-->
         <v-col cols="12" md="6">
+          <div class="white--text">{{order.name}}</div>
 
           <v-row class="ma-1">
-            <span class="top-text">구매상품</span>
-          </v-row>
-
-          <v-row align="center" class="mb-12 pa-md-10 pa-3 " style="background-color: rgb(40,40,40)">
-            <!--책 이미지 영역-->
-            <v-col cols="12" md="3" class=" justify-center align-center d-flex flex-column">
-              <v-img
-                  :src="bookData.bookThumb"
-                  :lazy-src="bookData.bookThumb"
-                  alt="bookThumb"
-                  max-height="150"
-                  max-width="100"
-              ><template v-slot:placeholder>
-                <v-row
-                    class="fill-height ma-0"
-                    align="center"
-                    justify="center"
-                >
-                  <v-progress-circular
-                      indeterminate
-                      color="black lighten-5"
-                  ></v-progress-circular>
-                </v-row>
-              </template>
-              </v-img>
-            </v-col>
-            <!--책 이미지 영역 끝-->
-            <v-col cols="9" md="6" class="mt-5 mb-5">
-              <!--책 제목과 저자-->
-              <v-row class="book-text ml-1 ma-0">
-                <span>{{bookData.bookTitle}}</span>
-              </v-row>
-              <v-row class="book-subtext ml-1 ma-0">
-                <span>{{bookData.bookAuthor}} | {{bookData.bookPublisher}}</span>
-              </v-row>
-            </v-col>
-            <v-col cols="3" md="2" class="mt-5 mb-5">
-              <span class="book-text">{{bookData.bookSalePrice}} 원</span>
-            </v-col>
+            <span class="top-text">주문목록</span>
           </v-row>
 
 
+          <v-row style="background-color: rgb(40,40,40)" class="justify-center align-center">
+
+            <v-col cols="12" md="11" class="pa-6"><v-divider dark></v-divider></v-col>
+
+            <v-col cols="12" md="11" class="pa-0 "
+                   v-for="(data,index) in bookData"
+                   :key="index">
+              <v-row align="center" class="ma-0 pl-4 pr-4 no-gutters ">
+                <!--책 이미지 영역-->
+                <v-col cols="12" md="2" class="pl-4">
+                  <v-img
+                      :src="data.bookThumb"
+                      :lazy-src="data.bookThumb"
+                      alt="bookThumb"
+                      max-height="130"
+                      max-width="80"
+                  ><template v-slot:placeholder>
+                    <v-row
+                        class="fill-height ma-0"
+                        align="center"
+                        justify="center"
+                    >
+                      <v-progress-circular
+                          indeterminate
+                          color="black lighten-5"
+                      ></v-progress-circular>
+                    </v-row>
+                  </template>
+                  </v-img>
+                </v-col>
+                <!--책 이미지 영역 끝-->
+                <v-col cols="9" md="8" class="mt-5 mb-5">
+                  <!--책 제목과 저자-->
+                  <v-row class="book-text ml-1 ma-0">
+                    <span>{{data.bookTitle}}</span>
+                  </v-row>
+                  <v-row class="book-subtext ml-1 ma-0">
+                    <span>{{data.bookAuthor}} | {{data.bookPublisher}}</span>
+                  </v-row>
+                </v-col>
+
+                <v-col cols="3" md="2" class="mt-5 mb-5 pr-4 align-end d-flex flex-column">
+                  <span class="book-text">{{data.bookSalePrice}} 원</span>
+                  <span class="book-subtext" style="font-size: 16px">수량 : {{data.bookCount}} 권</span>
+                </v-col>
+
+                <v-col cols="12" class="pt-6 pb-6">
+                  <v-divider dark></v-divider>
+                </v-col>
+              </v-row>
+
+            </v-col>
+          </v-row>
 
 
-          <v-row class="ma-1">
+
+
+
+
+
+          <v-row class="ma-1 mt-10">
             <span class="top-text">배송정보</span>
           </v-row>
 
@@ -241,9 +261,8 @@ export default {
   data: function (){
     return{
       bid : this.$route.query.bid,
-      bookCount : 0,
+      bidArr : this.$route.query.bidArr,
       bookData : [],
-
       orderItems:[
         {text: '상품금액', data: 0, },
         {text: '배송금액', data: 0, },
@@ -291,22 +310,40 @@ export default {
     },
 
     getBookInfo() {
-      this.$axios.get('book/info/' + this.bid)
-          .then(response => {
-            this.bookData = response.data;
-            //orderItems 리스트에 가격 set
-            this.orderItems[0].data = response.data.bookSalePrice;
-            //주문-amount = 최종금액. (책 가격 + 배송비 - 할인금액)
-            this.order.amount = this.orderItems[0].data + this.orderItems[1].data - this.orderItems[2].data;
-            //주문 item name
-            this.order.name = response.data.bookTitle;
-          })
-          .catch(error => {
-            console.log(error.response);
-          })
+      if(this.bid == null){
+        this.$axios.get('cart/list/' + this.bidArr)
+            .then(response => {
+              this.bookData = response.data;
+              //orderItems 리스트에 가격 set
+              this.orderItems[0].data = response.data.map(e => e.bookSalePrice).reduce((prev,curr) => prev + curr,0)
+              //주문-amount = 최종금액. (책 가격 + 배송비 - 할인금액)
+              this.order.amount = this.orderItems[0].data + this.orderItems[1].data - this.orderItems[2].data;
+              //주문 item name
+              this.order.name = response.data[1].bookTitle + " 외 " + (response.data.length-1) +"종"
+            })
+            .catch(error => {
+              console.log(error.response);
+            })
+      }
+      if(this.bidArr == null){
+        this.$axios.get('book/info/' + this.bid)
+            .then(response => {
+              this.bookData[0] = response.data;
+              this.orderItems[0].data = response.data.bookSalePrice;
+              //주문-amount = 최종금액. (책 가격 + 배송비 - 할인금액)
+              this.order.amount = this.orderItems[0].data + this.orderItems[1].data - this.orderItems[2].data;
+              //주문 item name
+              this.order.name = response.data.bookTitle;
+              this.$set(this.bookData[0],'bookCount',1)  //수량
+            })
+            .catch(error => {
+              console.log(error.response);
+            })
+      }
     },
 
 
+    //
     //카카오 우편번호 api
     getPostcode(){
       new window.daum.Postcode({
@@ -394,18 +431,19 @@ export default {
         alert("구매 동의를 체크해주세요")
         return false;
       }
-
       if(nameCheck && addrCheck && phoneCheck && this.orderCheck){
         this.requestPay(this.payRadios);
       }
     },
 
+
+
+
     //주문번호 생성
     getMerchantId(){
       let data = {};
       data.merchant_uid = 'merchant_' + new Date().getTime();
-      data.bid = this.bid           //책id
-
+      data.bid = this.bid       //책id
 
       this.$axios.post("order/",JSON.stringify(data),{
         headers: {
@@ -418,6 +456,9 @@ export default {
       })
     },
 
+
+
+    //import 주문관련
     requestPay(pgData) {
       //1. 객체 초기화 (가맹점 식별코드 삽입)
       IMP.init(this.impCode);
@@ -471,18 +512,14 @@ export default {
             console.log(error.response);
           })
 
-
-
-
         } else {
           let msg = '결제에 실패하였습니다.';
           msg += '에러내용 : ' + rsp.error_msg;
           console.log(msg)
         }
       });
-
-
     },
+
 
   },
   mounted() {
@@ -528,10 +565,7 @@ export default {
   color: #BDBDBD;
   font-size: 13px;
 }
-.content-text{
-  color: #BDBDBD;
-  font-size: 15px;
-}
+
 
 
 @media screen and (max-width: 960px){

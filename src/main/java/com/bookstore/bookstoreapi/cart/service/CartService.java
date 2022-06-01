@@ -1,5 +1,6 @@
 package com.bookstore.bookstoreapi.cart.service;
 
+import com.bookstore.bookstoreapi.cart.dto.CartByOrder;
 import com.bookstore.bookstoreapi.cart.dto.CartDTO;
 import com.bookstore.bookstoreapi.cart.dto.CartInterface;
 import com.bookstore.bookstoreapi.cart.model.Cart;
@@ -37,8 +38,16 @@ public class CartService {
     //장바구니 목록 보여주기 > mid 에 해당하는 장바구니
     public List<CartInterface> getCartList() {
         Long mid = getMemberIdByEmail();
+        //isDel = book.isDel
         return cartRepository.getMyCart(mid, "N");
     }
+    //장바구니 목록 보여주기 > 선택한 cart id 들만
+    public List<CartByOrder> getCartListByIdArr(List<Long> cartIdArr) {
+        Long mid = getMemberIdByEmail();
+        //isDel = book.isDel
+        return cartRepository.getMyCartByIdArr(mid,cartIdArr, "N");
+    }
+
 
     //장바구니 담기 - not list
     public ApiResponse<CartInterface> addToCart(Long bid) {

@@ -6,7 +6,6 @@
         <span class="main-title">장바구니</span>
       </v-col>
     </v-row>
-
     <v-row class="pa-0 ma-0 justify-end">
       <v-col cols="12" md="6" offset="3" class="pa-0 ma-0 pl-1 pr-1 mt-6">
         <v-row style="background-color: rgb(40,40,40)" class="pb-4 justify-center align-center">
@@ -51,7 +50,7 @@
             <v-row align="center" class="ma-0 pa-0">
               <v-col cols="1" class="justify-end d-flex">
                 <v-checkbox
-                    class="pb-4" v-model="data.select"
+                    class="pb-4" v-model="selected" :value="data"
                     on-icon="mdi-check-circle blue--text"
                     off-icon="mdi-check-circle-outline white--text"
                     hide-details/>
@@ -170,7 +169,7 @@
         </v-row>
         <v-row class="ma-0">
           <v-col class="pa-0" cols="12">
-            <v-btn class="ma-8 mt-4" color="yellow darken-2" max-width="300px" width="80%" height="50px">
+            <v-btn class="ma-8 mt-4" color="yellow darken-2" max-width="300px" width="80%" height="50px" dark @click="linkOrder" :disabled="selected.length<1">
               <span style="font-weight: bold; font-size: 20px; color: rgb(40,40,40)">결제하기</span>
             </v-btn>
           </v-col>
@@ -196,32 +195,42 @@ export default {
       selectAll: true,
       totalCount : 0,
       totalAmount : 0,
+
+      //test
+      selected :[],
     }
   },
   watch: {
+    /*
     bookData: {
       deep : true,
       handler(val){
         let count = val.filter(e => true === e.select)
         this.selectAll = count.length === val.length;
-
-        this.totalCount = count.map(e => e.bookCount).reduce((prev,curr) => prev + curr,0)
+        this.totalCount = D
         this.totalAmount = count.map(e => (e.bookSalePrice * e.bookCount)).reduce((prev,curr) => prev + curr,0)
       }
+    }
+
+     */
+    selected(val){
+      this.selectAll = this.bookData.length === val.length;
+      this.totalCount = val.map(e => e.bookCount).reduce((prev,curr) => prev + curr,0)
+      this.totalAmount = val.map(e => (e.bookSalePrice * e.bookCount)).reduce((prev,curr) => prev + curr,0)
+
     }
   },
 
 
   methods: {
 
-
-
     getBookInfo() {
       this.$axios.get('cart/')
           .then(response => {
             this.bookData = response.data;
+            this.selected = [];
             for(let i =0; i<response.data.length; i++){
-              this.$set(this.bookData[i],'select', true)
+              // this.$set(this.bookData[i],'select', true)
               this.$set(this.bookData[i],'fixCount',response.data[i].bookCount) //수량변경용 fixCount
             }
             if(response.data.length === 0){
@@ -233,18 +242,30 @@ export default {
           })
     },
 
+    linkOrder(){
+      let bidArr = this.selected.map(e => e.cartId)
+      console.log(bidArr)
+      this.$router.push({name: 'Order', query: {bidArr} });
+    },
+
     selectAllBtn(){
+      /*
       if(this.selectAll === true) {
-        this.bookData.map(e => {
-          e.select = true
+        this.bookData.map(e => { e.select = true
           return e;
         })
       }else{
-        this.bookData.map(e => {
-          e.select = false
+        this.bookData.map(e => {e.select = false
           return e;
         })
       }
+       */
+      if(this.selectAll === true) {
+        this.selected =  this.bookData.map(e => e)
+      }else{
+        this.selected = []
+      }
+
     },
     // 수량변경 - fixCount 변경 (저장x)
     setCount(index,data){
