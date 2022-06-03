@@ -32,6 +32,7 @@ public class CartController {
         return cartService.getCartListByIdArr(cartIdArr);
     }
 
+
     //장바구니 담기 - not list
     @GetMapping("/add/{bid}")
     public ApiResponse<CartInterface> addToCart(@PathVariable Long bid){

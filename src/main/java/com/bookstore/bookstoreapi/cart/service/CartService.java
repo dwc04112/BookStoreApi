@@ -49,6 +49,7 @@ public class CartService {
     }
 
 
+
     //장바구니 담기 - not list
     public ApiResponse<CartInterface> addToCart(Long bid) {
         Long mid = getMemberIdByEmail();
@@ -57,7 +58,7 @@ public class CartService {
             return new ApiResponse<>(false, "bid : " + bid +" already exist");
         }else{
             long newCartIdValue = this.getNewCartIdValue(cartRepository);
-            int result = cartRepository.addToCart(newCartIdValue, mid, bid, 1, "N");
+            int result = cartRepository.addToCart(newCartIdValue, mid, bid, 1);
             if (result < 1) {
                 return new ApiResponse<>(false, "items don't add to cart");
             } else {
@@ -93,7 +94,7 @@ public class CartService {
                 successfulBid.add(bid);
             }else{
                 long newCartIdValue = this.getNewCartIdValue(cartRepository);
-                int result = cartRepository.addToCart(newCartIdValue, mid, bid, 1, "N");
+                int result = cartRepository.addToCart(newCartIdValue, mid, bid, 1);
                 if (result < 1) {
                     failedBid.add(bid);
                 }else {

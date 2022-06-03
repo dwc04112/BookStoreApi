@@ -49,10 +49,11 @@ public interface CartRepository extends JpaRepository<Cart, Long> {
 
     Cart findTopByOrderByCartIdDesc();
 
+
     @Transactional
     @Modifying
-    @Query(value = "Insert into Cart value (:cartId,:mid,:bid,:bookCount,:isDel)", nativeQuery = true)
-    Integer addToCart(@Param("cartId") Long cartId, @Param("mid") Long mid, @Param("bid") Long bid, @Param("bookCount") Integer bookCount, @Param("isDel") String isDel);
+    @Query(value = "Insert into Cart value (:cartId,:mid,:bid,:bookCount)", nativeQuery = true)
+    Integer addToCart(@Param("cartId") Long cartId, @Param("mid") Long mid, @Param("bid") Long bid, @Param("bookCount") Integer bookCount);
 
     //수량변경
     Optional<Cart> findCartByCartId(Long cartId);

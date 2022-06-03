@@ -31,22 +31,20 @@ public class Cart implements Serializable {
 
     @Column(unique = true)
     private int bookCount;
-    private String isDel;
 
     public void updateCount(int bookCount){
         this.bookCount = bookCount;
     }
 
+
     public Cart(Long cartId,
                 Long mid,
                 Book book,
-                int bookCount,
-                String isDel
+                int bookCount
                 ){
         this.cartId = cartId;
         this.mid = mid;
         this.book = book;
         this.bookCount = bookCount;
-        this.isDel = isDel;
     }
 }

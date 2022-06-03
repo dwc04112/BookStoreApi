@@ -6,6 +6,7 @@
         <span class="main-title">장바구니</span>
       </v-col>
     </v-row>
+
     <v-row class="pa-0 ma-0 justify-end">
       <v-col cols="12" md="6" offset="3" class="pa-0 ma-0 pl-1 pr-1 mt-6">
         <v-row style="background-color: rgb(40,40,40)" class="pb-4 justify-center align-center">
@@ -50,7 +51,7 @@
             <v-row align="center" class="ma-0 pa-0">
               <v-col cols="1" class="justify-end d-flex">
                 <v-checkbox
-                    class="pb-4" v-model="selected" :value="data"
+                    class="pb-4" v-model="selected" :value="data.cartId"
                     on-icon="mdi-check-circle blue--text"
                     off-icon="mdi-check-circle-outline white--text"
                     hide-details/>
@@ -192,32 +193,34 @@ export default {
 
       noCart : false, //댓글없을때
 
-      selectAll: true,
+      selectAll: false,
       totalCount : 0,
       totalAmount : 0,
 
-      //test
       selected :[],
     }
   },
   watch: {
-    /*
+
+    //이중비교
+    //1. 수량변경
+    //수량 업데이트시 변경되는 bookData 값을 확인하고 수량과 금액을 변경
     bookData: {
       deep : true,
       handler(val){
-        let count = val.filter(e => true === e.select)
-        this.selectAll = count.length === val.length;
-        this.totalCount = D
-        this.totalAmount = count.map(e => (e.bookSalePrice * e.bookCount)).reduce((prev,curr) => prev + curr,0)
+        let total = val.filter(e => this.selected.includes(e.cartId))
+        this.totalCount = total.map(e=>e.bookCount).reduce((prev,curr) => prev + curr,0)
+        this.totalAmount = total.map(e => (e.bookSalePrice * e.bookCount)).reduce((prev,curr) => prev + curr,0)
       }
-    }
-
-     */
+    },
+    //2. 책 선택
+    //책 선택시 변경되는 selected 값을 확인하고 수량과 금액을 변경
     selected(val){
-      this.selectAll = this.bookData.length === val.length;
-      this.totalCount = val.map(e => e.bookCount).reduce((prev,curr) => prev + curr,0)
-      this.totalAmount = val.map(e => (e.bookSalePrice * e.bookCount)).reduce((prev,curr) => prev + curr,0)
+      this.selectAll = this.bookData.length === val.length; //전체선택
 
+      let total = this.bookData.filter(e => val.includes(e.cartId))
+      this.totalCount = total.map(e=>e.bookCount).reduce((prev,curr) => prev + curr,0)
+      this.totalAmount = total.map(e => (e.bookSalePrice * e.bookCount)).reduce((prev,curr) => prev + curr,0)
     }
   },
 
@@ -228,11 +231,12 @@ export default {
       this.$axios.get('cart/')
           .then(response => {
             this.bookData = response.data;
-            this.selected = [];
+          //  this.selected = response.data.map(e=>e.cartId)
             for(let i =0; i<response.data.length; i++){
               // this.$set(this.bookData[i],'select', true)
               this.$set(this.bookData[i],'fixCount',response.data[i].bookCount) //수량변경용 fixCount
             }
+
             if(response.data.length === 0){
               this.noCart = true;
             }
@@ -242,30 +246,12 @@ export default {
           })
     },
 
-    linkOrder(){
-      let bidArr = this.selected.map(e => e.cartId)
-      console.log(bidArr)
-      this.$router.push({name: 'Order', query: {bidArr} });
-    },
-
     selectAllBtn(){
-      /*
       if(this.selectAll === true) {
-        this.bookData.map(e => { e.select = true
-          return e;
-        })
-      }else{
-        this.bookData.map(e => {e.select = false
-          return e;
-        })
-      }
-       */
-      if(this.selectAll === true) {
-        this.selected =  this.bookData.map(e => e)
+        this.selected =  this.bookData.map(e=>e.cartId)
       }else{
         this.selected = []
       }
-
     },
     // 수량변경 - fixCount 변경 (저장x)
     setCount(index,data){
@@ -288,7 +274,6 @@ export default {
         },
       }).then(response=>{
         console.log(response.data)
-        this.selected = [];
         this.getBookInfo()
       }).catch(error =>{
         console.log(error.response);
@@ -297,7 +282,7 @@ export default {
 
     //선택삭제
     selectDelete(){
-      let cartIdList = this.bookData.filter(e => true === e.select).map(e => e.cartId)
+      let cartIdList = this.selected
       this.$axios.delete("cart/"+cartIdList)
           .then(response=>{
             console.log(response.data)
@@ -306,7 +291,15 @@ export default {
           }).catch(error =>{
             console.log(error.response);
           })
-    }
+    },
+
+    //주문으로 이동
+    linkOrder(){
+      let bidArr = this.selected
+      console.log(bidArr)
+      this.$router.push({name: 'Order', query: {bidArr} });
+    },
+
   },
 
   mounted() {

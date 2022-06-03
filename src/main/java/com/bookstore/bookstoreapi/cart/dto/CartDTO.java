@@ -9,5 +9,4 @@ public class CartDTO {
     private long mid;
     private Book book;
     private String bookCount;
-    private String isDel;
 }
