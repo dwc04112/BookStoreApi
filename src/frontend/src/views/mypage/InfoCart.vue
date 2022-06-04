@@ -295,9 +295,9 @@ export default {
 
     //주문으로 이동
     linkOrder(){
-      let bidArr = this.selected
-      console.log(bidArr)
-      this.$router.push({name: 'Order', query: {bidArr} });
+      let cartArr = this.selected
+      console.log(cartArr)
+      this.$router.push({name: 'Order', query: {cartArr} });
     },
 
   },

@@ -7,10 +7,10 @@
         <v-col cols="12" style="height: 40px"/>
         <v-col cols="12" md="3"></v-col>
 
-
         <!--main-->
         <v-col cols="12" md="6">
           <div class="white--text">{{order.name}}</div>
+          <v-btn @click="createOrder">test</v-btn>
 
           <v-row class="ma-1">
             <span class="top-text">주문목록</span>
@@ -261,7 +261,7 @@ export default {
   data: function (){
     return{
       bid : this.$route.query.bid,
-      bidArr : this.$route.query.bidArr,
+      cartArr : this.$route.query.cartArr,
       bookData : [],
       orderItems:[
         {text: '상품금액', data: 0, },
@@ -285,7 +285,6 @@ export default {
         name : '',
         amount : 0,
         buyer_email : 'dwc04112@gmail.com',
-        buyer_tel : '010',
         buyer_name : '',
         buyer_postcode: '',
         buyer_addr: '',
@@ -294,9 +293,9 @@ export default {
       },
 
 
-
     }
   },
+
 
 
   methods: {
@@ -309,9 +308,10 @@ export default {
       }
     },
 
+    //책정보 받아오기
     getBookInfo() {
       if(this.bid == null){
-        this.$axios.get('cart/list/' + this.bidArr)
+        this.$axios.get('cart/list/' + this.cartArr)
             .then(response => {
               this.bookData = response.data;
               //orderItems 리스트에 가격 set
@@ -319,13 +319,17 @@ export default {
               //주문-amount = 최종금액. (책 가격 + 배송비 - 할인금액)
               this.order.amount = this.orderItems[0].data + this.orderItems[1].data - this.orderItems[2].data;
               //주문 item name
-              this.order.name = response.data[1].bookTitle + " 외 " + (response.data.length-1) +"종"
+              if(response.data.length>1) {
+                this.order.name = response.data[0].bookTitle + " 외 " + (response.data.length - 1) + "종"
+              }else{
+                this.order.name = response.data[0].bookTitle
+              }
             })
             .catch(error => {
               console.log(error.response);
             })
       }
-      if(this.bidArr == null){
+      if(this.cartArr == null){
         this.$axios.get('book/info/' + this.bid)
             .then(response => {
               this.bookData[0] = response.data;
@@ -440,10 +444,19 @@ export default {
 
 
     //주문번호 생성
-    getMerchantId(){
+    createOrder(){
       let data = {};
-      data.merchant_uid = 'merchant_' + new Date().getTime();
-      data.bid = this.bid       //책id
+      if(this.cartArr == null){
+        data.bid = this.bid                              //책id
+        data.bookCount = this.bookData[0].bookCount         //책 수량
+      }else{
+        data.cartArr = this.cartArr                      //cart id array
+      }
+
+      data.postcode = this.order.buyer_detail_addr;      //우편번호
+      data.addr = this.order.buyer_addr;                 //주소
+      data.detailAddr = this.order.custom_data;          //상세주소
+      data.phoneNum = this.phoneNum1 + this.phoneNum2 + this.phoneNum3        //구매자 번호
 
       this.$axios.post("order/",JSON.stringify(data),{
         headers: {
