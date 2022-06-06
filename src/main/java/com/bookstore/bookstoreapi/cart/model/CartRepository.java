@@ -1,6 +1,5 @@
 package com.bookstore.bookstoreapi.cart.model;
 
-import com.bookstore.bookstoreapi.cart.dto.CartByOrder;
 import com.bookstore.bookstoreapi.cart.dto.CartInterface;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,7 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,20 +27,6 @@ public interface CartRepository extends JpaRepository<Cart, Long> {
             "c.bookCount as bookCount " +
             "FROM Cart c where c.mid =?1 and c.book.isDel=?2 order by cartId desc ")
     List<CartInterface> getMyCart(Long mid, String isDel);
-
-    @Query("SELECT " +
-            "c.cartId as cartId," +
-            "c.book.bid as bid, " +
-            "c.book.bookTitle as bookTitle, " +
-            "c.book.bookAuthor as bookAuthor, " +
-            "c.book.bookPublisher as bookPublisher, " +
-            "c.book.bookSalePrice as bookSalePrice, " +
-            "c.book.bookThumb as bookThumb, " +
-            "c.book.isDel as bookIsDel, " +
-            "c.bookCount as bookCount " +
-            "FROM Cart c where c.mid =?1 and c.cartId In(?2) and c.book.isDel =?3 order by cartId desc ")
-    List<CartByOrder> getMyCartByIdArr(Long mid, List<Long> cartIdArr, String isDel);
-
 
     @Query("select count(c.cartId) from Cart c where c.mid=?1 and c.book.bid=?2")
     Integer selectByMidAndBid(Long mid, Long bid);

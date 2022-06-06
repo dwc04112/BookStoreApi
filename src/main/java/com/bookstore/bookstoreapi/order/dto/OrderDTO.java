@@ -7,9 +7,9 @@ import java.time.LocalTime;
 
 @Data
 public class OrderDTO {
-    private String orderId;         //1. 주문번호
+    private long orderId;         //1. 주문번호
     private long mid;               //2. 사용자 id
-    private int postcode;           //3. 우편번호
+    private String postcode;           //3. 우편번호
     private String addr;            //4. 주소
     private String detailAddr;      //5. 상세주소
     private String phoneNum;        //6. 핸드폰 번호

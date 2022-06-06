@@ -26,29 +26,33 @@ public class BookJpaService {
     final BookRepository bookRepository;
     final MemberRepository memberRepository;
 
-    //리스트 가져오기
+    // 리스트 가져오기
     public List<Book> getBookList() {
         return bookRepository.findBookByIsDel("N");
     }
 
+    //1-1 about 화면
     public List<BookMainDTO> getBookList2() {
         return bookRepository.findBookBy();
     }
-
+    //1-2 main 화면
     public List<BookMainDetailInterface> getBookListMain(){
         return bookRepository.getMainBook();
     }
 
-    //지정한 책만 가져오기
+    //2-1 책 상세화면
     public Book getBookId(long bid) {
         Optional<Book> bookData = bookRepository.findBookByBidAndIsDel(bid, "N");
         return bookData.orElseThrow(() -> new RuntimeException("no data"));
     }
-
+    //2-2 책 상세화면 (info 인터페이스 사용)
     public BookMainDTO getBookInfoId(long bid) {
         return bookRepository.getBookByBidAndIsDel(bid, "N");
     }
-
+    //2-3 order.vue 에서 호출
+    public List<BookMainDTO> getBookByIdArr(List<Long> bidArr) {
+        return bookRepository.getBookByBidInAndIsDel(bidArr, "N");
+    }
 
     //책 등록
     public ApiResponse<Book> postBook(BookDTO bookDTO) {
@@ -153,8 +157,6 @@ public class BookJpaService {
     }
 
     public List<BookMainDTO> searchByMainTag(String bookTag) {
-
         return bookRepository.findBookByBookTagStartingWithAndIsDel(bookTag, "N");
     }
-
 }

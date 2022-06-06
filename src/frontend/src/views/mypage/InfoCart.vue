@@ -295,9 +295,15 @@ export default {
 
     //주문으로 이동
     linkOrder(){
-      let cartArr = this.selected
-      console.log(cartArr)
-      this.$router.push({name: 'Order', query: {cartArr} });
+      let cartArr = this.bookData.map( e=>{
+        return {
+          bid: e.bid,
+          bookCount: e.bookCount
+        }
+      })
+      // this.$router.push({name: 'Order', query: {cartArr} });
+      this.$store.dispatch('getOrderByCart',cartArr);
+      this.$router.push({name: 'Order'});
     },
 
   },

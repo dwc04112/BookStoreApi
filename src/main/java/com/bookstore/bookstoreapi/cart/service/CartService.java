@@ -1,13 +1,11 @@
 package com.bookstore.bookstoreapi.cart.service;
 
-import com.bookstore.bookstoreapi.cart.dto.CartByOrder;
 import com.bookstore.bookstoreapi.cart.dto.CartDTO;
 import com.bookstore.bookstoreapi.cart.dto.CartInterface;
 import com.bookstore.bookstoreapi.cart.model.Cart;
 import com.bookstore.bookstoreapi.cart.model.CartRepository;
 import com.bookstore.bookstoreapi.common.ApiResponse;
 import com.bookstore.bookstoreapi.member.MemberRepository;
-import com.bookstore.bookstoreapi.wishlist.model.Wishlist;
 import com.bookstore.bookstoreapi.wishlist.model.WishlistRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,13 +39,6 @@ public class CartService {
         //isDel = book.isDel
         return cartRepository.getMyCart(mid, "N");
     }
-    //장바구니 목록 보여주기 > 선택한 cart id 들만
-    public List<CartByOrder> getCartListByIdArr(List<Long> cartIdArr) {
-        Long mid = getMemberIdByEmail();
-        //isDel = book.isDel
-        return cartRepository.getMyCartByIdArr(mid,cartIdArr, "N");
-    }
-
 
 
     //장바구니 담기 - not list

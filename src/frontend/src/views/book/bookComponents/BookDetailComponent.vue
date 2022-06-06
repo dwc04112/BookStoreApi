@@ -329,7 +329,8 @@ export default {
     },
 
     pushLink(){
-      let bid = this.bookData.bid
+      let bid = []
+      bid[0] = this.bookData.bid
       this.$router.push({name: 'Order' ,query: {bid} });
     },
   },

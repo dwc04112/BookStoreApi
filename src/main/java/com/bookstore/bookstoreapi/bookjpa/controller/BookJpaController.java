@@ -27,29 +27,34 @@ public class BookJpaController {
         return bookJpaService.getBookList();
     }
 
-    //about 화면
+    //1-1 about 화면
     @GetMapping("/info")
     public List<BookMainDTO> getBookList2(){
         return bookJpaService.getBookList2();
     }
-    //main 화면
+    //1-2 main 화면
     @GetMapping("/main")
     public List<BookMainDetailInterface> getBookListMain(){
         return bookJpaService.getBookListMain();
     }
 
-    //책 상세화면
+    //2-1 책 상세화면
     @GetMapping("/{bid}")
     public Book getBookId(@PathVariable long bid){
         return bookJpaService.getBookId(bid);
     }
 
-    //책 상세화면 (info 인터페이스 사용)
+    //2-2 책 상세화면 (info 인터페이스 사용)
     @GetMapping("/info/{bid}")
     public BookMainDTO getBookIdMain(@PathVariable long bid){
         return bookJpaService.getBookInfoId(bid);
     }
 
+    //2-3 order.vue 에서 호출
+    @GetMapping("/order/{bidArr}")
+    public List<BookMainDTO> getBookByIdArr(@PathVariable List<Long> bidArr){
+        return bookJpaService.getBookByIdArr(bidArr);
+    }
 
     //책 등록
     @PostMapping("/")

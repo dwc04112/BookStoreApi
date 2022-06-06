@@ -260,8 +260,9 @@ export default {
   name: "Order",
   data: function (){
     return{
-      bid : this.$route.query.bid,
-      cartArr : this.$route.query.cartArr,
+  //    bid : this.$route.query.bid,
+  //    cartArr : this.$route.query.cartArr,
+      orderData : this.$store.state.toOrderStore.bookList,
       bookData : [],
       orderItems:[
         {text: '상품금액', data: 0, },
@@ -292,7 +293,6 @@ export default {
         buyer_extra_addr: '',
       },
 
-
     }
   },
 
@@ -310,40 +310,29 @@ export default {
 
     //책정보 받아오기
     getBookInfo() {
-      if(this.bid == null){
-        this.$axios.get('cart/list/' + this.cartArr)
-            .then(response => {
-              this.bookData = response.data;
-              //orderItems 리스트에 가격 set
-              this.orderItems[0].data = response.data.map(e => e.bookSalePrice).reduce((prev,curr) => prev + curr,0)
-              //주문-amount = 최종금액. (책 가격 + 배송비 - 할인금액)
-              this.order.amount = this.orderItems[0].data + this.orderItems[1].data - this.orderItems[2].data;
-              //주문 item name
-              if(response.data.length>1) {
-                this.order.name = response.data[0].bookTitle + " 외 " + (response.data.length - 1) + "종"
-              }else{
-                this.order.name = response.data[0].bookTitle
-              }
-            })
-            .catch(error => {
-              console.log(error.response);
-            })
-      }
-      if(this.cartArr == null){
-        this.$axios.get('book/info/' + this.bid)
-            .then(response => {
-              this.bookData[0] = response.data;
-              this.orderItems[0].data = response.data.bookSalePrice;
-              //주문-amount = 최종금액. (책 가격 + 배송비 - 할인금액)
-              this.order.amount = this.orderItems[0].data + this.orderItems[1].data - this.orderItems[2].data;
-              //주문 item name
-              this.order.name = response.data.bookTitle;
-              this.$set(this.bookData[0],'bookCount',1)  //수량
-            })
-            .catch(error => {
-              console.log(error.response);
-            })
-      }
+      let bidArr = this.orderData.map(e=>e.bid)
+      this.$axios.get('book/order/' + bidArr)
+          .then(response => {
+            this.bookData = response.data;
+            //orderItems 리스트에 가격 set
+            this.orderItems[0].data = response.data.map(e => e.bookSalePrice).reduce((prev,curr) => prev + curr,0)
+            //주문-amount = 최종금액. (책 가격 + 배송비 - 할인금액)
+            this.order.amount = this.orderItems[0].data + this.orderItems[1].data - this.orderItems[2].data;
+            //주문 item name
+            if(response.data.length>1) {
+              this.order.name = response.data[0].bookTitle + " 외 " + (response.data.length - 1) + "종"
+            }else{
+              this.order.name = response.data[0].bookTitle
+            }
+            // 책 수량 set
+            for(let i=0; i<response.data.length; i++) {
+              this.$set(this.bookData[i], 'bookCount', this.orderData[i].bookCount)  //수량
+            }
+
+          })
+          .catch(error => {
+            console.log(error.response);
+          })
     },
 
 
@@ -446,16 +435,11 @@ export default {
     //주문번호 생성
     createOrder(){
       let data = {};
-      if(this.cartArr == null){
-        data.bid = this.bid                              //책id
-        data.bookCount = this.bookData[0].bookCount         //책 수량
-      }else{
-        data.cartArr = this.cartArr                      //cart id array
-      }
-
-      data.postcode = this.order.buyer_detail_addr;      //우편번호
+      data.bidArr = this.orderData.map(e=>e.bid);
+      data.bookCount = this.orderData.map(e=>e.bookCount);
+      data.postcode = this.order.buyer_postcode;      //우편번호
       data.addr = this.order.buyer_addr;                 //주소
-      data.detailAddr = this.order.custom_data;          //상세주소
+      data.detailAddr = this.order.buyer_detail_addr;          //상세주소
       data.phoneNum = this.phoneNum1 + this.phoneNum2 + this.phoneNum3        //구매자 번호
 
       this.$axios.post("order/",JSON.stringify(data),{
@@ -467,6 +451,8 @@ export default {
       }).catch(error =>{
         console.log(error.response);
       })
+
+
     },
 
 

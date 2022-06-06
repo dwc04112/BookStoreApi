@@ -1,12 +1,10 @@
 package com.bookstore.bookstoreapi.cart.controller;
 
-import com.bookstore.bookstoreapi.cart.dto.CartByOrder;
 import com.bookstore.bookstoreapi.cart.dto.CartDTO;
 import com.bookstore.bookstoreapi.cart.dto.CartInterface;
 import com.bookstore.bookstoreapi.cart.model.Cart;
 import com.bookstore.bookstoreapi.cart.service.CartService;
 import com.bookstore.bookstoreapi.common.ApiResponse;
-import com.bookstore.bookstoreapi.wishlist.model.Wishlist;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -26,12 +24,6 @@ public class CartController {
     public List<CartInterface> getCartList(){
         return cartService.getCartList();
     }
-    //선택한 데이터만 보여주기
-    @GetMapping("/list/{cartIdArr}")
-    public List<CartByOrder> getCartList(@PathVariable List<Long> cartIdArr){
-        return cartService.getCartListByIdArr(cartIdArr);
-    }
-
 
     //장바구니 담기 - not list
     @GetMapping("/add/{bid}")
