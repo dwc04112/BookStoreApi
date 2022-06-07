@@ -63,7 +63,6 @@ public class PaymentsController {
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.add("Authorization",auth);
 
-
         try {
             HttpEntity<String> entity = new HttpEntity<>(headers);
             ResponseEntity<String> response = rt.postForEntity(API_URL+"/payments/"+imp_uid, entity, String.class);

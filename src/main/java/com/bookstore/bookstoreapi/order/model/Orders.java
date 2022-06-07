@@ -1,13 +1,14 @@
 package com.bookstore.bookstoreapi.order.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -15,7 +16,9 @@ import java.time.LocalTime;
 @ToString
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Orders {
+public class Orders implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Id
     @Column(name = "orderId")
@@ -32,16 +35,23 @@ public class Orders {
     private String orderState;      //9. 주문상태
     private int deliverCost;        //10. 배송료
 
+
+    @OneToMany(mappedBy = "orders")
+    private List<OrderItem> orderItems = new ArrayList<>();
+
+
     public Orders(Long orderId,
-                 Long mid,
-                 String postcode,
-                 String addr,
-                 String detailAddr,
-                 String phoneNum,
-                 LocalDate orderDate,
-                 LocalTime orderTime,
-                 String orderState,
-                 int deliverCost)
+                  Long mid,
+                  String postcode,
+                  String addr,
+                  String detailAddr,
+                  String phoneNum,
+                  LocalDate orderDate,
+                  LocalTime orderTime,
+                  String orderState,
+                  int deliverCost,
+                  List<OrderItem> orderItems
+    )
     {
         this.orderId = orderId;
         this.mid = mid;
@@ -53,5 +63,6 @@ public class Orders {
         this.orderTime = orderTime;
         this.orderState = orderState;
         this.deliverCost = deliverCost;
+        this.orderItems = orderItems;
     }
 }

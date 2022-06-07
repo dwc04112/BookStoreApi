@@ -1,9 +1,10 @@
 package com.bookstore.bookstoreapi.order.dto;
 
 import lombok.Data;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
+
+
 
 @Data
 public class OrderDTO {
@@ -17,4 +18,5 @@ public class OrderDTO {
     private LocalTime orderTime;    //8. 주문시간
     private String orderState;      //9. 주문상태
     private int deliverCost;        //10. 배송료
+
 }

@@ -315,7 +315,7 @@ export default {
           .then(response => {
             this.bookData = response.data;
             //orderItems 리스트에 가격 set
-            this.orderItems[0].data = response.data.map(e => e.bookSalePrice).reduce((prev,curr) => prev + curr,0)
+            this.orderItems[0].data = response.data.map((e,index) => (e.bookSalePrice*this.orderData[index].bookCount)).reduce((prev,curr) => prev + curr,0)
             //주문-amount = 최종금액. (책 가격 + 배송비 - 할인금액)
             this.order.amount = this.orderItems[0].data + this.orderItems[1].data - this.orderItems[2].data;
             //주문 item name
@@ -419,7 +419,6 @@ export default {
       }else{
         addrCheck = true;
       }
-
       if(!this.orderCheck){
         alert("구매 동의를 체크해주세요")
         return false;
@@ -451,8 +450,6 @@ export default {
       }).catch(error =>{
         console.log(error.response);
       })
-
-
     },
 
 

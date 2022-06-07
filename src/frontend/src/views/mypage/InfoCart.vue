@@ -295,13 +295,13 @@ export default {
 
     //주문으로 이동
     linkOrder(){
-      let cartArr = this.bookData.map( e=>{
+      let cartArr = this.bookData.filter(e => this.selected.includes(e.cartId))
+      cartArr = cartArr.map( e=>{
         return {
           bid: e.bid,
           bookCount: e.bookCount
         }
       })
-      // this.$router.push({name: 'Order', query: {cartArr} });
       this.$store.dispatch('getOrderByCart',cartArr);
       this.$router.push({name: 'Order'});
     },

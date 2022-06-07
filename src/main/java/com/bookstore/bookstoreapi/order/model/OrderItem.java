@@ -1,41 +1,45 @@
 package com.bookstore.bookstoreapi.order.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.io.Serializable;
 
 
 @Entity
 @Getter
 @Table(name = "orderItem")
-@ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class OrderItem {
+public class OrderItem implements Serializable {
 
     @Id
     @Column(name = "orderItemId")
     private long orderItemId;     //1. 상품번호
 
+    //1대N 양방향
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name = "orderId", insertable = false, updatable = false)
+    @JsonIgnore
+    private Orders orders;           //2. 주문번호
+
     @Column(unique = true)
-    private long orderId;           //2. 주문번호
     private long bid;               //3. 책 id
     private int bookCount;          //4. 책 수량
     private int bookSalePrice;      //5. 판매 가격
 
     public OrderItem(Long orderItemId,
-                  Long orderId,
+                  Orders orders,
                   Long bid,
                   int bookCount,
                   int bookSalePrice)
     {
         this.orderItemId = orderItemId;
-        this.orderId = orderId;
+        this.orders = orders;
         this.bid = bid;
         this.bookCount = bookCount;
         this.bookSalePrice = bookSalePrice;
