@@ -49,8 +49,8 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     List<BookMainDTO> findBookBy();
     //2-2 책 상세화면 (info 인터페이스 사용)
     BookMainDTO getBookByBidAndIsDel(Long bid, String isDel);
-    //2-3 order.vue 에서 호출
-    List<BookMainDTO> getBookByBidInAndIsDel(List<Long> bidArr, String isDel);
+    //2-3 order.vue 에서 호출 > getBookByBidAndIsDel
+    // List<BookMainDTO> getBookByBidInAndIsDel(List<Long> bidArr, String isDel);
 
     //bookThumb ,bookTitle ,bookKeyword, bookAuthor, bookPublisher,bookContent ,bookPreview
     @Query(value = "select bid, bookThumb ,bookTitle ,bookKeyword, bookAuthor, bookPublisher,bookContent ,bookPreview FROM Book where bid between 1 and 5", nativeQuery = true)

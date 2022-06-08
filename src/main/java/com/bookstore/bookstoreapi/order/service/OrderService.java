@@ -1,5 +1,6 @@
 package com.bookstore.bookstoreapi.order.service;
 
+import com.bookstore.bookstoreapi.bookjpa.dto.BookOrderDTO;
 import com.bookstore.bookstoreapi.bookjpa.model.Book;
 import com.bookstore.bookstoreapi.bookjpa.model.BookRepository;
 import com.bookstore.bookstoreapi.common.ApiResponse;
@@ -59,7 +60,7 @@ public class OrderService {
                 .deliverCost(0)
                 .build();
         ordersRepository.save(postData);
-        setCartListItem(setOrderDTO.getBidArr(), setOrderDTO.getBookCount() ,newOrderId);
+        setCartListItem(setOrderDTO.getBookOrder(),newOrderId);
         return new ApiResponse<>(true,"주문번호 생성 성공", newOrderId);
     }
 
@@ -80,18 +81,20 @@ public class OrderService {
 
     // 1-2 주문상품 관련
     // 주문 아이템 등록
-    public void setCartListItem(List<Long> bidArr, List<Integer> bookCount, long newOrderId) {
-        for(int i = 0; i < bidArr.size(); i++){
-            Optional<Book> bookData = bookRepository.findBookByBidAndIsDel(bidArr.get(i), "N");
+    public void setCartListItem(List<BookOrderDTO> BookOrder, long newOrderId) {
+
+        for (BookOrderDTO bookOrderDTO : BookOrder) {
+            Optional<Book> bookData = bookRepository.findBookByBidAndIsDel(bookOrderDTO.getBid(), "N");
             Book data = bookData.orElseThrow(() -> new RuntimeException("해당 책 정보가 없습니다"));
+
             int result = orderItemRepository.addToOrderItem(
                     getNewOrderItemId(orderItemRepository),
                     newOrderId,
                     data.getBid(),
-                    bookCount.get(i),
+                    bookOrderDTO.getBookCount(),
                     data.getBookSalePrice()
             );
-            if(result<1){
+            if (result < 1) {
                 throw new RuntimeException("주문상품을 등록하는데 실패했습니다");
             }
         }
@@ -118,4 +121,10 @@ public class OrderService {
         return ordersRepository.findOrdersByMid(getMemberIdByEmail());
     }
 
+
+    // by payments
+    public int getTotalAmount(String merchant_uid) {
+        long orderId = Long.parseLong(merchant_uid);
+        return orderItemRepository.totalAmount(orderId);
+    }
 }

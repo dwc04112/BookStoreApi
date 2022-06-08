@@ -179,7 +179,6 @@
       <!--right nav End-->
 
     </v-row>
-    <div style="height: 800px"></div>
   </v-container>
 </template>
 
@@ -223,7 +222,6 @@ export default {
       this.totalAmount = total.map(e => (e.bookSalePrice * e.bookCount)).reduce((prev,curr) => prev + curr,0)
     }
   },
-
 
   methods: {
 

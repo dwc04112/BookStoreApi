@@ -9,9 +9,6 @@
 
         <!--main-->
         <v-col cols="12" md="6">
-          <div class="white--text">{{order.name}}</div>
-          <v-btn @click="createOrder">test</v-btn>
-
           <v-row class="ma-1">
             <span class="top-text">주문목록</span>
           </v-row>
@@ -262,7 +259,7 @@ export default {
     return{
   //    bid : this.$route.query.bid,
   //    cartArr : this.$route.query.cartArr,
-      orderData : this.$store.state.toOrderStore.bookList,
+   //   orderData : this.$store.state.toOrderStore.bookList,
       bookData : [],
       orderItems:[
         {text: '상품금액', data: 0, },
@@ -310,12 +307,17 @@ export default {
 
     //책정보 받아오기
     getBookInfo() {
-      let bidArr = this.orderData.map(e=>e.bid)
-      this.$axios.get('book/order/' + bidArr)
-          .then(response => {
+      let data =  this.$store.state.toOrderStore.bookList;
+      this.$axios.post("book/order",JSON.stringify(data),{
+        headers: {
+          "Content-Type": `application/json`,
+        },
+      }).then(response => {
+        console.log(response.data)
             this.bookData = response.data;
+            //set
             //orderItems 리스트에 가격 set
-            this.orderItems[0].data = response.data.map((e,index) => (e.bookSalePrice*this.orderData[index].bookCount)).reduce((prev,curr) => prev + curr,0)
+            this.orderItems[0].data = response.data.map(e => (e.bookSalePrice*e.bookCount)).reduce((prev,curr) => prev + curr,0)
             //주문-amount = 최종금액. (책 가격 + 배송비 - 할인금액)
             this.order.amount = this.orderItems[0].data + this.orderItems[1].data - this.orderItems[2].data;
             //주문 item name
@@ -324,11 +326,6 @@ export default {
             }else{
               this.order.name = response.data[0].bookTitle
             }
-            // 책 수량 set
-            for(let i=0; i<response.data.length; i++) {
-              this.$set(this.bookData[i], 'bookCount', this.orderData[i].bookCount)  //수량
-            }
-
           })
           .catch(error => {
             console.log(error.response);
@@ -424,20 +421,17 @@ export default {
         return false;
       }
       if(nameCheck && addrCheck && phoneCheck && this.orderCheck){
-        this.requestPay(this.payRadios);
+        this.createOrder();
       }
     },
-
-
 
 
     //주문번호 생성
     createOrder(){
       let data = {};
-      data.bidArr = this.orderData.map(e=>e.bid);
-      data.bookCount = this.orderData.map(e=>e.bookCount);
-      data.postcode = this.order.buyer_postcode;      //우편번호
-      data.addr = this.order.buyer_addr;                 //주소
+      data.bookOrder = this.$store.state.toOrderStore.bookList; //책정보
+      data.postcode = this.order.buyer_postcode;                 //우편번호
+      data.addr = this.order.buyer_addr;                          //주소
       data.detailAddr = this.order.buyer_detail_addr;          //상세주소
       data.phoneNum = this.phoneNum1 + this.phoneNum2 + this.phoneNum3        //구매자 번호
 
@@ -446,23 +440,21 @@ export default {
           "Content-Type": `application/json`,
         },
       }).then(response=>{
-        console.log(response.data)
+        this.requestPay(this.payRadios, response.data.data);
       }).catch(error =>{
         console.log(error.response);
       })
     },
 
-
-
     //import 주문관련
-    requestPay(pgData) {
+    requestPay(pgData, orderId) {
       //1. 객체 초기화 (가맹점 식별코드 삽입)
       IMP.init(this.impCode);
       //3. 결제창 호출
       IMP.request_pay({
         pg: pgData,
         pay_method: 'card',
-        merchant_uid: 'merchant_' + new Date().getTime(),
+        merchant_uid: orderId,
         name: this.order.name,
         amount: this.order.amount,
         buyer_email: this.order.buyer_email,
@@ -474,7 +466,6 @@ export default {
       }, rsp => { // callback
         console.log(rsp);
         if (rsp.success) {
-
           let data = {};
           data.imp_uid= rsp.imp_uid;
           data.merchant_uid= rsp.merchant_uid;
@@ -494,7 +485,6 @@ export default {
           data.paidAmount = rsp.paid_amount;      //결제 금액
           data.applyNum = rsp.apply_num;          //카드 승인번호
           data.paidStatus = rsp.status;           //결제 상태
-
            */
 
           console.log(data)

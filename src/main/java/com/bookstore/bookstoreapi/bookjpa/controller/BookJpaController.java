@@ -51,9 +51,9 @@ public class BookJpaController {
     }
 
     //2-3 order.vue 에서 호출
-    @GetMapping("/order/{bidArr}")
-    public List<BookMainDTO> getBookByIdArr(@PathVariable List<Long> bidArr){
-        return bookJpaService.getBookByIdArr(bidArr);
+    @PostMapping("/order")
+    public List<ReturnOrder> getBookByIdArr(@RequestBody List<BookOrderDTO> bookOrderDTOList){
+        return bookJpaService.getBookByIdArr(bookOrderDTOList);
     }
 
     //책 등록

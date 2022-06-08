@@ -11,10 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 
@@ -50,8 +48,24 @@ public class BookJpaService {
         return bookRepository.getBookByBidAndIsDel(bid, "N");
     }
     //2-3 order.vue 에서 호출
-    public List<BookMainDTO> getBookByIdArr(List<Long> bidArr) {
-        return bookRepository.getBookByBidInAndIsDel(bidArr, "N");
+    public List<ReturnOrder> getBookByIdArr(List<BookOrderDTO> bookOrderDTOList) {
+        List<ReturnOrder> returnOrderList = new ArrayList<>();
+        for (BookOrderDTO bookOrderDTO : bookOrderDTOList) {
+            BookMainDTO data = bookRepository.getBookByBidAndIsDel(bookOrderDTO.getBid(), "N");
+
+            ReturnOrder result = new ReturnOrder();
+
+            result.setBid(data.getBid());
+            result.setBookTitle(data.getBookTitle());
+            result.setBookAuthor(data.getBookAuthor());
+            result.setBookPublisher(data.getBookPublisher());
+            result.setBookSalePrice(data.getBookSalePrice());
+            result.setBookThumb(data.getBookThumb());
+            result.setBookCount(bookOrderDTO.getBookCount());
+            returnOrderList.add(result);
+        }
+        return returnOrderList;
+        //return bookRepository.getBookByBidInAndIsDel(bidArr, "N");
     }
 
     //책 등록
