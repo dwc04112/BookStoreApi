@@ -3,6 +3,7 @@ package com.bookstore.bookstoreapi.order.service;
 import com.bookstore.bookstoreapi.bookjpa.dto.BookOrderDTO;
 import com.bookstore.bookstoreapi.bookjpa.model.Book;
 import com.bookstore.bookstoreapi.bookjpa.model.BookRepository;
+import com.bookstore.bookstoreapi.cart.model.Cart;
 import com.bookstore.bookstoreapi.common.ApiResponse;
 import com.bookstore.bookstoreapi.member.MemberRepository;
 import com.bookstore.bookstoreapi.order.model.OrderItemRepository;
@@ -122,9 +123,24 @@ public class OrderService {
     }
 
 
-    // by payments
+    // *** by payments ****
+    // by payments 전체 가격 받아오기
     public int getTotalAmount(String merchant_uid) {
         long orderId = Long.parseLong(merchant_uid);
         return orderItemRepository.totalAmount(orderId);
+    }
+
+    // by payments 상태 갱신
+    public boolean updateState(long merchant_uid, String status) {
+        try {
+            Optional<Orders> orderData = ordersRepository.findOrdersByOrderId(merchant_uid);
+            Orders data = orderData.orElseThrow(() -> new RuntimeException("no data : find order by order_id"));
+            data.updateOrderState(status);
+            ordersRepository.save(data);
+            return true;
+        }catch (Exception e){
+            log.debug("Exception (updateState) : "+ e);
+            return false;
+        }
     }
 }

@@ -313,7 +313,6 @@ export default {
           "Content-Type": `application/json`,
         },
       }).then(response => {
-        console.log(response.data)
             this.bookData = response.data;
             //set
             //orderItems 리스트에 가격 set

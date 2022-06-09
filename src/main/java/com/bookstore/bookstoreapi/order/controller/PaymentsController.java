@@ -1,29 +1,22 @@
 package com.bookstore.bookstoreapi.order.controller;
 
 import com.bookstore.bookstoreapi.common.ApiResponse;
-import com.bookstore.bookstoreapi.order.dto.BuyerInfoDTO;
 import com.bookstore.bookstoreapi.order.dto.ImportDTO;
+import com.bookstore.bookstoreapi.order.dto.PaymentsDTO;
+import com.bookstore.bookstoreapi.order.dto.PaymentsRsp;
+import com.bookstore.bookstoreapi.order.model.Payments;
 import com.bookstore.bookstoreapi.order.service.OrderService;
 import com.bookstore.bookstoreapi.order.service.PaymentsService;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.http.*;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
-import sun.net.www.http.KeepAliveCache;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Objects;
 
 
 @RestController
@@ -44,82 +37,93 @@ public class PaymentsController {
     @PostMapping("/complete")
     public ApiResponse<String> getOrderInfo(@RequestBody ImportDTO importDTO)throws Exception{
 
-
-
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");
         headers.add("Accept", "application/json");
 
-
-
         JSONObject body= new JSONObject();
         body.put("imp_key", api_key);
         body.put("imp_secret", api_secret);
-
 
         try {
             HttpEntity<String> entity = new HttpEntity<>(body.toString(), headers);
             ResponseEntity<String> response = rt.postForEntity(API_URL+"/users/getToken", entity, String.class);
             log.debug("rsp : " + response);
 
-
             // No HttpMessageConverter "application/json" 에러때문에
             //json -> String 변환해서 호출. 받은 String 값 다시 json 으로 변환
-             JSONObject rspBody = new JSONObject(response.getBody());
-             JSONObject rspData = new JSONObject(rspBody.get("response").toString());
-             String auth = rspData.get("access_token").toString();
+            JSONObject rspBody = new JSONObject(response.getBody());
+            JSONObject rspData = new JSONObject(rspBody.get("response").toString());
+            String auth = rspData.get("access_token").toString();
 
 
-             return postRequest(auth, importDTO);
+            ApiResponse<PaymentsDTO> getPayments = postRequest(auth, importDTO);
+            assert getPayments != null;
+
+            if(!getPayments.isSuccess()){
+                return new ApiResponse<>(false, "결제 정보 불러오기를 실패했습니다. 에러코드 "+ getPayments.getData().getCode());
+            }else{
+                // 결제정보 불러오기에 성공하면
+                return compareData( getPayments.getData().getResponse(), importDTO);
+            }
+
+
         }catch (Exception e){
-            log.debug("Exception : "+ e);
+            log.debug("Exception (getOrderInfo) : "+ e);
         }
         return null;
     }
 
-
-    private ApiResponse<String> postRequest(String auth, ImportDTO importDTO){
+    private ApiResponse<PaymentsDTO> postRequest(String auth, ImportDTO importDTO){
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");
         headers.add("Accept", "application/json");
         headers.add("Authorization",auth);
 
-       // headers.setContentType(MediaType.APPLICATION_JSON);
-       // headers.add("Authorization",auth);
-
         try {
             HttpEntity<String> entity = new HttpEntity<>(headers);
-            ResponseEntity<String> response = rt.postForEntity(API_URL+"/payments/"+importDTO.getImp_uid(), entity, String.class);
-            log.debug("rsp : " + response);
+            ResponseEntity<PaymentsDTO> response = rt.postForEntity(API_URL+"/payments/"+importDTO.getImp_uid(), entity, PaymentsDTO.class);
+            log.debug("post R : " + response.getStatusCodeValue());
 
-            compareData(response, importDTO);
-            return new ApiResponse<>(true,"대충 성공");
+            if(response.getStatusCodeValue() == 200){
+                return new ApiResponse<>(true, response.getBody() );
+            }else{
+                return new ApiResponse<>(false, response.getBody() );
+            }
 
         }catch (Exception e){
-            log.debug("Exception : "+ e);
-            return new ApiResponse<>(false,"결제 정보를 받아오는데 실패했습니다");
+            log.debug("Exception (postRequest) : "+ e);
         }
-
+        return null;
     }
 
 
-    private void compareData(ResponseEntity<String> response, ImportDTO importDTO)throws Exception {
-
-        JSONObject rspBody = new JSONObject(response.getBody());
-        JSONObject Data = new JSONObject(rspBody.get("response").toString());
-        int amount = Integer.parseInt(Data.get("amount").toString());
-
+    private ApiResponse<String> compareData(PaymentsRsp paymentsRsp, ImportDTO importDTO) {
         //결제 정보 비교
         int amountToBePaid = orderService.getTotalAmount(importDTO.getMerchant_uid());
+        log.debug("compare : " + paymentsRsp.getAmount() + " and " + amountToBePaid);
 
-        if(amountToBePaid == amount){
-            // Json object dto로 가공 찾아보기
-            paymentsService.setPaymentsInfo(Data);  //결제정보 저장
+        if(amountToBePaid == paymentsRsp.getAmount()){
+            Payments saveData = paymentsService.setPaymentsInfo(paymentsRsp);           //결제정보 저장
+            boolean orderUpdate = orderService.updateState(saveData.getOrderId(), saveData.getPayStatus());   //order 상태 업데이트
+            if(!orderUpdate){
+                return new ApiResponse<>(false, "결제 후, 주문상태 업데이트를 실패했습니다." );
+            }
 
+            switch (saveData.getPayStatus()){
+                case ("ready") : {
+                    return new ApiResponse<>(true, "가상계좌 발급 부분" );
+                    //추가예정
+                }
+                case ("paid") : {
+                    return new ApiResponse<>(true, "일반 결제에 성공했습니다." );
+                }
+            }
         } else { // 결제금액 불일치. 위/변조 된 결제
-            log.debug("위조된 결제");
+            return new ApiResponse<>(false, "위조된 결제 시도." );
         }
+        return null;
     }
 }
 //rspData.get("amount")

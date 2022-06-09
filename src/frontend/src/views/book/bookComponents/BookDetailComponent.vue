@@ -329,9 +329,10 @@ export default {
     },
 
     pushLink(){
-      let bid = []
-      bid[0] = this.bookData.bid
-      this.$router.push({name: 'Order' ,query: {bid} });
+      let cartArr = []
+      cartArr.push( {bid:this.bookData.bid, bookCount:1})
+      this.$store.dispatch('getOrderByDetail', cartArr);
+      this.$router.push({name: 'Order'});
     },
   },
   mounted() {

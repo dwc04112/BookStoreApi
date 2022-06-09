@@ -1,13 +1,16 @@
 package com.bookstore.bookstoreapi.order.dto;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.json.JSONObject;
 
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+
+@Getter
 @NoArgsConstructor
 @Data
-public class BuyerInfoDTO {
-    private String code;
+public class PaymentsDTO {
+    private int code;
     private String message;
-    private JSONObject response = new JSONObject();
+    private PaymentsRsp response;
 }

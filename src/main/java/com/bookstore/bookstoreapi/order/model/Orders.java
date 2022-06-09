@@ -40,6 +40,11 @@ public class Orders implements Serializable {
     private List<OrderItem> orderItems = new ArrayList<>();
 
 
+    public void updateOrderState(String orderState){
+        this.orderState = orderState;
+    }
+
+
     public Orders(Long orderId,
                   Long mid,
                   String postcode,

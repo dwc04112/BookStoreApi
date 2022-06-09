@@ -18,7 +18,7 @@ public class Payments {
 
     @Id
     @Column(name = "paymentId")
-    private long paymentId;          //1. imp_uid
+    private String paymentId;          //1. imp_uid
 
     @Column(unique = true)
     private long orderId;            //2. order id = merchant_uid
@@ -31,7 +31,7 @@ public class Payments {
     private String bankName;         //9. 가상계좌 은행명
     private String bankHorder;       //10. 가상계좌 예금주
 
-    public Payments(Long paymentId,
+    public Payments(String paymentId,
                   Long orderId,
                   String payMethod,
                   String pgProvide,
