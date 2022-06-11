@@ -10,11 +10,32 @@ export default {
   name: "OrderDetail",
   data: () => ({
 
+
+
+    //가상계좌 환불입력목록
+    refund_holder : null,
+    refund_bank : null,
+    refund_account : null,
   }),
 
   methods: {
     cancelPay() {
-      alert("hello")
+      let data = {};
+      data.merchant_uid = this.$route.query.orderId;
+
+      data.refund_holder = this.refund_holder;
+      data.refund_bank = this.refund_bank;
+      data.refund_account = this.refund_account;
+      this.$axios.post("payments/cancel",JSON.stringify(data),{
+        headers: {
+          "Content-Type": `application/json`,
+        },
+      }).then(response => {
+        console.log(response.data);
+      })
+          .catch(error => {
+        console.log(error.response);
+      })
     },
 
   },

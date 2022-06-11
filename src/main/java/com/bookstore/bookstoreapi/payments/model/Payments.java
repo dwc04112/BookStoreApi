@@ -1,4 +1,4 @@
-package com.bookstore.bookstoreapi.order.model;
+package com.bookstore.bookstoreapi.payments.model;
 
 import lombok.*;
 
@@ -27,9 +27,15 @@ public class Payments {
     private int paidAt;              //5. 결제시간
     private String payStatus;        //6. 결제상태
     private int payAmount;           //7. 결제금액
+    private int cancelAmount;
     private String buyerName;        //8. 주문자 이름
     private String bankName;         //9. 가상계좌 은행명
     private String bankHorder;       //10. 가상계좌 예금주
+
+    public void updateCancel(String payStatus, int cancelAmount){
+        this.payStatus = payStatus;
+        this.cancelAmount = cancelAmount;
+    }
 
     public Payments(String paymentId,
                   Long orderId,
@@ -38,6 +44,7 @@ public class Payments {
                   int paidAt,
                   String payStatus,
                   int payAmount,
+                  int cancelAmount,
                   String buyerName,
                   String bankName,
                   String bankHorder
@@ -50,6 +57,7 @@ public class Payments {
         this.paidAt = paidAt;
         this.payStatus = payStatus;
         this.payAmount = payAmount;
+        this.cancelAmount = cancelAmount;
         this.buyerName = buyerName;
         this.bankName = bankName;
         this.bankHorder = bankHorder;

@@ -134,9 +134,8 @@ public class OrderService {
 
     // *** by payments ****
     // by payments 전체 가격 받아오기
-    public int getTotalAmount(String merchant_uid) {
-        long orderId = Long.parseLong(merchant_uid);
-        return orderItemRepository.totalAmount(orderId);
+    public int getTotalAmount(Long merchant_uid) {
+        return orderItemRepository.totalAmount(merchant_uid);
     }
 
     // by payments 상태 갱신

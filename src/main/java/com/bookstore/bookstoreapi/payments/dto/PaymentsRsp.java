@@ -1,4 +1,4 @@
-package com.bookstore.bookstoreapi.order.dto;
+package com.bookstore.bookstoreapi.payments.dto;
 
 import lombok.Data;
 
@@ -9,7 +9,6 @@ public class PaymentsRsp {
 
     private String pay_method;
     private String pg_provider;
-
     private int paid_at;
     private String status;
     private int amount;
@@ -17,4 +16,9 @@ public class PaymentsRsp {
 
     private String vbank_name;
     private String vbank_holder;
+
+
+    private int cancel_amount;
+    private int cancelled_at;
+    private Object cancel_history;
 }

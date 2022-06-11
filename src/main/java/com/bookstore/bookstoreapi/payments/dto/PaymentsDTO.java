@@ -1,4 +1,4 @@
-package com.bookstore.bookstoreapi.order.dto;
+package com.bookstore.bookstoreapi.payments.dto;
 
 
 import lombok.Data;
