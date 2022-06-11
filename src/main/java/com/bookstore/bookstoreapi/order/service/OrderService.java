@@ -3,7 +3,6 @@ package com.bookstore.bookstoreapi.order.service;
 import com.bookstore.bookstoreapi.bookjpa.dto.BookOrderDTO;
 import com.bookstore.bookstoreapi.bookjpa.model.Book;
 import com.bookstore.bookstoreapi.bookjpa.model.BookRepository;
-import com.bookstore.bookstoreapi.cart.model.Cart;
 import com.bookstore.bookstoreapi.common.ApiResponse;
 import com.bookstore.bookstoreapi.member.MemberRepository;
 import com.bookstore.bookstoreapi.order.model.OrderItemRepository;
@@ -20,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
@@ -93,7 +93,9 @@ public class OrderService {
                     newOrderId,
                     data.getBid(),
                     bookOrderDTO.getBookCount(),
-                    data.getBookSalePrice()
+                    data.getBookSalePrice(),
+                    data.getBookTitle(),
+                    data.getBookThumb()
             );
             if (result < 1) {
                 throw new RuntimeException("주문상품을 등록하는데 실패했습니다");
@@ -119,7 +121,14 @@ public class OrderService {
 
     // order list 출력
     public List<Orders> getOrderList() {
-        return ordersRepository.findOrdersByMid(getMemberIdByEmail());
+        //default 2years
+        LocalDate endDate = LocalDate.now();
+        LocalDate startDate = endDate.minusYears(2);
+
+        //고정
+        LocalTime endTime = LocalTime.of(23,59,59);
+        LocalTime startTime = LocalTime.of(0,0,0);
+        return ordersRepository.findOrdersByMidAndOrderDateBetweenAndOrderTimeBetweenOrderByOrderDateDescOrderTimeDesc(getMemberIdByEmail(), startDate,endDate, startTime,endTime);
     }
 
 
@@ -132,6 +141,14 @@ public class OrderService {
 
     // by payments 상태 갱신
     public boolean updateState(long merchant_uid, String status) {
+        if(status.equals("paid")){
+            status = "결제완료";
+        }else if(status.equals("ready")){
+            status = "결제대기";
+        }else{
+            status = "결제실패";
+        }
+
         try {
             Optional<Orders> orderData = ordersRepository.findOrdersByOrderId(merchant_uid);
             Orders data = orderData.orElseThrow(() -> new RuntimeException("no data : find order by order_id"));

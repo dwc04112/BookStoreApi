@@ -31,17 +31,23 @@ public class OrderItem implements Serializable {
     private long bid;               //3. 책 id
     private int bookCount;          //4. 책 수량
     private int bookSalePrice;      //5. 판매 가격
+    private String bookTitle;
+    private String bookThumb;
 
     public OrderItem(Long orderItemId,
-                  Orders orders,
-                  Long bid,
-                  int bookCount,
-                  int bookSalePrice)
+                      Orders orders,
+                      Long bid,
+                      int bookCount,
+                      int bookSalePrice,
+                      String bookTitle,
+                      String bookThumb)
     {
         this.orderItemId = orderItemId;
         this.orders = orders;
         this.bid = bid;
         this.bookCount = bookCount;
         this.bookSalePrice = bookSalePrice;
+        this.bookTitle = bookTitle;
+        this.bookThumb = bookThumb;
     }
 }

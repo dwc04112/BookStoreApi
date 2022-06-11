@@ -61,7 +61,7 @@ public class PaymentsController {
             assert getPayments != null;
 
             if(!getPayments.isSuccess()){
-                return new ApiResponse<>(false, "결제 정보 불러오기를 실패했습니다. 에러코드 "+ getPayments.getData().getCode());
+                 return new ApiResponse<>(false, "결제 정보 불러오기를 실패했습니다. 에러코드 "+ getPayments.getData().getCode());
             }else{
                 // 결제정보 불러오기에 성공하면
                 return compareData( getPayments.getData().getResponse(), importDTO);

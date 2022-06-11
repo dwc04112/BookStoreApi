@@ -16,8 +16,16 @@ public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {
 
     @Transactional
     @Modifying
-    @Query(value = "Insert into orderItem value (:orderItemId,:orderId,:bid,:bookCount,:bookSalePrice)", nativeQuery = true)
-    Integer addToOrderItem(@Param("orderItemId") Long orderItemId, @Param("orderId") Long orderId, @Param("bid") Long bid, @Param("bookCount") Integer bookCount, @Param("bookSalePrice") Integer bookSalePrice);
+    @Query(value = "Insert into orderItem value (:orderItemId,:orderId,:bid,:bookCount,:bookSalePrice, :bookTitle, :bookThumb)", nativeQuery = true)
+    Integer addToOrderItem(
+            @Param("orderItemId") Long orderItemId,
+            @Param("orderId") Long orderId,
+            @Param("bid") Long bid,
+            @Param("bookCount") Integer bookCount,
+            @Param("bookSalePrice") Integer bookSalePrice,
+            @Param("bookTitle") String bookTitle,
+            @Param("bookThumb") String bookThumb
+    );
 
     @Query("select sum (bookSalePrice*bookCount) from OrderItem where orders.orderId = ?1")
     Integer totalAmount(Long orderId);

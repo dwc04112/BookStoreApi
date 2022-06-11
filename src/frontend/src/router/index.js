@@ -121,7 +121,6 @@ const routes = [
 
 
 
-
     //Info Component (MY Page)
     {
         path: '/infoEditComponent',
@@ -138,6 +137,17 @@ const routes = [
         name: 'MyCommentComponent',
         component: () =>  import('@/views/mypage/infoComponents/MyCommentComponent')
     },
+    {
+        path: '/myOrderComponent',
+        name: 'MyOrderComponent',
+        component: () =>  import('@/views/mypage/infoComponents/MyOrderComponent'),
+    },
+    {
+        path: '/orderDetail',
+        name: 'OrderDetail',
+        component: () =>  import('@/views/mypage/infoComponents/OrderDetail'),
+    },
+
 
 
 

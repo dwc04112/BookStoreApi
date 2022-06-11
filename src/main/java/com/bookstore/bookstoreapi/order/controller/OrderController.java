@@ -20,7 +20,7 @@ public class OrderController {
 
     public final OrderService orderService;
 
-    //전체 보여주기
+    // 로그인한 mid 의 전체 주문 보여주기
     @GetMapping("/")
     public List<Orders> getCartList(){
         return orderService.getOrderList();
