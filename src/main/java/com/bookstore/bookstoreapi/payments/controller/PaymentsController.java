@@ -29,8 +29,7 @@ public class PaymentsController {
     @PostMapping("/cancel")
     public ApiResponse<String> cancelPay(@RequestBody ImportDTO importDTO)throws Exception{
         log.debug("cancel Payments : " + importDTO);
-        paymentsService.cancelPay(importDTO);
-        return null;
+        return paymentsService.cancelPay(importDTO);
     }
 
 }

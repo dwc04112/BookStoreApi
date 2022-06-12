@@ -140,12 +140,19 @@ public class OrderService {
 
     // by payments 상태 갱신
     public boolean updateState(long merchant_uid, String status) {
-        if(status.equals("paid")){
-            status = "결제완료";
-        }else if(status.equals("ready")){
-            status = "결제대기";
-        }else{
-            status = "결제실패";
+        switch (status) {
+            case "paid":
+                status = "결제완료";
+                break;
+            case "ready":
+                status = "결제대기";
+                break;
+            case "cancel":
+                status = "결제취소";
+                break;
+            default:
+                status = "결제실패";
+                break;
         }
 
         try {

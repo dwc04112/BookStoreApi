@@ -18,6 +18,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Objects;
@@ -36,26 +37,37 @@ public class PaymentsService {
     RestTemplate rt = new RestTemplate();
 
 
-    public ApiResponse<String> getOrderInfo(ImportDTO importDTO) {
+
+    // Post Request
+    private ApiResponse<PaymentsDTO> postRequest(String auth,String url, JSONObject body){
+
         try {
-            ApiResponse<PaymentsDTO> payments = getPayments(getToken(), importDTO);
-            if(payments==null){
-                throw new Exception();
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Content-Type", "application/json");
+            headers.add("Authorization",auth);
+
+            // body 있을때 없을때
+            HttpEntity<String> entity = new HttpEntity<>(headers);
+            if(body!=null){
+                entity = new HttpEntity<>(body.toString(), headers);
             }
 
-            if(!payments.isSuccess()){
-                return new ApiResponse<>(false, "결제 정보 불러오기를 실패했습니다. 에러코드 "+ payments.getData().getCode());
+            ResponseEntity<PaymentsDTO> response = rt.postForEntity(API_URL+url, entity, PaymentsDTO.class);
+            log.debug("post Rsp : " + response);
+
+            if(response.getStatusCodeValue() == 200){
+                return new ApiResponse<>(true, response.getBody() );
             }else{
-                // 결제정보 불러오기에 성공하면
-                return compareData( payments.getData().getResponse(), importDTO);
+                return new ApiResponse<>(false, response.getBody() );
             }
+
         }catch (Exception e){
-            log.debug("Exception (getOrderInfo) : "+ e);
+            log.debug("Exception (postRequest) : "+ e);
         }
         return null;
     }
 
-    //토큰 받아오기
+    // 토큰 받아오기
     private AccessToken getAuth() {
         try {
             HttpHeaders headers = new HttpHeaders();
@@ -93,6 +105,7 @@ public class PaymentsService {
     }
 
 
+    // 토큰 사용
     public String getToken()  {
         int nowUnixTime = (int) System.currentTimeMillis() / 1000;
 
@@ -106,31 +119,25 @@ public class PaymentsService {
         }
     }
 
-
-    // Post Request
-    private ApiResponse<PaymentsDTO> getPayments(String auth, ImportDTO importDTO){
-
+    //결제부분
+    public ApiResponse<String> getOrderInfo(ImportDTO importDTO) {
         try {
-            HttpHeaders headers = new HttpHeaders();
-            headers.add("Content-Type", "application/json");
-            headers.add("Authorization",auth);
-
-            HttpEntity<String> entity = new HttpEntity<>(headers);
-            ResponseEntity<PaymentsDTO> response = rt.postForEntity(API_URL+"/payments/"+importDTO.getImp_uid(), entity, PaymentsDTO.class);
-            log.debug("post R : " + response.getStatusCodeValue());
-
-            if(response.getStatusCodeValue() == 200){
-                return new ApiResponse<>(true, response.getBody() );
-            }else{
-                return new ApiResponse<>(false, response.getBody() );
+            ApiResponse<PaymentsDTO> response = postRequest(getToken(), "/payments/"+importDTO.getImp_uid(), null);
+            if(response==null){
+                throw new Exception();
             }
 
+            if(!response.isSuccess()){
+                return new ApiResponse<>(false, "결제 정보 불러오기를 실패했습니다. 에러코드 "+ response.getData().getCode());
+            }else{
+                // 결제정보 불러오기에 성공하면 결제정보 비교
+                return compareData( response.getData().getResponse(), importDTO);
+            }
         }catch (Exception e){
-            log.debug("Exception (postRequest) : "+ e);
+            log.debug("Exception (getOrderInfo) : "+ e);
         }
         return null;
     }
-
 
     private ApiResponse<String> compareData(PaymentsRsp paymentsRsp, ImportDTO importDTO) {
         //결제 정보 비교
@@ -149,7 +156,7 @@ public class PaymentsService {
                     //추가예정
                 }
                 case ("paid") : {
-                    return new ApiResponse<>(true, "일반 결제에 성공했습니다." );
+                    return new ApiResponse<>(true, "일반결제 완료." );
                 }
             }
         } else { // 결제금액 불일치. 위/변조 된 결제
@@ -157,8 +164,6 @@ public class PaymentsService {
         }
         return null;
     }
-
-
     // save payments
     public Payments setPaymentsInfo(PaymentsRsp data) {
         Payments payments = Payments.builder()
@@ -177,38 +182,42 @@ public class PaymentsService {
         return paymentsRepository.save(payments);
     }
 
+
     //환불부분
     public ApiResponse<String> cancelPay(ImportDTO importDTO)throws Exception {
         Optional<Payments> payments = this.paymentsRepository.findPaymentsByOrderId(importDTO.getMerchant_uid());
         Payments data = payments.orElseThrow(() -> new RuntimeException("no data : find payments by order_id"));
-
         int cancelableAmount = data.getPayAmount() - data.getCancelAmount();
         if (cancelableAmount <= 0) { // 이미 전액 환불된 경우
             return new ApiResponse<>(false,"이미 전액환불된 주문입니다.");
         }
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Type", "application/json");
-        headers.add("Authorization", getToken());
 
         JSONObject body= new JSONObject();
         body.put("imp_uid", data.getPaymentId());
         body.put("amount", data.getPayAmount());    //전액환불
         body.put("checksum", cancelableAmount);
 
-        try {
-            HttpEntity<String> entity = new HttpEntity<>(body.toString() ,headers);
-            ResponseEntity<PaymentsDTO> cancel = rt.postForEntity(API_URL+"/payments/cancel", entity, PaymentsDTO.class);
-            log.debug("cancel R : " +cancel);
-
-            //여기부터 수정? payments 업데이트 완료 order상태 업데이트 해야함
-            data.updateCancel("cancel" , Objects.requireNonNull(cancel.getBody()).getResponse().getCancel_amount());
-            paymentsRepository.save(data);
-
-        }catch (Exception e){
-            log.debug("Exception (cancelPay) : "+ e);
+        ApiResponse<PaymentsDTO> response = postRequest(getToken(),"/payments/cancel", body);
+        if(response==null){
+            throw new Exception();
         }
-        return null;
+        if(!response.isSuccess()){
+            return new ApiResponse<>(false, "결제취소 정보 불러오기를 실패했습니다. 에러코드 "+ response.getData().getCode());
+        }else{
+            if(cancelUpdate(data, response)){
+                return new ApiResponse<>(true, "결제취소 완료");
+            }else{
+                return new ApiResponse<>(false, "결제취소 후, 주문상태 업데이트를 실패했습니다." );
+            }
+        }
     }
 
+    @Transactional
+    public boolean cancelUpdate(Payments data, ApiResponse<PaymentsDTO> response)throws Exception {
+        // 결제정보 불러오기에 성공하면
+        data.updateCancel("cancel", response.getData().getResponse().getCancel_amount());
+        paymentsRepository.save(data);
+        boolean result = orderService.updateState(data.getOrderId(), data.getPayStatus());
+        return Objects.equals(data.getPayStatus(), "cancel") && result;
+    }
 }
