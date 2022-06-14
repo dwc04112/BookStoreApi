@@ -468,24 +468,6 @@ export default {
           let data = {};
           data.imp_uid= rsp.imp_uid;
           data.merchant_uid= rsp.merchant_uid;
-          /*
-          data.merUid = rsp.merchant_uid;      //주문번호
-
-          //주문
-          data.addr = rsp.buyer_addr;              //주소
-          data.detailAddr = rsp.custom_data;       //상세주소
-          data.postcode = rsp.buyer_postcode;      //우편번호
-          data.phoneNum = rsp.buyer_tel;           //구매자 번호
-
-          //결제
-          data.impUid = rsp.imp_uid;              //결제번호
-          data.paidAt = rsp.paid_at;              //결제 승인시각 timestamp
-          data.paidMethod = rsp.pay_method;       //결제수단
-          data.paidAmount = rsp.paid_amount;      //결제 금액
-          data.applyNum = rsp.apply_num;          //카드 승인번호
-          data.paidStatus = rsp.status;           //결제 상태
-           */
-
           console.log(data)
           this.$axios.post("payments/complete/",JSON.stringify(data),{
             headers: {
@@ -493,6 +475,10 @@ export default {
             },
           }).then(response=>{
             console.log(response.data)
+            //order state 초기화
+            this.$store.dispatch('clearOrderState');
+            alert("주문에 성공했습니다. 마이페이지로 이동합니다")
+            this.$router.push({name: 'InfoNavi', params: {AboutTab: 4}})
           }).catch(error =>{
             console.log(error.response);
           })

@@ -2,7 +2,7 @@
   <v-container fluid class="pa-0 ma-0" style="background-color: rgb(24,24,24)">
     <!-- 상단 검색바 -->
     <SearchMenu
-      @searchData="searchComponent"
+      @searchData="searchByMenu"
     ></SearchMenu>
 
     <!-- chip -->
@@ -477,7 +477,7 @@ export default {
     ],
     completeData : [],
     inputMsg : '',
-    autoSearchList : false,
+
 
 
 
@@ -503,8 +503,21 @@ export default {
     clickOutside: vClickOutside.directive
   },
 
-  methods: {
+  created() {
+    this.$eventBus.$on('searchData', (payload)=>{
+      console.log(payload);
+    });
+  },
 
+  methods: {
+    //search
+    mountedData(data){
+      if(data!=null){
+        this.searchByMenu(data)
+      }else{
+        this.getBookInfo()
+      }
+    },
     //Get Main Book Info
     getBookInfo(){
       this.$axios.get('book/info')
@@ -515,11 +528,15 @@ export default {
             console.log(error.response);
           })
     },
-
-    //search Component
-    searchComponent(data){
-      this.bookDatas = data;
+    searchByMenu(val){
+      this.$axios.get("book/search/" + val)
+          .then(response => {
+            this.bookDatas = response.data
+          }).catch(error => {
+        console.log(error.response);
+      })
     },
+
     //Select Book Info
     openInfo(book){
       if(this.show.data === true){  //책 정보가 열려있을때
@@ -534,27 +551,7 @@ export default {
       this.selectKeywords = book.bookKeyword.split(',')
     },
 
-    // == 검색관련 ==
-    mainSearch(){
-      let str = this.inputMsg
-      str = str.trim()                                             //양끝 공백 제거
-      str = str.replace(/\s/g,'+')            //스페이스바 +로 치환
-      const reg = /[^가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9|+]/.test(str);         //특문검사 정규식
-      if(!reg && str !== "") {
-        this.$axios.get("book/search/" + str)
-            .then(response => {
-              console.log(response.data)
 
-              this.bookDatas = response.data;
-
-            }).catch(error => {
-          console.log(error.response);
-        })
-      }else{
-        alert("검색어를 입력해주세요")
-        this.inputMsg="";
-      }
-    },
     //키워드로 검색
     keywordSearch(data){
       this.$axios.get("book/keyword/"+data)
@@ -564,6 +561,7 @@ export default {
         console.log(error.response);
       })
     },
+
 
 
     /*
@@ -580,25 +578,7 @@ export default {
         this.completeSearch()
       }, 500)
     },
-    //자동완성 기능
-    completeSearch(){
-      let str = this.inputMsg
-      str = str.trim()                                             //양끝 공백 제거
-      str = str.replace(/\s/g,'+')            //스페이스바 +로 치환
-      const reg = /[^가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9|+]/.test(str);         //특문검사 정규식
-      if(!reg && str !== ""){
-        this.$axios.get("book/complete/" + str)
-            .then(response => {
-              this.completeData = response.data
-            }).catch(error => {
-          console.log(error.response);
-        })
-      }
-    },
-    //자동검색 리스트에서 바깥부분 클릭시 리스트 닫음
-    onClickOutside () {
-      this.autoSearchList = false
-    },
+
 
     //카테고리로 검색
     byCategory(num){
@@ -686,7 +666,7 @@ export default {
   },
 
   mounted() {
-    this.getBookInfo()
+    this.mountedData(this.$route.params.str)
   }
 }
 </script>

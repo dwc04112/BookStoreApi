@@ -29,7 +29,9 @@ const toOrderStore = {
             commit('clearState')
             commit('setOrder', payload)
         },
-
+        clearOrderState({commit}){
+            commit('clearState')
+        }
     },
 }
 export default toOrderStore;

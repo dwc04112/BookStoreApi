@@ -28,11 +28,15 @@ const routes = [
         name: 'PostBook',
         component: () =>  import('@/views/book/PostBook')
     },
+
+
     {
         path: '/detailView',
         name: 'DetailView',
         component: () =>  import('@/views/book/DetailView')
     },
+
+
     //Book Component ( detail )
     {
         path: '/bookDetailComponent',
@@ -83,9 +87,41 @@ const routes = [
 
 
 
+    {
+        path: '/my',
+        component: () =>  import('@/views/mypage/My'),
+        children:[
+            {
+                path: '',
+                component: () =>  import('@/views/mypage/infoComponents/MyOrderComponent'),
+            },
+            {
+                path: 'wish',
+                name: 'InfoWishList',
+                component: () =>  import('@/views/mypage/InfoWishList')
+            },
+            {
+                path: 'comment',
+                name: 'MyCommentComponent',
+                component: () =>  import('@/views/mypage/infoComponents/MyCommentComponent')
+            },
+            {
+                path: 'cart',
+                name: 'InfoCart',
+                component: () =>  import('@/views/mypage/InfoCart'),
+            },
+            {
+                path: 'order',
+                name: 'MyOrderComponent',
+                component: () =>  import('@/views/mypage/infoComponents/MyOrderComponent'),
+            },
+        ]
+    },
+
 
     // *****
     // myPage
+    /*
     {
         path: '/infoNavi',
         name: 'InfoNavi',
@@ -138,16 +174,17 @@ const routes = [
         component: () =>  import('@/views/mypage/infoComponents/MyCommentComponent')
     },
     {
-        path: '/myOrderComponent',
+        path: 'myOrder',
         name: 'MyOrderComponent',
         component: () =>  import('@/views/mypage/infoComponents/MyOrderComponent'),
     },
+
+     */
     {
-        path: '/orderDetail',
-        name: 'OrderDetail',
+        path: '/orderDetail/:orderId',
+        name: 'orderDetail',
         component: () =>  import('@/views/mypage/infoComponents/OrderDetail'),
     },
-
 
 
 
@@ -180,6 +217,6 @@ const routes = [
 
 const router = new VueRouter({
     routes
-})
+});
 
 export default router

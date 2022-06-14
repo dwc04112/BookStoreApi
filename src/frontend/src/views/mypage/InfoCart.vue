@@ -1,14 +1,15 @@
 <template>
   <v-container fluid class="align-center">
 
-    <v-row class=" pa-0 ma-0 justify-center align-center">
-      <v-col cols="11" md="6" class="no-gutters pa-0 ma-0 mt-10" >
+    <v-row>
+      <v-col cols="12" md="8" class="pa-0 pb-8">
         <span class="main-title">장바구니</span>
+        <div class="white--text"> {{selected}}</div>
       </v-col>
     </v-row>
 
-    <v-row class="pa-0 ma-0 justify-end">
-      <v-col cols="12" md="6" offset="3" class="pa-0 ma-0 pl-1 pr-1 mt-6">
+    <v-row class="pa-0">
+      <v-col cols="12" md="8">
         <v-row style="background-color: rgb(40,40,40)" class="pb-4 justify-center align-center">
 
           <v-col cols="3" class="pa-0">
@@ -32,8 +33,9 @@
               <v-icon class="pl-1" size="17">mdi-delete</v-icon>
             </v-btn>
           </v-col>
+
           <v-col cols="12" class="pa-0 mb-4">
-            <v-divider class="ma-1 ml-md-8 mr-md-8" style="background-color:rgb(200,200,200)"/>
+            <v-divider class="ma-2 ml-7 mr-7" style="background-color: rgb(180,180,180); border: rgb(180,180,180) solid 1px"></v-divider>
           </v-col>
 
 
@@ -140,37 +142,35 @@
       </v-col>
 
       <!--right nav-->
-      <v-col cols="12" md="3">
-        <v-row class="pa-0 ma-0">
+      <v-col cols="12" md="4">
+        <v-row class="pa-0 justify-center">
           <v-card
               elevation="0"
-              color="transparent"
-              class="ma-8 mt-0 mb-4 nav-menu"
-              width="300px"
-              rounded
+              color="rgb(40,40,40)"
+              width="80%"
+              class="mt-0 mb-4"
+              tile
           >
-            <v-divider></v-divider>
-            <v-divider dark></v-divider>
-            <v-row class="pa-0 ma-8 nav-text">
-              <span>{{totalCount}}</span>
+            <v-row class="pa-0 ma-4 nav-text justify-center">
+              <span class="yellow--text text--darken-2 pr-1">{{totalCount}}</span>
               <span style="font-weight: bold">권을 선택하셨습니다</span>
             </v-row>
 
-            <v-row class="pa-0 ma-4 justify-center align-center">
+            <v-divider style="background-color:rgb(200,200,200)"/>
+
+            <v-row class="pa-0 ma-3 justify-center align-center">
               <span class="nav-text">총 결제금액</span>
-              <span style="font-size: 30px" class="yellow--text text--darken-2 pr-1 pl-1">
+              <span style="font-size: 30px" class="yellow--text text--darken-2 pb-1 pr-1 pl-1">
                 {{totalAmount}}
               </span>
               <span class="nav-text">원</span>
             </v-row>
-            <v-divider dark></v-divider>
-
-            <v-divider></v-divider>
           </v-card>
         </v-row>
-        <v-row class="ma-0">
-          <v-col class="pa-0" cols="12">
-            <v-btn class="ma-8 mt-4" color="yellow darken-2" max-width="300px" width="80%" height="50px" dark @click="linkOrder" :disabled="selected.length<1">
+
+        <v-row>
+          <v-col class="pa-0 d-flex justify-center">
+            <v-btn color="yellow darken-2" tile width="80%" height="50px" dark @click="linkOrder" :disabled="selected.length<1">
               <span style="font-weight: bold; font-size: 20px; color: rgb(40,40,40)">결제하기</span>
             </v-btn>
           </v-col>
@@ -215,7 +215,11 @@ export default {
     //2. 책 선택
     //책 선택시 변경되는 selected 값을 확인하고 수량과 금액을 변경
     selected(val){
-      this.selectAll = this.bookData.length === val.length; //전체선택
+      if(this.bookData.length === 0){
+        this.selectAll = false
+      }else {
+        this.selectAll = this.bookData.length === val.length; //전체선택
+      }
 
       let total = this.bookData.filter(e => val.includes(e.cartId))
       this.totalCount = total.map(e=>e.bookCount).reduce((prev,curr) => prev + curr,0)
@@ -234,10 +238,11 @@ export default {
               // this.$set(this.bookData[i],'select', true)
               this.$set(this.bookData[i],'fixCount',response.data[i].bookCount) //수량변경용 fixCount
             }
-
             if(response.data.length === 0){
               this.noCart = true;
             }
+            this.selected=[]
+
           })
           .catch(error => {
             console.log(error.response);
@@ -285,6 +290,7 @@ export default {
           .then(response=>{
             console.log(response.data)
             alert("선택한 책이 성공적으로 삭제되었습니다.")
+
             this.getBookInfo();
           }).catch(error =>{
             console.log(error.response);
@@ -349,8 +355,7 @@ export default {
 
 
 .nav-menu{
-  outline: rgb(200,200,200) 1.5px solid;
-  border-radius: 30px 30px 30px 30px;
+  outline: rgb(160,160,160) 1.5px solid;
 }
 .nav-text{
   color: rgb(200,200,200);

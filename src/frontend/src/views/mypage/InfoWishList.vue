@@ -1,18 +1,19 @@
 <template>
   <v-container fluid class="align-center" >
 
-    <v-row class=" pa-0 ma-0 justify-center align-center">
-      <v-col cols="11" md="6" class="no-gutters pa-0 ma-0 mt-10" >
+    <v-row>
+      <v-col cols="12" md="8" class="pa-0 pb-8">
         <span class="main-title">나의 찜목록</span>
       </v-col>
     </v-row>
 
-    <v-row class=" pa-0 ma-0 justify-center align-center">
-      <v-col cols="11" md="6" class="pa-0 ma-0 mt-6">
+    <v-row class="pa-0">
+      <v-col cols="12" md="8">
         <v-chip-group
             class="ma-0 pa-0 pb-1"
             active-class="primary"
-            v-model="selectKeyword"
+            v-model="selectWishTitle"
+            mandatory
             dark
         >
           <v-chip
@@ -20,25 +21,32 @@
               v-for="(wish,index) in wishlistTitle"
               :key="index"
               :value="wish.titleNum"
+              :close="titleDelete"
+              @click="titleDelete = false"
               @click.stop="getWishList(wish.titleNum)"
+              @click:close="setDelete(wish.titleNum)"
           >
             {{wish.wishlistTitle}}
           </v-chip>
+
+
           <v-chip
-              @click.stop="editWishDialog=true"
+              @click.stop="titleDelete=true"
               class="red lighten-1 white--text"
           >
             <span class="pl-1 pr-1">Edit</span>
             <v-icon class="white--text" size="19">mdi-wrench</v-icon>
           </v-chip>
         </v-chip-group>
+
       </v-col>
     </v-row>
+    <!--삭제 확인 메시지-->
 
 
     <!-- 중간부분 책 리스트 -->
-    <v-row class=" pa-0 ma-0 justify-center align-center">
-      <v-col cols="12" md="6" class="pa-0 ma-0 pl-1 pr-1 mt-6">
+    <v-row class="pa-0">
+      <v-col cols="12" md="8">
         <v-row style="background-color: rgb(40,40,40)" class="pb-4">
           <v-col cols="4" class="white--text mt-2">
             <div v-show="showSelect" >
@@ -50,18 +58,18 @@
           <v-col cols="8" class="justify-end d-flex pb-0 mb-0">
             <div class="pb-2 pr-6">
               <v-btn icon>
-                <v-icon @click="showSelectSet"  :color=" showSelect ? 'blue' : 'white'"
+                <v-icon @click="showSelectSet"  :color=" showSelect ? 'blue' : 'rgb(180,180,180)'"
                 >{{ showSelect ? 'mdi-check-circle' : 'mdi-check-circle-outline' }}</v-icon>
               </v-btn>
             </div>
           </v-col>
 
           <v-col cols="12" class="pa-0 ma-0">
-            <v-divider class="ma-1 ml-8 mr-8" style="background-color:rgb(200,200,200)"/>
+            <v-divider class="ma-1 ml-8 mr-8" style="background-color: rgb(180,180,180); border: rgb(180,180,180) solid 1px"/>
           </v-col>
           <!--List Card-->
           <v-col cols="12"
-                 class="book-list-col no-gutters pl-md-6 ml-md-6"
+                 class="book-list-col no-gutters ml-md-4"
                  style="min-height: 57vh"
           >
             <div
@@ -106,162 +114,43 @@
     </v-row>
 
 
+    <!--삭제 확인 메시지-->
+    <v-dialog
+        max-width="400"
+        v-model="deleteDialog"
+    >
+      <v-card rounded color="rgb(55,55,55)" tile dark>
+        <div class="pa-4 pb-6 pt-6" style="font-weight: lighter; font-size: 15px">{{ deleteMsg }}</div>
+        <v-card-actions class="justify-end" style="background-color: rgb(50,50,50)">
+          <v-btn
+              rounded
+              text
+              @click="deleteDialog =false"
+          >Close</v-btn>
+          <v-btn
+              class="ml-2"
+              rounded
+              elevation="0"
+              color="red"
+              @click="listOrItem"
+          >Commit</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
 
+    <v-snackbar
+        transition="dialog-bottom-transition"
+        elevation="0"
+        color="white"
+        rounded
+        v-model="snackbar"
+    >
+      <div>
+        <v-icon color="blue" size="30" class="pr-2">mdi-checkbox-marked-circle</v-icon>
+        <span class="black--text">삭제되었습니다.</span>
+      </div>
+    </v-snackbar>
 
-    <v-row class=" pa-0 ma-0 justify-center align-center">
-
-        <!-- 위시리스트 수정 -->
-        <v-container fluid>
-          <v-dialog
-              class="align-center justify-center align-content-center"
-              v-model="editWishDialog"
-              max-width="600"
-              overlay-color="transparent"
-          >
-            <v-card>
-              <v-toolbar
-                  elevation="0"
-                  class="white--text mb-4"
-                  color="rgb(40,40,40)"
-              >
-                <v-card-title> 위시리스트 관리</v-card-title>
-              </v-toolbar>
-              <v-card-text>
-                <div>나만의 위시리스트를 관리합니다.</div>
-                <v-simple-table
-                    class="pa-5"
-                    style="background-color: transparent"
-                    dense>
-                  <template v-slot:default>
-                    <thead>
-                    <tr>
-                      <th class="text-left">
-                        카테고리 이름
-                      </th>
-                      <th class="text-left">
-                        등록된 책 수
-                      </th>
-                      <th></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr
-                        v-for="item in wishlistTitle"
-                        :key="item.titleNum"
-                    >
-                      <td>{{ item.wishlistTitle }}</td>
-                      <td>{{ item.countTitle }}</td>
-                      <td>
-                        <v-icon
-                            small
-                            @click="setDeleteDialog(item.titleNum,item.wishlistTitle, 1)"
-                        >
-                          mdi-delete
-                        </v-icon>
-                      </td>
-                    </tr>
-                    </tbody>
-                  </template>
-                </v-simple-table>
-
-                <div>
-                  <ul>
-                    <li>카테고리 추가는 메인페이지 > 책 등록시 가능합니다</li>
-                    <li>새로 만들어진 카테고리는 자동으로 공개처리됩니다.</li>
-                    <li>카테고리 관리는 마이페이지 > 위시리스트 > 나의 찜목록 으로 이동하시면 가능합니다.</li>
-                  </ul>
-                </div>
-              </v-card-text>
-
-              <v-divider/>
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn
-                    color="rgb(40,40,40)"
-                    text
-                    @click="editWishDialog = false"
-                >
-                  close
-                </v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
-        </v-container>
-
-
-        <!--정말 삭제하시겠습니까? -->
-        <v-container fluid>
-          <v-dialog
-              class="align-center justify-center align-content-center"
-              v-model="deleteDialog"
-              max-width="400"
-          >
-            <v-card color="rgb(40,40,40)">
-              <v-card-text>
-                <div
-                    style="color: rgb(220,220,220); font-size: 15px"
-                    class="pt-6 d-flex flex-column align-center"
-                >{{ deleteTitleMsg }}
-                </div>
-              </v-card-text>
-
-              <v-divider class="white"/>
-
-              <v-card-actions class="align-center justify-center">
-                <v-btn
-                    color=white
-                    text
-                    style="font-size: 16px"
-                    @click="deleteInList()"
-                >
-                  삭제
-                </v-btn>
-                <v-btn
-                    color=white
-                    text
-                    style="font-size: 16px"
-                    @click="deleteDialog = false"
-                >
-                  취소
-                </v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
-        </v-container>
-
-        <!-- 삭제 결과 메시지-->
-        <v-container fluid>
-          <v-dialog
-              class="align-center justify-center align-content-center"
-              v-model="msgDialog"
-              max-width="400"
-          >
-            <v-card color="rgb(33,33,33)">
-              <v-card-text>
-                <div
-                    style="color: rgb(220,220,220); font-size: 15px"
-                    class="pt-6"
-                >
-                  {{resultMsg}}
-                </div>
-              </v-card-text>
-              <v-divider class="white"/>
-
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn
-                    color=rgb(220,220,220)
-                    text
-                    style="font-size: 16px"
-                    @click.stop="closeMsg"
-                >
-                  확인
-                </v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
-        </v-container>
-    </v-row>
 
     <!-- on off Footer -->
     <v-footer color="rgb(40,40,40)" fixed style="z-index: 5" v-show="showSelect">
@@ -278,7 +167,7 @@
           </v-chip>
           <v-spacer></v-spacer>
           <v-chip
-              @click="deleteInList"
+              @click="setDelete(null)"
               color="red lighten-1 white--text"
               text v-show="showSelect"
               :disabled="selectWidList.length<1"
@@ -298,33 +187,28 @@ export default {
   name: "InfoWishList",
   data: () => ({
 
+    // 불러온 값
     wishlistTitle :[],
     wishBooks: [],
-    selectKeyword: 1,
+
+
+    selectWishTitle: 0,
+    titleDelete : false,
+
 
     //책 선택
     showSelect : false, //책 선택 보여줄건지?
     absolute : true,
     selectWidList : [],
 
-
-    editWishDialog : false,
-    editWishData : '',
-
-    //삭제창 관련
-    deleteType : null,
-    deleteTitleMsg : '',
-    deleteNum : null,
+    //delete
+    deleteMsg: '',
     deleteDialog : false,
-
-    //삭제 결과 관련
-    resultMsg : '',
-    msgDialog : false,
-
+    deleteTitle : null,
+    snackbar : false,
 
     page : 1,
     pageCount: 0,
-
     headers: [
       {
         align: 'center',
@@ -339,11 +223,20 @@ export default {
     ],
 
   }),
+  watch: {
+    snackbar(val) {
+      val && setTimeout(() => {
+        this.snackbar = false
+      }, 3000)
+    },
+  },
   methods: {
     getWishTitle(){
       this.$axios.get("wish/title/")
           .then(response=>{
             this.wishlistTitle = response.data
+            this.selectWishTitle = response.data[0].titleNum
+            this.getWishList();
           }).catch(error =>{
         console.log(error.response);
       })
@@ -354,7 +247,7 @@ export default {
       this.showSelect = false;  //책 선택영역 닫기
       this.selectWidList = []   // 책 선택 리스트 초기화
       if(titleNum == null){
-        titleNum=1;
+        titleNum= this.wishlistTitle[0].titleNum;
       }
       this.$axios.get("wish/title/"+titleNum)
           .then(response=>{
@@ -378,7 +271,6 @@ export default {
     // 책 선택하기
     selectBook(wid, index){
       this.wishBooks[index].select = !this.wishBooks[index].select
-
       //해당 책 wish id 찾아서 추가 or 제거
       if(this.selectWidList.indexOf(wid) === -1) {
         this.selectWidList.push(wid)
@@ -387,19 +279,58 @@ export default {
       }
     },
 
-    // 선택한 책 삭제하기
-    deleteInList(){
-      alert(this.selectWidList + "번 책을 삭제합니다")
-      let widArr = this.selectWidList
-      this.$axios.delete("wish/"+widArr)
+    //삭제 부분
+    setDelete(num){
+      if(!num){
+        this.deleteMsg = "선택한 책 목록을 삭제하겠습니까?";
+      }else {
+        this.deleteMsg = "선택한 위시리스트를 삭제하겠습니까?";
+        this.deleteTitle = num;
+      }
+      this.deleteDialog = true
+    },
+    listOrItem(){
+      console.log(this.deleteTitle)
+      if(this.deleteTitle !=null){
+        this.deleteWishList()
+      }else {
+        this.deleteInList()
+      }
+    },
+    deleteWishList(){
+      this.$axios.delete("wish/title/"+this.deleteTitle)
           .then(response=>{
             console.log(response.data)
-            alert("선택한 책이 성공적으로 삭제되었습니다.")
-            this.getWishList(this.selectKeyword)  //선택된 키워드 번호로 책목록 다시받기 (리로드)
+            this.getWishTitle()  //선택된 타이틀 번호로 타이틀 다시받기 (리로드)
+            this.deleteDialog =false
+            this.snackbarDelay();
           }).catch(error =>{
             console.log(error.response);
           })
     },
+    // 선택한 책 삭제하기
+    deleteInList(){
+      let widArr = this.selectWidList
+      this.$axios.delete("wish/"+widArr)
+          .then(response=>{
+            console.log(response.data)
+            this.getWishList(this.selectKeyword)  //선택된 키워드 번호로 책목록 다시받기 (리로드)
+            this.deleteDialog =false
+            this.snackbarDelay();
+          }).catch(error =>{
+            console.log(error.response);
+          })
+    },
+    snackbarDelay(){
+      clearTimeout(this._timerId)
+      // delay new call 500ms
+      this._timerId = setTimeout(() => {
+        // maybe : this.fetch_data()
+        this.snackbar = true;
+      }, 400)
+    },
+
+
 
     addToCart(){
       let widArr = this.selectWidList
@@ -413,75 +344,6 @@ export default {
       })
     },
 
-
-
-
-    //delete Dialog 열고 삭제할 값 세팅
-    setDeleteDialog(numId, title, deleteType){
-      if(deleteType === 1) {
-        this.deleteTitleMsg = "\"" + title + "\" 위시리스트를 삭제하시겠습니까?"
-      }else{
-        this.deleteTitleMsg =  "\"" + title + "\" 책을 위시리스트에서 삭제하시겠습니까?"
-      }
-      this.deleteType = deleteType
-      this.deleteNum = numId
-      this.deleteDialog = true
-    },
-    // 책을 삭제? 카테고리를 삭제?
-    titleOrBook(){
-      if(this.deleteType ===1) {
-        this.deleteWishList()
-      }else {
-        this.deleteItem()
-      }
-    },
-
-    //삭제. 수행후 delete Dialog 닫기
-    deleteWishList(){
-      let titleNum = this.deleteNum
-      this.$axios.delete("wish/title/"+titleNum)
-          .then(response=>{
-            console.log(response.data)
-            this.resultMsg ="위시리스트가 성공적으로 삭제되었습니다."
-            this.msgDialog = true
-          }).catch(error =>{
-            console.log(error.response);
-            this.resultMsg = "위시리스트 삭제를 실패했습니다."
-            this.msgDialog = true
-          })
-      this.deleteDialog = false
-    },
-
-    // 삭제 결과 메시지 닫기
-    closeMsg(){
-      this.msgDialog = false
-      this.updateComponentKey()   // 컴포넌트 업데이트를 위해 리 렌더링
-      this.resetDeleteData()
-    },
-
-    // 삭제 수행중 세팅된 데이터 초기화
-    resetDeleteData(){
-      this.deleteNum = null
-      this.deleteTitleMsg = ''
-      this.deleteType = null
-    },
-
-    //책 삭제
-    deleteItem(){
-      let bid = this.deleteNum
-      this.$axios.delete("wish/"+bid)
-          .then(response=>{
-            console.log(response.data)
-            this.resultMsg ="선택한 책이 성공적으로 삭제되었습니다."
-            this.msgDialog = true
-          }).catch(error =>{
-            console.log(error.response);
-            this.resultMsg = "선택한 책 삭제를 실패했습니다."
-            this.msgDialog = true
-      })
-      this.deleteDialog = false
-    },
-
     // 리 렌더링을 위해 부모 컴포넌트 Data 변경
     updateComponentKey(){
       this.$emit('updateChildKey')
@@ -490,7 +352,6 @@ export default {
 
   mounted() {
     this.getWishTitle()
-    this.getWishList()
   }
 }
 </script>

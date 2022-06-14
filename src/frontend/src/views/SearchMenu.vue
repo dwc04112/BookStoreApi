@@ -7,7 +7,13 @@
       height="80px"
   >
     <v-row>
-      <v-col cols="9" offset-md="4" offset="1" sm="7" md="4" class="pt-10" v-click-outside="onClickOutside">
+      <v-col cols="1" md="1" class="pt-9 d-flex flex-column align-end">
+        <v-btn class="ml-2 search-icon" @click="pushLink('/about')" icon>
+          <v-icon>mdi-home</v-icon>
+        </v-btn>
+      </v-col>
+
+      <v-col cols="9" offset-md="3" offset="1" sm="7" md="4" class="pt-10" v-click-outside="onClickOutside">
         <v-text-field
             class="main-search"
             v-model="inputMsg"
@@ -69,11 +75,11 @@
           <v-icon>mdi-magnify</v-icon>
         </v-btn>
 
-        <v-btn class="top-icon" icon @click="pushInfoWishList(3)">
+        <v-btn class="top-icon" icon @click="pushLink('/my/wish')">
           <v-icon>mdi-heart</v-icon>
         </v-btn>
 
-        <v-btn icon class="top-icon">
+        <v-btn icon class="top-icon" @click="pushLink('/my')">
           <v-icon>mdi-account</v-icon>
         </v-btn>
       </v-col>
@@ -102,16 +108,15 @@ export default {
       let str = this.inputMsg
       str = str.trim()                                             //양끝 공백 제거
       str = str.replace(/\s/g,'+')            //스페이스바 +로 치환
-      const reg = /^[ㄱ-ㅎ|가-힣|a-z|A-Z|0-9|+:()]+$/.test(str);         //특문검사 정규식
+      const reg = /^[ㄱ-ㅎ|가-힣|a-z|A-Z|0-9|+:(),]+$/.test(str);         //특문검사 정규식
       if(reg) {
-        this.$axios.get("book/search/" + str)
-            .then(response => {
-              console.log(response.data)
-              this.$emit('searchData', response.data )
+        // 페이지 이동?
+        if(this.$router.history.current.name === 'About') {
+          this.$emit('searchData',str)
+        }else{
+          this.$router.push({name: 'About' ,params: {str}});
+        }
 
-            }).catch(error => {
-          console.log(error.response);
-        })
       }else{
         console.log(str)
         alert("검색어를 입력해주세요")
@@ -169,6 +174,11 @@ export default {
         this.$router.push({name: 'InfoNavi', params: {AboutTab: pushNum}})
       }
     },
+    pushLink(data) {
+      console.log(this.$router.history.current.name);
+      this.$router.push({path:data})
+    },
+
     //책 보러가기
     detailView(bid){
       this.$router.push({name: 'DetailView' ,query: {bid}});
