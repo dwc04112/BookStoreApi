@@ -11,16 +11,18 @@ import com.bookstore.bookstoreapi.order.dto.SetOrderDTO;
 import com.bookstore.bookstoreapi.order.model.Orders;
 import com.bookstore.bookstoreapi.order.model.OrderItem;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -36,8 +38,11 @@ public class OrderService {
     final MemberRepository memberRepository;
 
     //SecurityContextHolder에 저장된 사용자Email을 통해 사용자 Mid 불러오기
-    private Long getMemberIdByEmail() {
+    private Long getMemberIdByEmail() throws Exception {
         String memberEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        if(memberEmail==null){
+            throw new Exception("SecurityContextHolder 에서 정보를 찾을 수 없습니다.");
+        }
         return memberRepository.getMemberIdByEmail(memberEmail);
     }
 
@@ -45,12 +50,13 @@ public class OrderService {
     //주문 생성
     // transactional 의 default = error & runtime e
     @Transactional
-    public ApiResponse<Long> setCartList(SetOrderDTO setOrderDTO) {
+    public ApiResponse<Long> setCartList(SetOrderDTO setOrderDTO) throws Exception {
         long newOrderId = newMerchantId(setOrderDTO);
 
         Orders postData = Orders.builder()
                 .orderId(newOrderId)
                 .mid(getMemberIdByEmail())
+                .buyerName(setOrderDTO.getBuyerName())
                 .postcode(setOrderDTO.getPostcode())
                 .addr(setOrderDTO.getAddr())
                 .detailAddr(setOrderDTO.getDetailAddr())
@@ -59,6 +65,7 @@ public class OrderService {
                 .orderTime(LocalTime.now())
                 .orderState("결제대기중")
                 .deliverCost(0)
+                .isDel("N")
                 .build();
         ordersRepository.save(postData);
         setCartListItem(setOrderDTO.getBookOrder(),newOrderId);
@@ -120,7 +127,7 @@ public class OrderService {
 
 
     // order list 출력
-    public List<Orders> getOrderList() {
+    public List<Orders> getOrderList() throws Exception {
         //default 2years
         LocalDate endDate = LocalDate.now();
         LocalDate startDate = endDate.minusYears(2);
@@ -128,7 +135,21 @@ public class OrderService {
         //고정
         LocalTime endTime = LocalTime.of(23,59,59);
         LocalTime startTime = LocalTime.of(0,0,0);
-        return ordersRepository.findOrdersByMidAndOrderDateBetweenAndOrderTimeBetweenOrderByOrderDateDescOrderTimeDesc(getMemberIdByEmail(), startDate,endDate, startTime,endTime);
+        return ordersRepository.findOrdersByMidAndIsDelAndOrderDateBetweenAndOrderTimeBetweenOrderByOrderDateDescOrderTimeDesc(getMemberIdByEmail(), "N", startDate,endDate, startTime,endTime);
+    }
+
+    public List<Orders> getCartListByDate(String toDate, String fromDate) throws Exception {
+        LocalDate endDate = LocalDate.parse(toDate, DateTimeFormatter.ISO_DATE);
+        LocalDate startDate = LocalDate.parse(fromDate, DateTimeFormatter.ISO_DATE);
+        int result = endDate.compareTo(startDate);
+        //고정
+        LocalTime endTime = LocalTime.of(23,59,59);
+        LocalTime startTime = LocalTime.of(0,0,0);
+        if(result < 0){
+            return ordersRepository.findOrdersByMidAndIsDelAndOrderDateBetweenAndOrderTimeBetweenOrderByOrderDateDescOrderTimeDesc(getMemberIdByEmail(), "N", endDate, startDate, startTime, endTime);
+        }else {
+            return ordersRepository.findOrdersByMidAndIsDelAndOrderDateBetweenAndOrderTimeBetweenOrderByOrderDateDescOrderTimeDesc(getMemberIdByEmail(), "N", startDate, endDate, startTime, endTime);
+        }
     }
 
 
@@ -156,7 +177,7 @@ public class OrderService {
         }
 
         try {
-            Optional<Orders> orderData = ordersRepository.findOrdersByOrderId(merchant_uid);
+            Optional<Orders> orderData = ordersRepository.findOrdersByOrderIdAndIsDel(merchant_uid, "N");
             Orders data = orderData.orElseThrow(() -> new RuntimeException("no data : find order by order_id"));
             data.updateOrderState(status);
             ordersRepository.save(data);
@@ -166,4 +187,9 @@ public class OrderService {
             return false;
         }
     }
+
+    public Orders getOrderByPayments(Long orderId) throws Exception{
+        return ordersRepository.findOrdersByMidAndOrderIdAndIsDel(getMemberIdByEmail(),orderId,"N");
+    }
+
 }

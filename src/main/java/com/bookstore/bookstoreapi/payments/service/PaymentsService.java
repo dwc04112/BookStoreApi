@@ -2,7 +2,9 @@ package com.bookstore.bookstoreapi.payments.service;
 
 
 import com.bookstore.bookstoreapi.common.ApiResponse;
+import com.bookstore.bookstoreapi.order.model.Orders;
 import com.bookstore.bookstoreapi.payments.dto.ImportDTO;
+import com.bookstore.bookstoreapi.payments.dto.PayAndOrderItems;
 import com.bookstore.bookstoreapi.payments.dto.PaymentsDTO;
 import com.bookstore.bookstoreapi.payments.dto.PaymentsRsp;
 import com.bookstore.bookstoreapi.payments.model.AccessToken;
@@ -219,5 +221,23 @@ public class PaymentsService {
         paymentsRepository.save(data);
         boolean result = orderService.updateState(data.getOrderId(), data.getPayStatus());
         return Objects.equals(data.getPayStatus(), "cancel") && result;
+    }
+
+    // 결제내역 가져오기
+    public ApiResponse<PayAndOrderItems> getPaymentById(Long orderId) throws Exception {
+        Orders orders = orderService.getOrderByPayments(orderId);
+        if(orders == null){
+            return new ApiResponse<>(false, "결제한 책 정보가 없습니다.");
+        }
+
+        Payments payments = paymentsRepository.getPaymentsByOrderId(orderId);
+        if(payments==null){
+            return new ApiResponse<>(false, "결제 정보가 없습니다.");
+        }
+
+        PayAndOrderItems payAndOrderItems = new PayAndOrderItems();
+        payAndOrderItems.setPayments(payments);
+        payAndOrderItems.setItems(orders);
+        return new ApiResponse<>(true,payAndOrderItems);
     }
 }

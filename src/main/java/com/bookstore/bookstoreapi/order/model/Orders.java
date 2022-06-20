@@ -26,6 +26,7 @@ public class Orders implements Serializable {
 
     @Column(unique = true)
     private long mid;               //2. 사용자 id
+    private String buyerName;
     private String postcode;           //3. 우편번호
     private String addr;            //4. 주소
     private String detailAddr;      //5. 상세주소
@@ -34,7 +35,7 @@ public class Orders implements Serializable {
     private LocalTime orderTime;    //8. 주문시간
     private String orderState;      //9. 주문상태
     private int deliverCost;        //10. 배송료
-
+    private String isDel;
 
     @OneToMany(mappedBy = "orders")
     private List<OrderItem> orderItems = new ArrayList<>();
@@ -44,9 +45,13 @@ public class Orders implements Serializable {
         this.orderState = orderState;
     }
 
+    public void updateIsDel(String isDel){
+        this.isDel = isDel;
+    }
 
     public Orders(Long orderId,
                   Long mid,
+                  String buyerName,
                   String postcode,
                   String addr,
                   String detailAddr,
@@ -55,11 +60,13 @@ public class Orders implements Serializable {
                   LocalTime orderTime,
                   String orderState,
                   int deliverCost,
+                  String isDel,
                   List<OrderItem> orderItems
     )
     {
         this.orderId = orderId;
         this.mid = mid;
+        this.buyerName = buyerName;
         this.postcode = postcode;
         this.addr = addr;
         this.detailAddr = detailAddr;
@@ -68,6 +75,7 @@ public class Orders implements Serializable {
         this.orderTime = orderTime;
         this.orderState = orderState;
         this.deliverCost = deliverCost;
+        this.isDel = isDel;
         this.orderItems = orderItems;
     }
 }

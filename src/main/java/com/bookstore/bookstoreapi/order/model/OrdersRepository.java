@@ -13,9 +13,9 @@ import java.util.Optional;
 @Repository
 public interface OrdersRepository extends JpaRepository<Orders, Long> {
 
-    List<Orders> findOrdersByMidAndOrderDateBetweenAndOrderTimeBetweenOrderByOrderDateDescOrderTimeDesc(Long mid, LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime);
+    List<Orders> findOrdersByMidAndIsDelAndOrderDateBetweenAndOrderTimeBetweenOrderByOrderDateDescOrderTimeDesc(Long mid,String isDel , LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime);
 
-    Orders findOrdersByMidAndOrderId(Long mid, Long orderId);
+    Orders findOrdersByMidAndOrderIdAndIsDel(Long mid, Long orderId, String isDel);
 
-    Optional<Orders> findOrdersByOrderId(Long orderId);
+    Optional<Orders> findOrdersByOrderIdAndIsDel(Long orderId, String isDel);
 }

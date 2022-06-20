@@ -11,6 +11,7 @@ public class SetOrderDTO {
     private List<BookOrderDTO> bookOrder;
 
     private long mid;               //2. 사용자 id
+    private String buyerName;
     private String postcode;           //3. 우편번호
     private String addr;            //4. 주소
     private String detailAddr;      //5. 상세주소
