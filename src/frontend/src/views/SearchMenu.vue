@@ -1,90 +1,93 @@
 <template>
-  <v-app-bar
-      fixed
-      color="rgb(40,40,40)"
-      dark
-      elevation="0"
-      height="80px"
-  >
-    <v-row>
-      <v-col cols="1" md="1" class="pt-9 d-flex flex-column align-end">
-        <v-btn class="ml-2 search-icon" @click="pushLink('/about')" icon>
+    <v-app-bar
+        fixed
+        dark
+        elevation="0"
+        color="rgb(40,40,40)"
+        dense
+        class="justify-center align-center d-flex flex-column"
+    >
+        <v-btn class="top-icon" @click="homeLink" icon>
           <v-icon>mdi-home</v-icon>
         </v-btn>
-      </v-col>
 
-      <v-col cols="9" offset-md="3" offset="1" sm="7" md="4" class="pt-10" v-click-outside="onClickOutside">
-        <v-text-field
-            class="main-search"
-            v-model="inputMsg"
-            filled
-            outlined
-            rounded
-            dense
-            @focus="autoSearchList = true"
-            @keyup="autoSearchList = true"
-        >
-        </v-text-field>
-        <transition name="top-slide" mode="in-out">
-          <div class="search-list-div">
-            <v-list class="pa-0 ma-0 search-list" v-show="autoSearchList" light>
-              <v-list-item-group>
-                <v-hover v-slot="{ hover }"
-                         v-for="(item,index) in completeData"
-                         :key="index">
-                  <v-list-item
-                      class="pa-3 pl-5 top-list"
-                      :class="{ 'on-hover': hover }"
-                      @click="inputMsg=item.bookTitle">
-                    <v-card
-                        class="search-list-img"
-                        elevation="1"
-                        tile>
-                      <img
-                          :src="item.bookThumb"
-                          alt="bookThumb"
-                          height="100%"
-                          @click="detailView(item.bid)">
-                    </v-card>
-
-                    <v-list-item-content class="pl-8">
-                      <v-list-item-title>
-                        <span class="search-list-title" @click="detailView(item.bid)"> {{item.bookTitle}} </span>
-                      </v-list-item-title>
-
-                      <v-list-item-subtitle class="pt-2">
-                        <span class="search-list-subtitle"> {{ item.bookAuthor }} | {{item.bookPublisher}}</span>
-                      </v-list-item-subtitle>
-                    </v-list-item-content>
-                  </v-list-item>
-                </v-hover>
-              </v-list-item-group>
-            </v-list>
-          </div>
-        </transition>
-      </v-col>
-
-
-      <v-col cols="1" sm="3" md="2" class="pt-9">
         <v-btn class="top-menu-btn" @click="drawMenu" icon>
-          <font-awesome-icon
-              style="font-size: 24px" icon="fa-solid fa-2x fa-bars"/>
+          <font-awesome-icon style="font-size: 24px" icon="fa-solid fa-2x fa-bars"/>
         </v-btn>
 
-        <v-btn class="ml-2 search-icon" @click="mainSearch" icon>
-          <v-icon>mdi-magnify</v-icon>
-        </v-btn>
+        <v-card
+            elevation="0"
+            v-click-outside="onClickOutside"
+            min-width="30vw"
+            max-width="70vw"
+        >
+          <v-text-field
+              class="main-input"
+              hide-details
+              flat
+              v-model="inputMsg"
+              @focus="autoSearchList = true"
+              @keyup="autoSearchList = true"
+              background-color="rgb(20,20,20)"
+          ></v-text-field>
+          <v-expand-transition>
+            <div class="search-list-div" v-show="autoSearchList">
+              <v-list class="pa-0 ma-0 search-list">
+                <v-list-item-group>
+                  <v-hover v-slot="{ hover }"
+                           v-for="(item,index) in completeData"
+                           :key="index">
+                    <v-list-item
+                        class="pa-3 pl-5 top-list"
+                        :class="{ 'on-hover': hover }"
+                        @click="inputMsg=item.bookTitle">
+                      <v-card
+                          class="search-list-img"
+                          elevation="1"
+                          tile>
+                        <img
+                            :src="item.bookThumb"
+                            alt="bookThumb"
+                            height="100%"
+                            @click="detailView(item.bid)">
+                      </v-card>
 
-        <v-btn class="top-icon" icon @click="pushLink('/my/wish')">
-          <v-icon>mdi-heart</v-icon>
-        </v-btn>
+                      <v-list-item-content class="pl-8">
+                        <v-list-item-title>
+                          <span class="search-list-title" @click="detailView(item.bid)"> {{item.bookTitle}} </span>
+                        </v-list-item-title>
 
-        <v-btn icon class="top-icon" @click="pushLink('/my')">
-          <v-icon>mdi-account</v-icon>
-        </v-btn>
-      </v-col>
-    </v-row>
-  </v-app-bar>
+                        <v-list-item-subtitle class="pt-2">
+                          <span class="search-list-subtitle"> {{ item.bookAuthor }} | {{item.bookPublisher}}</span>
+                        </v-list-item-subtitle>
+                      </v-list-item-content>
+                    </v-list-item>
+
+                  </v-hover>
+
+                </v-list-item-group>
+              </v-list>
+            </div>
+          </v-expand-transition>
+        </v-card>
+
+      <v-spacer></v-spacer>
+
+
+      <v-btn class="ml-2 search-icon" @click="mainSearch" icon>
+        <v-icon>mdi-magnify</v-icon>
+      </v-btn>
+
+      <v-btn class="top-icon" icon @click="myLink('/wish')">
+        <v-icon>mdi-heart</v-icon>
+      </v-btn>
+
+      <v-btn icon class="top-icon" @click="myLink('/home')">
+        <v-icon>mdi-account</v-icon>
+      </v-btn>
+
+
+    </v-app-bar>
 </template>
 
 <script>
@@ -111,14 +114,8 @@ export default {
       const reg = /^[ㄱ-ㅎ|가-힣|a-z|A-Z|0-9|+:(),]+$/.test(str);         //특문검사 정규식
       if(reg) {
         // 페이지 이동?
-        if(this.$router.history.current.name === 'About') {
-          this.$emit('searchData',str)
-        }else{
-          this.$router.push({name: 'About' ,params: {str}});
-        }
-
+        this.$router.push({name: 'search' , query:{search: str}}).catch(()=>{});
       }else{
-        console.log(str)
         alert("검색어를 입력해주세요")
         this.inputMsg="";
       }
@@ -152,12 +149,14 @@ export default {
         })
       }
     },
+
     //자동검색 리스트에서 바깥부분 클릭시 리스트 닫음
     onClickOutside () {
       this.autoSearchList = false
     },
 
     drawMenu(){
+     // this.$router.push('drawMenu', true ).catch(()=>{});
       this.$emit('drawMenu', true )
     },
 
@@ -174,9 +173,14 @@ export default {
         this.$router.push({name: 'InfoNavi', params: {AboutTab: pushNum}})
       }
     },
-    pushLink(data) {
-      console.log(this.$router.history.current.name);
-      this.$router.push({path:data})
+    homeLink() {
+      this.inputMsg = ''
+      if(this.$router.history.current.name !== 'About') {
+        this.$router.push({path: "/"})
+      }
+    },
+    myLink(data){
+      this.$router.push({path: "../my"+data})
     },
 
     //책 보러가기
@@ -194,49 +198,39 @@ export default {
 }
 
 .search-list-div{
-  width: 470px;
   position : absolute;
-  transform: translateY(-23px) translateX(20px);
+  width: 100%;
 }
-.search-list{
-  width: 95%;
-  outline: rgb(40,40,40) solid 2px;
+.main-input >>> .v-input__slot::before {
+  border-style: none !important;
 }
+
 .search-list-title{
-  color: rgb(40,40,40);
+  color: rgb(180,180,180);
   font-weight: bold;
 }
 .search-list-title:hover{
   text-decoration: underline;
 }
 .search-list-subtitle{
-  color: rgb(60,60,60);
+  color: rgb(160,160,160);
 }
+
 .search-list-img{
   height: 90px;
   overflow: hidden;
 }
 .top-menu-btn{
   display: none;
-  position: absolute;
-  left: 13px;
   color: rgb(240,240,240);
 }
 @media screen and (max-width: 768px){
   /* 최상단 검색 */
-  .search-list{
-    transform: translateX(12px);
-    width: 58%;
-  }
   .top-icon{
     display: none;
   }
-  .main-search{
-    left: 18px;
-  }
   .top-menu-btn{
     display: block;
-    left: 13px;
   }
 
   .search-list-title{

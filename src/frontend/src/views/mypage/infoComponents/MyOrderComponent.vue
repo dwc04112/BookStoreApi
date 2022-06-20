@@ -1,20 +1,124 @@
 <template>
-  <v-container fluid class="align-center" >
+  <v-container fluid>
 
     <v-row>
-      <v-col cols="12" md="8" class="pa-0 pb-8">
-        <span class="main-title">구매목록</span>
+      <v-col cols=12 md="3">
+        <v-card height="100%" class="align-center flex-column d-flex" color="transparent" tile elevation="0">
+          <v-sheet class="align-center justify-center flex-column d-flex" color="transparent">
+            <v-avatar
+                color="grey"
+                size="110">
+            </v-avatar>
+            <strong class="pt-5" style="color: rgb(190,190,190); font-size: 20px">{{ $store.state.memberStore.nickName }}</strong>
+          </v-sheet>
+          <v-divider class="ma-2" style="width: 60%" dark></v-divider>
+        </v-card>
       </v-col>
-    </v-row>
 
-    <v-row class="pa-0">
-      <v-col cols="12" md="8">
-        <v-row style="background-color: rgb(40,40,40)">
-          <v-col class="pa-0 ma-0 mt-6"  v-show="noOrders">
-            <span style="color:rgb(80,80,80); font-size: 21px; font-weight: bold;">주문내역이 없습니다.</span>
+
+      <v-col cols="12" md="7" class="pb-8">
+        <div class="mb-8">
+          <span class="main-title">구매목록</span>
+        </div>
+
+        <v-row class="mb-6 pa-0 align-center" style="background-color: rgb(40,40,40);">
+          <v-col cols="12" md="5" class="justify-center d-flex ml-md-6">
+            <v-btn-toggle
+                dense
+                dark
+                rounded
+                active-class="grey grey--text text--darken-4"
+                v-model="selectMonth"
+            >
+              <v-btn
+                  v-for="(month,i) in autoMonth"
+                  :key="i"
+                  :value="month"
+                  @click="setDate(month)"
+              >
+                <span>{{ month }}월</span>
+              </v-btn>
+            </v-btn-toggle>
           </v-col>
 
-          <v-col cols="12" class="pb-2"></v-col>
+          <v-col cols="12" md="6">
+            <v-row class="justify-center align-center d-flex">
+              <v-col cols="5">
+                <v-menu
+                    v-model="menu1"
+                    :close-on-content-click="false"
+                    :nudge-right="35"
+                    transition="scale-transition"
+                    offset-y
+                    min-width="auto"
+                >
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-text-field
+                        v-model="fromDate"
+                        prepend-icon="mdi-calendar"
+                        readonly
+                        hide-details
+                        v-bind="attrs"
+                        v-on="on"
+                        dark
+                        outlined
+                        dense
+                    ></v-text-field>
+                  </template>
+                  <v-date-picker
+                      v-model="fromDate"
+                      @input="(menu1 = false) || (selectMonth = null)"
+                  ></v-date-picker>
+                </v-menu>
+              </v-col>
+              <v-icon size="15px" class="white--text">mdi-tilde</v-icon>
+              <v-col cols="4">
+                <v-menu
+                    v-model="menu2"
+                    :close-on-content-click="false"
+                    :nudge-right="35"
+                    transition="scale-transition"
+                    offset-y
+                    min-width="auto"
+                    locale="zh-cn"
+                >
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-text-field
+                        v-model="toDate"
+                        readonly
+                        hide-details
+                        v-bind="attrs"
+                        v-on="on"
+                        dark
+                        outlined
+                        dense
+                    ></v-text-field>
+                  </template>
+                  <v-date-picker
+                      v-model="toDate"
+                      @input="(menu2 = false) || (selectMonth = null)"
+                  ></v-date-picker>
+                </v-menu>
+              </v-col>
+              <v-col cols="1" class="align-center d-flex">
+                <v-btn elevation="0" fab x-small @click="searchByDate">
+                  <v-icon>mdi-magnify</v-icon>
+                </v-btn>
+              </v-col>
+
+            </v-row>
+          </v-col>
+        </v-row>
+
+        <v-row class="pb-4 align-center pa-0" style="background-color: rgb(30,30,30); min-height: 200px;">
+          <v-col class="pa-0 align-center" v-show="noOrders">
+            <v-row class="justify-center mt-6">
+              <span style="color:rgb(80,80,80); font-size: 21px; font-weight: bold;">주문내역이 없습니다.</span>
+            </v-row>
+          </v-col>
+
+          <v-col cols="12" class="pb-1"></v-col>
+
           <v-col
               cols="12" class="pa-0"
               v-for="(data , index) in ordersData"
@@ -56,7 +160,7 @@
                   <v-col cols="9" md="6" class="pa-5 mt-5 mb-5">
                     <!--책 제목과 저자-->
                     <v-row class="book-text ml-1 pa-0 ma-0" >
-                      <router-link :to="`/orderDetail/${data.orderId}`" >
+                      <router-link :to="`./order/${data.orderId}`" >
                         <span style="color: #BDBDBD">{{orderItem.bookTitle}}</span>
                       </router-link>
                     </v-row>
@@ -73,20 +177,21 @@
                     <span class="book-state">{{data.orderState}}</span>
                   </v-col>
                 </v-row>
-                <v-divider v-show="vShow(index, data.orderItems.length-1)" class="ma-3 ml-10 mr-10" dark></v-divider>
+                <v-divider v-show="vShow(index, data.orderItems.length-1)" class="ma-2 ml-10 mr-10" dark></v-divider>
               </v-col>
             </v-row>
 
             <v-col cols="12">
               <v-row class="align-center justify-center pa-0">
-                <v-divider class="ma-5 ml-7 mr-7" style="background-color: rgb(180,180,180); border: rgb(180,180,180) solid 1px"></v-divider>
+                <v-divider class="mt-3 mb-3" style="background-color: rgb(70,70,70); border: rgb(70,70,70) solid 1px"></v-divider>
               </v-row>
             </v-col>
           </v-col>
-
-
         </v-row>
       </v-col>
+
+
+
     </v-row>
   </v-container>
 </template>
@@ -98,56 +203,97 @@ export default {
     ordersData: [],
     noOrders : false,
 
+    selectMonth: null,
+    month : new Date().getMonth()+1,  //0~11로 출력
+    fromDate : (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
+    toDate: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
+    menu1: false,
+    menu2: false,
 
+    links: [
+      {icon:'mdi-pencil', name:'개인정보 수정', link:'infoEdit', color:'red lighten-1', show:true},
+    ],
   }),
+  computed:{
+    autoMonth(){
+      let arr = [];
+      for (let i = this.month-5; i <= this.month; i++) {
+        arr.push(i);
+      }
+      return arr;
+    }
+  },
 
   methods: {
     getBookOrders() {
       this.$axios.get("order/")
       .then(response => {
         this.ordersData = response.data
-        if(response.data.content.length === 0){
-          this.noOrders = true;
+        this.noOrders = response.data.length < 1;
+      }).catch(error => {
+        console.log(error.response);
+      })
+    },
+
+    searchByDate(){
+      this.$axios.get("order/range/",{
+        params: {
+          fromDate:this.fromDate,
+          toDate:this.toDate
         }
+      })
+      .then(response => {
+        this.ordersData = response.data
+        this.noOrders = response.data.length < 1;
 
       }).catch(error => {
         console.log(error.response);
       })
     },
+
     vShow(index , num){
       return index !== num;
     },
 
-
+    setDate(month){
+      let nowDate = new Date();
+      let lastDay = new Date(nowDate.getFullYear(),month,0).getDate()
+      month = month >= 10 ? month : '0' + month;
+      this.fromDate = nowDate.getFullYear()+"-"+month+"-01"
+      this.toDate = nowDate.getFullYear()+"-"+month+"-"+lastDay
+    },
   },
 
   mounted() {
-    this.getBookOrders()
+    this.getBookOrders();
+    window.scrollTo(0, 0);
   }
 }
 </script>
 
-<style scoped>
+<style lang="scss">
 .main-title{
   font-size: 24px;
   font-weight: bold;
-  color: rgb(240,240,240);
+  color: rgb(200,200,200);
 }
 .book-text{
-  color: #BDBDBD;
+  color: rgb(120,120,120);
   font-size: 19px;
   font-weight: bold;
 }
 .book-state{
-  color: #BDBDBD;
+  color: rgb(170,170,170);
   font-size: 15px;
   font-weight: bold;
 }
 
 .content-text{
-  color: #BDBDBD;
+  color: rgb(120,120,120);
   font-size: 16px;
 }
+
+
 a {
   text-decoration: none;
 }

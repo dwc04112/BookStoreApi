@@ -35,6 +35,7 @@ public class CommentController {
         return commentService.getCommentById(sortDTO);
     }
 
+
     //2-1 추천수 get
     @GetMapping(value = "/pop/{bid}")
     public List<PopCountInterface> getPopularity(@PathVariable long bid){
@@ -59,6 +60,12 @@ public class CommentController {
     @PostMapping(value = "/myComment")
     public Page<CommentBookMapping> getPopularity(@RequestBody SortDTO sortDTO){
         return commentService.getMyCommentList(sortDTO);
+    }
+
+    @PostMapping(value = "/range")
+    public Page<CommentBookMapping> getCommentByDate(@RequestBody SortDTO sortDTO){
+        log.debug("date : " + sortDTO.getFromDate() +" , " + sortDTO.getToDate());
+        return commentService.getCommentByDate(sortDTO);
     }
 
     //5. 댓글 삭제

@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,6 +30,13 @@ public class CommentService {
     final CommentRepository commentRepository;
     final CommentBookRepository commentBookRepository;
     final MemberRepository memberRepository;
+
+
+    //SecurityContextHolder 저장된 사용자 Email 통해 사용자 Mid 가져오는 로직
+    private Long getMemberIdByEmail() {
+        String memberEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        return memberRepository.getMemberIdByEmail(memberEmail);
+    }
 
     //1. 전체
     public List<Comment> getCommentList() {
@@ -116,18 +124,33 @@ public class CommentService {
     //4. 내가 쓴 모든 댓글 불러오기
     public Page<CommentBookMapping> getMyCommentList(SortDTO sortDTO) {
         PageRequest pageRequest = PageRequest.of(sortDTO.getPage() , sortDTO.getSize());
-
         //Mid 가져오기
-        long midByLoginInfo = getMemberIdByEmail(memberRepository);
-        return commentBookRepository.findAllByBidAndIsDel(midByLoginInfo ,"N", pageRequest);
+        return commentBookRepository.findAllByBidAndIsDel(getMemberIdByEmail() ,"N", pageRequest);
     }
+
+    public Page<CommentBookMapping> getCommentByDate(SortDTO sortDTO) {
+        PageRequest pageRequest = PageRequest.of(sortDTO.getPage() , sortDTO.getSize());
+
+        LocalDate endDate = LocalDate.parse(sortDTO.getToDate(), DateTimeFormatter.ISO_DATE);
+        LocalDate startDate = LocalDate.parse(sortDTO.getFromDate(), DateTimeFormatter.ISO_DATE);
+        int result = endDate.compareTo(startDate);
+        //고정
+        LocalTime endTime = LocalTime.of(23,59,59);
+        LocalTime startTime = LocalTime.of(0,0,0);
+        if(result < 0){
+            return commentBookRepository.findAllByDate(getMemberIdByEmail() ,"N", endDate,startDate,startTime,endTime, pageRequest);
+        }else {
+            return commentBookRepository.findAllByDate(getMemberIdByEmail() ,"N", startDate,endDate,startTime,endTime, pageRequest);
+        }
+    }
+
 
     //5. 삭제
     public ApiResponse<Comment> updateIsDelByCid(long cid) {
         Optional<Comment> commentData = commentRepository.findCommentByCidAndIsDel(cid, "N");
         Comment data = commentData.orElseThrow(() -> new RuntimeException("no data"));
         //북 오너 정보와 매치 필요
-        long midByLoginInfo = getMemberIdByEmail(memberRepository);
+        long midByLoginInfo = getMemberIdByEmail();
 
         if (data.getMid() == midByLoginInfo) {
             data.updateIsDel("Y");
@@ -136,12 +159,6 @@ public class CommentService {
         } else {
             return new ApiResponse<>(false, "failed to delete comment id " + cid);
         }
-    }
-
-    //SecurityContextHolder 저장된 사용자 Email 통해 사용자 Mid 가져오는 로직
-    private Long getMemberIdByEmail(MemberRepository memberRepository) {
-        String memberEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        return memberRepository.getMemberIdByEmail(memberEmail);
     }
 
 }

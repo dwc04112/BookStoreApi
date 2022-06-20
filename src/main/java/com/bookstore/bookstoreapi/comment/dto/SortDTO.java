@@ -8,4 +8,7 @@ public class SortDTO {
     private int sortType;
     private int page;
     private int size;
+
+    private String toDate;
+    private String fromDate;
 }

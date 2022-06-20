@@ -2,15 +2,29 @@
   <v-container fluid class="align-center" >
 
     <v-row>
-      <v-col cols="12" md="8" class="pa-0 pb-8">
-        <span class="main-title">나의 찜목록</span>
+      <v-col cols=12 md="3">
+        <v-card height="100%" class="align-center flex-column d-flex" color="transparent" tile elevation="0">
+          <v-sheet class="align-center justify-center flex-column d-flex" color="transparent">
+            <v-avatar
+                color="grey"
+                size="110">
+            </v-avatar>
+            <strong class="pt-5" style="color: rgb(190,190,190); font-size: 20px">{{ $store.state.memberStore.nickName }}</strong>
+          </v-sheet>
+          <v-divider class="ma-2" style="width: 60%" dark></v-divider>
+        </v-card>
       </v-col>
-    </v-row>
 
-    <v-row class="pa-0">
-      <v-col cols="12" md="8">
+
+
+
+
+      <v-col cols="12" md="7" class="pb-8">
+        <div class="mb-4">
+          <span class="main-title">나의 찜목록</span>
+        </div>
         <v-chip-group
-            class="ma-0 pa-0 pb-1"
+            class="mb-4"
             active-class="primary"
             v-model="selectWishTitle"
             mandatory
@@ -33,30 +47,24 @@
           <v-chip
               @click.stop="titleDelete=true"
               class="red lighten-1 white--text"
+              active-class="red white--text"
+              filter
           >
             <span class="pl-1 pr-1">Edit</span>
             <v-icon class="white--text" size="19">mdi-wrench</v-icon>
           </v-chip>
         </v-chip-group>
 
-      </v-col>
-    </v-row>
-    <!--삭제 확인 메시지-->
-
-
-    <!-- 중간부분 책 리스트 -->
-    <v-row class="pa-0">
-      <v-col cols="12" md="8">
-        <v-row style="background-color: rgb(40,40,40)" class="pb-4">
+        <v-row style="background-color: rgb(30,30,30)" class="pb-4">
           <v-col cols="4" class="white--text mt-2">
             <div v-show="showSelect" >
-              <v-icon class="pl-4" color="white" size="20">mdi-check</v-icon>
+              <v-icon color="white" size="20">mdi-check</v-icon>
               <span class="pl-1"> {{this.selectWidList.length}}권 선택</span>
             </div>
           </v-col>
 
           <v-col cols="8" class="justify-end d-flex pb-0 mb-0">
-            <div class="pb-2 pr-6">
+            <div class="pb-2">
               <v-btn icon>
                 <v-icon @click="showSelectSet"  :color=" showSelect ? 'blue' : 'rgb(180,180,180)'"
                 >{{ showSelect ? 'mdi-check-circle' : 'mdi-check-circle-outline' }}</v-icon>
@@ -65,12 +73,11 @@
           </v-col>
 
           <v-col cols="12" class="pa-0 ma-0">
-            <v-divider class="ma-1 ml-8 mr-8" style="background-color: rgb(180,180,180); border: rgb(180,180,180) solid 1px"/>
+            <v-divider style="background-color: rgb(180,180,180); border: rgb(180,180,180) solid 1px"/>
           </v-col>
           <!--List Card-->
           <v-col cols="12"
                  class="book-list-col no-gutters ml-md-4"
-                 style="min-height: 57vh"
           >
             <div
                 style="display: inline-block;"
@@ -368,7 +375,7 @@ li{
 .main-title{
   font-size: 24px;
   font-weight: bold;
-  color: rgb(240,240,240);
+  color: rgb(180,180,180);
 }
 @media screen and (max-width: 768px) {
   .book-list-col{

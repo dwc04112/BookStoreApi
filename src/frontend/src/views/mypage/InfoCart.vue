@@ -1,41 +1,64 @@
 <template>
   <v-container fluid class="align-center">
 
-    <v-row>
-      <v-col cols="12" md="8" class="pa-0 pb-8">
-        <span class="main-title">장바구니</span>
-        <div class="white--text"> {{selected}}</div>
-      </v-col>
-    </v-row>
-
     <v-row class="pa-0">
-      <v-col cols="12" md="8">
-        <v-row style="background-color: rgb(40,40,40)" class="pb-4 justify-center align-center">
+      <v-col cols=12 md="3">
+        <v-card height="100%" class="align-center flex-column d-flex" color="transparent" tile elevation="0">
+          <v-sheet class="align-center justify-center flex-column d-flex" color="transparent">
+            <v-avatar
+                color="grey"
+                size="110">
+            </v-avatar>
+            <strong class="pt-5" style="color: rgb(190,190,190); font-size: 20px">{{ $store.state.memberStore.nickName }}</strong>
+          </v-sheet>
+          <v-divider class="ma-2" style="width: 60%" dark></v-divider>
 
-          <v-col cols="3" class="pa-0">
-              <v-checkbox
-                  dark class="mb-3"
-                  on-icon="mdi-check-circle blue--text"
-                  off-icon="mdi-check-circle-outline white--text"
-                  label="전체선택"
-                  v-model="selectAll"
-                  @click="selectAllBtn"
-                  hide-details/>
-          </v-col>
+          <span style="font-weight: bold; color:rgb(180,180,180);">
+            <strong class="yellow--text text--darken-2">{{totalCount}}</strong>
+            권을 선택하셨습니다
+          </span>
 
-          <v-col cols="8" class="pa-0 justify-end d-flex">
-            <v-btn
-                class="mt-1 mr-2"
-                rounded small
-                @click="selectDelete"
-            >
-              <span style="font-size: 15px">선택삭제</span>
-              <v-icon class="pl-1" size="17">mdi-delete</v-icon>
-            </v-btn>
-          </v-col>
+          <v-divider class="ma-2" style="width: 60%" dark></v-divider>
 
-          <v-col cols="12" class="pa-0 mb-4">
-            <v-divider class="ma-2 ml-7 mr-7" style="background-color: rgb(180,180,180); border: rgb(180,180,180) solid 1px"></v-divider>
+          <span class="nav-text mb-4" >총 결제금액
+            <strong style="font-size: 25px" class="yellow--text text--darken-2">{{totalAmount}}
+            </strong> 원
+          </span>
+
+          <v-btn color="yellow darken-2" tile width="60%" height="50px" dark @click="linkOrder" :disabled="selected.length<1">
+            <span style="font-weight: bold; font-size: 20px; color: rgb(40,40,40)">결제하기</span>
+          </v-btn>
+        </v-card>
+      </v-col>
+
+      <v-col cols="12" md="7" class="pb-8">
+        <div class="mb-8">
+          <span class="main-title">장바구니</span>
+        </div>
+
+        <v-row class="pb-4 align-center pa-0" style="background-color: rgb(30,30,30)">
+          <v-checkbox
+              dark class="mb-3 ml-4"
+              on-icon="mdi-check-circle blue--text"
+              off-icon="mdi-check-circle-outline white--text"
+              label="전체선택"
+              v-model="selectAll"
+              @click="selectAllBtn"
+              hide-details/>
+          <v-spacer></v-spacer>
+
+          <v-btn
+              class="mt-1 mr-4"
+              rounded small
+              elevation="0"
+              @click="selectDelete">
+            <span style="font-size: 15px">선택삭제</span>
+            <v-icon class="pl-1" size="17">mdi-delete</v-icon>
+          </v-btn>
+
+
+          <v-col cols="12" class="pa-0 mb-3 mt-1">
+            <v-divider style="background-color: rgb(180,180,180); border: rgb(180,180,180) solid 1px"></v-divider>
           </v-col>
 
 
@@ -46,11 +69,11 @@
 
 
           <!--책 이미지 영역-->
-          <v-col cols="12" md="11" class="pa-0"
+          <v-col cols="12" class="pa-0"
                  v-for="(data,index) in bookData"
                  :key="index"
           >
-            <v-row align="center" class="ma-0 pa-0">
+            <v-row align="center" class="ma-0">
               <v-col cols="1" class="justify-end d-flex">
                 <v-checkbox
                     class="pb-4" v-model="selected" :value="data.cartId"
@@ -65,8 +88,8 @@
                     :src="data.bookThumb"
                     :lazy-src="data.bookThumb"
                     alt="bookThumb"
-                    max-height="95%"
-                    max-width="100%">
+                    max-height="70%"
+                    max-width="80%">
                   <template v-slot:placeholder>
                     <v-row
                         class="fill-height ma-0"
@@ -96,7 +119,6 @@
 
               <!-- 가격 -->
               <v-col cols="12" md="3" class="mt-2">
-
                 <v-row no-gutters class="ma-0 justify-center">
                   <v-col cols="11" md="8" class="pa-0">
                     <v-text-field
@@ -129,56 +151,23 @@
                     </v-btn>
                   </v-col>
                 </v-row>
-
               </v-col>
 
-              <v-col cols="12" class="pt-4">
-              <v-divider dark class="ml-2 mr-2"></v-divider>
+              <v-col cols="12" class="pa-0">
+                <v-divider class="ml-8 mr-8 ma-3" style="background-color: rgb(70,70,70); border: rgb(70,70,70) solid 0.5px"></v-divider>
               </v-col>
+
 
             </v-row>
           </v-col>
         </v-row>
       </v-col>
+    </v-row>
 
-      <!--right nav-->
-      <v-col cols="12" md="4">
-        <v-row class="pa-0 justify-center">
-          <v-card
-              elevation="0"
-              color="rgb(40,40,40)"
-              width="80%"
-              class="mt-0 mb-4"
-              tile
-          >
-            <v-row class="pa-0 ma-4 nav-text justify-center">
-              <span class="yellow--text text--darken-2 pr-1">{{totalCount}}</span>
-              <span style="font-weight: bold">권을 선택하셨습니다</span>
-            </v-row>
 
-            <v-divider style="background-color:rgb(200,200,200)"/>
-
-            <v-row class="pa-0 ma-3 justify-center align-center">
-              <span class="nav-text">총 결제금액</span>
-              <span style="font-size: 30px" class="yellow--text text--darken-2 pb-1 pr-1 pl-1">
-                {{totalAmount}}
-              </span>
-              <span class="nav-text">원</span>
-            </v-row>
-          </v-card>
-        </v-row>
-
-        <v-row>
-          <v-col class="pa-0 d-flex justify-center">
-            <v-btn color="yellow darken-2" tile width="80%" height="50px" dark @click="linkOrder" :disabled="selected.length<1">
-              <span style="font-weight: bold; font-size: 20px; color: rgb(40,40,40)">결제하기</span>
-            </v-btn>
-          </v-col>
-        </v-row>
-      </v-col>
       <!--right nav End-->
 
-    </v-row>
+
   </v-container>
 </template>
 
@@ -322,16 +311,16 @@ export default {
 .main-title{
   font-size: 24px;
   font-weight: bold;
-  color: rgb(240,240,240);
+  color: rgb(180,180,180);
 }
 
 .book-text{
-  color: #BDBDBD;
+  color: rgb(180,180,180);
   font-size: 18px;
   font-weight: bold;
 }
 .book-subtext{
-  color: #BDBDBD;
+  color: rgb(180,180,180);
   font-size: 13px;
 }
 
@@ -358,7 +347,7 @@ export default {
   outline: rgb(160,160,160) 1.5px solid;
 }
 .nav-text{
-  color: rgb(200,200,200);
+  color: rgb(180,180,180);
   font-size: 17px;
 }
 

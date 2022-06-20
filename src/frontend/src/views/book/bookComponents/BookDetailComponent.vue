@@ -1,10 +1,10 @@
 <template>
   <v-container fluid class="ma-0 pa-0">
+    <div style="height: 140px"></div>
 
     <!-- 우측 Nav -->
     <v-row>
       <v-col cols="2" md="2" class="pt-8 mt-8" style="position: absolute; right: 8%; top:70px;">
-
         <v-card elevation="0"
                 color="transparent"
                 class="ma-8  nav-menu"

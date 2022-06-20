@@ -2,17 +2,119 @@
   <v-container fluid class="align-center" >
 
     <v-row>
-      <v-col cols="12" md="8" class="pa-0 pb-8">
-        <span class="main-title">나의댓글</span>
+      <v-col cols=12 md="3">
+        <v-card height="100%" class="align-center flex-column d-flex" color="transparent" tile elevation="0">
+          <v-sheet class="align-center justify-center flex-column d-flex" color="transparent">
+            <v-avatar
+                color="grey"
+                size="110">
+            </v-avatar>
+            <strong class="pt-5" style="color: rgb(190,190,190); font-size: 20px">{{ $store.state.memberStore.nickName }}</strong>
+          </v-sheet>
+          <v-divider class="ma-2" style="width: 60%" dark></v-divider>
+        </v-card>
       </v-col>
-    </v-row>
 
-    <v-row class="pa-0">
-      <v-col cols="12" md="8">
-        <v-row style="background-color: rgb(40,40,40)" class="pb-4">
 
-          <v-col class="pa-0 ma-0 mt-6"  v-show="noComments">
-            <span style="color:rgb(80,80,80); font-size: 21px; font-weight: bold;">댓글이 없습니다. 첫번째 댓글을 작성해보세요</span>
+      <v-col cols="12" md="7" class="pb-8">
+        <div class="mb-8">
+          <span class="main-title">나의댓글</span>
+        </div>
+
+        <v-row class="mb-6 pa-0 align-center" style="background-color: rgb(40,40,40);">
+          <v-col cols="12" md="5" class="justify-center d-flex ml-md-6">
+            <v-btn-toggle
+                dense
+                dark
+                rounded
+                active-class="grey grey--text text--darken-4"
+                v-model="selectMonth"
+            >
+              <v-btn
+                  v-for="(month,i) in autoMonth"
+                  :key="i"
+                  :value="month"
+                  @click="setDate(month)"
+              >
+                <span>{{ month }}월</span>
+              </v-btn>
+            </v-btn-toggle>
+          </v-col>
+
+          <v-col cols="12" md="6">
+            <v-row class="justify-center align-center d-flex">
+              <v-col cols="5">
+                <v-menu
+                    v-model="menu1"
+                    :close-on-content-click="false"
+                    :nudge-right="35"
+                    transition="scale-transition"
+                    offset-y
+                    min-width="auto"
+                >
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-text-field
+                        v-model="fromDate"
+                        prepend-icon="mdi-calendar"
+                        readonly
+                        hide-details
+                        v-bind="attrs"
+                        v-on="on"
+                        dark
+                        outlined
+                        dense
+                    ></v-text-field>
+                  </template>
+                  <v-date-picker
+                      v-model="fromDate"
+                      @input="(menu1 = false) || (selectMonth = null)"
+                  ></v-date-picker>
+                </v-menu>
+              </v-col>
+              <v-icon size="15px" class="white--text">mdi-tilde</v-icon>
+              <v-col cols="4">
+                <v-menu
+                    v-model="menu2"
+                    :close-on-content-click="false"
+                    :nudge-right="35"
+                    transition="scale-transition"
+                    offset-y
+                    min-width="auto"
+                    locale="zh-cn"
+                >
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-text-field
+                        v-model="toDate"
+                        readonly
+                        hide-details
+                        v-bind="attrs"
+                        v-on="on"
+                        dark
+                        outlined
+                        dense
+                    ></v-text-field>
+                  </template>
+                  <v-date-picker
+                      v-model="toDate"
+                      @input="(menu2 = false) || (selectMonth = null)"
+                  ></v-date-picker>
+                </v-menu>
+              </v-col>
+              <v-col cols="1" class="align-center d-flex">
+                <v-btn elevation="0" fab x-small @click="searchByDate">
+                  <v-icon>mdi-magnify</v-icon>
+                </v-btn>
+              </v-col>
+            </v-row>
+          </v-col>
+        </v-row>
+
+
+        <v-row class="pb-4 align-center pa-0" style="background-color: rgb(30,30,30)">
+          <v-col class="pa-0 align-center"  v-show="noComments">
+            <v-row class="justify-center mt-6">
+             <span style="color:rgb(80,80,80); font-size: 21px; font-weight: bold;">댓글이 없습니다. 첫번째 댓글을 작성해보세요</span>
+            </v-row>
           </v-col>
 
           <v-col cols="12" class="pb-2"></v-col>
@@ -90,10 +192,10 @@
                 <!--댓글 끝-->
               </v-col>
             </v-row>
-            <v-divider class="ma-5 ml-7 mr-7" dark></v-divider>
+            <v-divider class="ma-4 ml-7 mr-7" style="background-color: rgb(70,70,70); border: rgb(70,70,70) solid 0.5px"></v-divider>
           </v-col>
 
-          <v-col cols="12" class="mt-4">
+          <v-col cols="12" class="mt-2">
             <div class="text-center">
               <v-pagination
                   dark
@@ -167,8 +269,24 @@ export default {
         setCid : 0,         //삭제할 댓글 id
         dialog : false,     //삭제 확인 메시지
         snackbar : false,   //삭제 성공? 실패?
+
+        selectMonth: null,
+        month : new Date().getMonth()+1,  //0~11로 출력
+        fromDate : (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
+        toDate: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
+        menu1: false,
+        menu2: false,
       }
   ),
+  computed:{
+    autoMonth(){
+      let arr = [];
+      for (let i = this.month-5; i <= this.month; i++) {
+        arr.push(i);
+      }
+      return arr;
+    }
+  },
 
   watch: {
     snackbar(val) {
@@ -190,13 +308,40 @@ export default {
       }).then(response => {
         this.commentData = response.data.content;
         this.totalPages = response.data.totalPages;
-        if(response.data.content.length === 0){
-          this.noComments = true;
-        }
+
+        this.noComments = response.data.content.length === 0;
       }).catch(error => {
         console.log(error.response);
       })
     },
+
+    searchByDate(){
+      let data = {}
+      data.page = this.page -1
+      data.size = this.size
+      data.toDate = this.toDate
+      data.fromDate = this.fromDate
+      this.$axios.post("comment/range", JSON.stringify(data), {
+        headers: {
+          "Content-Type": `application/json`,
+        },
+      }).then(response => {
+        this.commentData = response.data.content;
+        this.totalPages = response.data.totalPages;
+
+        this.noComments = response.data.content.length === 0;
+      }).catch(error => {
+        console.log(error.response);
+      })
+    },
+    setDate(month){
+      let nowDate = new Date();
+      let lastDay = new Date(nowDate.getFullYear(),month,0).getDate()
+      month = month >= 10 ? month : '0' + month;
+      this.fromDate = nowDate.getFullYear()+"-"+month+"-01"
+      this.toDate = nowDate.getFullYear()+"-"+month+"-"+lastDay
+    },
+
     //댓글 삭제
     deleteComment(){
       let cid = this.setCid

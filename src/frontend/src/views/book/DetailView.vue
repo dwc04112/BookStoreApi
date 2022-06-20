@@ -1,12 +1,10 @@
 <template>
   <v-app>
-    <SearchMenu @moveTabNum="pushLink"></SearchMenu>
-    <div style="height: 80px"></div>
+    <SearchMenu></SearchMenu>
 
-    <v-container fluid style="height: 100%; background-color: rgb(24,24,24)">
-      <v-row class="ma-0 pa-0 justify-center ">
+    <v-container fluid style="height: 100%; background-color: rgb(20,20,20)">
+      <v-row class="ma-0 pa-0 justify-center">
 
-        <v-col cols=12 style="height: 80px"/>
         <v-col cols="12" md="6" class="ma-0 pa-0">
           <BookDetailComponent/>
         </v-col>

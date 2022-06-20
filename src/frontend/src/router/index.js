@@ -7,17 +7,87 @@ Vue.use(VueRouter)
 
 const routes = [
 
-    // *****
-    // Book
     {
-        path: '/about',
-        name: 'About',
+        path: '/',
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
-        component: () => import(/* webpackChunkName: "about" */ '../views/book/About.vue'),
+        component: () => import(/* webpackChunkName: "about" */ '../views/index'),
+        children: [
+            // *****
+            // Book
+            {
+                path: '',
+                name: 'About',
+                component: () => import(/* webpackChunkName: "about" */ '../views/book/About.vue'),
+                props: true,
+            },
+            {
+                path: 'search',
+                name : 'search',
+                component: () => import(/* webpackChunkName: "about" */ '../views/book/search.vue'),
+                props: true,
+            },
+            {
+                path: 'category/:category',
+                name : 'category',
+                component: () => import(/* webpackChunkName: "about" */ '../views/book/category.vue'),
+                props: true,
+            },
+
+
+            {
+                path: '/my',
+                component: () =>  import('@/views/mypage/My'),
+                children:[
+                    {
+                        path: 'wish',
+                        name: 'InfoWishList',
+                        component: () =>  import('@/views/mypage/InfoWishList')
+                    },
+                    {
+                        path: 'comment',
+                        name: 'MyCommentComponent',
+                        component: () =>  import('@/views/mypage/infoComponents/MyCommentComponent')
+                    },
+                    {
+                        path: 'cart',
+                        name: 'InfoCart',
+                        component: () =>  import('@/views/mypage/InfoCart'),
+                    },
+
+                    {
+                        path: 'order',
+                        name: 'MyOrderComponent',
+                        component: () =>  import('@/views/mypage/infoComponents/MyOrderComponent'),
+                    },
+                    {
+                        path: 'order/:orderId',
+                        name: 'orderDetail',
+                        component: () =>  import('@/views/mypage/infoComponents/OrderDetail'),
+                    },
+                    {
+                        path: 'infoEdit',
+                        name: 'InfoEdit',
+                        component: () =>  import('@/views/mypage/InfoEdit')
+                    },
+                ]
+            },
+        ]
+    },
+
+    // *****
+    // Book
+    /*
+    {
+        path: '/about',
+        name: 'About',
+        component: () => import( '../views/book/About.vue'),
         props: true,
     },
+
+     */
+
     {
         path: '/mainBook',
         name: 'MainBook',
@@ -70,7 +140,7 @@ const routes = [
     },
 
     {
-        path: '/',
+        path: '/home',
         name: 'Home',
         component: () =>  import('@/views/Home')
     },
@@ -86,37 +156,6 @@ const routes = [
     },
 
 
-
-    {
-        path: '/my',
-        component: () =>  import('@/views/mypage/My'),
-        children:[
-            {
-                path: '',
-                component: () =>  import('@/views/mypage/infoComponents/MyOrderComponent'),
-            },
-            {
-                path: 'wish',
-                name: 'InfoWishList',
-                component: () =>  import('@/views/mypage/InfoWishList')
-            },
-            {
-                path: 'comment',
-                name: 'MyCommentComponent',
-                component: () =>  import('@/views/mypage/infoComponents/MyCommentComponent')
-            },
-            {
-                path: 'cart',
-                name: 'InfoCart',
-                component: () =>  import('@/views/mypage/InfoCart'),
-            },
-            {
-                path: 'order',
-                name: 'MyOrderComponent',
-                component: () =>  import('@/views/mypage/infoComponents/MyOrderComponent'),
-            },
-        ]
-    },
 
 
     // *****
@@ -179,13 +218,14 @@ const routes = [
         component: () =>  import('@/views/mypage/infoComponents/MyOrderComponent'),
     },
 
-     */
+
+
     {
         path: '/orderDetail/:orderId',
         name: 'orderDetail',
         component: () =>  import('@/views/mypage/infoComponents/OrderDetail'),
     },
-
+ */
 
 
     //wishlist component

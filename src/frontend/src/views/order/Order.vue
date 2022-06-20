@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <SearchMenu @moveTabNum="pushLink"></SearchMenu>
-    <div style="height: 80px"></div>
+    <div style="height: 40px"></div>
     <v-container fluid style="height: 100%; background-color: rgb(24,24,24)">
       <v-row class="ma-0 pa-0 justify-center ">
         <v-col cols="12" style="height: 40px"/>
@@ -283,7 +283,7 @@ export default {
         name : '',
         amount : 0,
         buyer_email : 'dwc04112@gmail.com',
-        buyer_name : '',
+        buyer_name : this.$store.state.memberStore.fullName,
         buyer_postcode: '',
         buyer_addr: '',
         buyer_detail_addr: '',
@@ -429,6 +429,7 @@ export default {
     createOrder(){
       let data = {};
       data.bookOrder = this.$store.state.toOrderStore.bookList; //책정보
+      data.buyerName = this.order.buyer_name;  //받는사람으로 씀
       data.postcode = this.order.buyer_postcode;                 //우편번호
       data.addr = this.order.buyer_addr;                          //주소
       data.detailAddr = this.order.buyer_detail_addr;          //상세주소
@@ -478,7 +479,7 @@ export default {
             //order state 초기화
             this.$store.dispatch('clearOrderState');
             alert("주문에 성공했습니다. 마이페이지로 이동합니다")
-            this.$router.push({name: 'InfoNavi', params: {AboutTab: 4}})
+            this.$router.push({name: 'MyOrderComponent'})
           }).catch(error =>{
             console.log(error.response);
           })

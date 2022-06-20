@@ -22,13 +22,18 @@ public class OrderController {
 
     // 로그인한 mid 의 전체 주문 보여주기
     @GetMapping("/")
-    public List<Orders> getCartList(){
+    public List<Orders> getCartList() throws Exception{
         return orderService.getOrderList();
+    }
+
+    @GetMapping("/range")
+    public List<Orders> getCartListByDate(@RequestParam(value="fromDate") String fromDate, @RequestParam(value="toDate") String toDate) throws Exception{
+        return orderService.getCartListByDate(toDate, fromDate);
     }
 
     //주문 및 주문아이템 등록
     @PostMapping("/")
-    public ApiResponse<Long> setCartList(@RequestBody SetOrderDTO setOrderDTO) {
+    public ApiResponse<Long> setCartList(@RequestBody SetOrderDTO setOrderDTO) throws Exception {
         log.debug("order test : "+setOrderDTO);
         return orderService.setCartList(setOrderDTO);
     }

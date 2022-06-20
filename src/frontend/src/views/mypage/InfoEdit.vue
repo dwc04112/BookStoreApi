@@ -1,13 +1,13 @@
 <template>
   <v-container fluid class="align-center">
     <v-row class=" pa-0 ma-0 justify-center align-center">
-      <v-col cols="11" md="6" class="no-gutters pa-0 ma-0 mt-10">
+      <v-col cols="11" md="10" class="no-gutters pa-0 ma-0 mt-10">
         <span class="main-title">개인정보 수정</span>
       </v-col>
     </v-row>
 
     <v-row class=" pa-0 ma-0 justify-center align-center">
-      <v-col cols="11" md="6" class="pa-0 ma-0 mt-6">
+      <v-col cols="11" md="10" class="pa-0 ma-0 mt-6">
         <v-chip-group
             class="ma-0 pa-0 pb-1"
             mandatory
@@ -27,7 +27,7 @@
     </v-row>
 
     <v-row class=" pa-0 ma-0 justify-center align-center">
-      <v-col cols="12" md="6" class="ma-0 pa-0 pl-1 pr-1 mt-6" >
+      <v-col cols="12" md="10" class="ma-0 pa-0 pl-1 pr-1 mt-6" >
         <component
             :key="componentKey"
             :is="component"
