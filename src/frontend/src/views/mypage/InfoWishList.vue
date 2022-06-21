@@ -19,10 +19,11 @@
 
 
 
-      <v-col cols="12" md="7" class="pb-8">
+      <v-col cols="12" md="7" class="pb-8 ml-md-4">
         <div class="mb-4">
           <span class="main-title">나의 찜목록</span>
         </div>
+
         <v-chip-group
             class="mb-4"
             active-class="primary"

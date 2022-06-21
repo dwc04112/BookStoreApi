@@ -241,6 +241,7 @@ export default {
   methods: {
 
     //정렬 설정 후 불러오기
+    //설정 안하고 바로 불러오면 다시 불러올때 (페이지 넘기거나할때) 초기화돼서
     setSelectSort(index){
       this.selectSort = index
       this.getBookComment();
@@ -334,7 +335,6 @@ export default {
                 //전체 별점 구하기
                 sumMulti = sumMulti + ( response.data[i].ratings * response.data[i].count )
             }
-
             this.totalRating = Math.round((sumMulti / totalCount) * 10) / 10;
             this.totalCount = totalCount;
 
@@ -353,7 +353,7 @@ export default {
           this.ratingList[i].value += 1
         }, 25)
       }
-    }
+    },
 
   },
 

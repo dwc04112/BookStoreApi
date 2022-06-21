@@ -31,7 +31,7 @@
         </v-card>
       </v-col>
 
-      <v-col cols="12" md="7" class="pb-8">
+      <v-col cols="12" md="7" class="pb-8 ml-md-4">
         <div class="mb-8">
           <span class="main-title">장바구니</span>
         </div>

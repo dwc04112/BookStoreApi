@@ -12,13 +12,28 @@
             <strong class="pt-5" style="color: rgb(190,190,190); font-size: 20px">{{ $store.state.memberStore.nickName }}</strong>
           </v-sheet>
           <v-divider class="ma-2" style="width: 60%" dark></v-divider>
+
+          <div v-for="data in orderState"
+               :key="data.state"
+               class="pa-1 d-flex align-center"
+          >
+            <span class="book-state pa-1">{{data.state}}</span>
+            <strong
+                class="pa-1"
+                :class="data.count > 0 ? 'yellow--text text--darken-2' : 'grey--text text--darken-1'"
+                style="font-size: 23px"
+            >{{data.count}}</strong>
+
+            <span class="book-state pa-1">건</span>
+          </div>
+          <v-divider class="ma-2" style="width: 60%" dark></v-divider>
         </v-card>
       </v-col>
 
 
-      <v-col cols="12" md="7" class="pb-8">
+      <v-col cols="12" md="7" class="pb-8 ml-md-4">
         <div class="mb-8">
-          <span class="main-title">구매목록</span>
+          <span class="main-title">주문목록 / 상태</span>
         </div>
 
         <v-row class="mb-6 pa-0 align-center" style="background-color: rgb(40,40,40);">
@@ -210,6 +225,12 @@ export default {
     menu1: false,
     menu2: false,
 
+    orderState: [
+      {state:'결제완료', count: 0},
+      {state:'결제대기', count: 0},
+      {state:'결제취소', count: 0},
+    ],
+
     links: [
       {icon:'mdi-pencil', name:'개인정보 수정', link:'infoEdit', color:'red lighten-1', show:true},
     ],
@@ -223,6 +244,17 @@ export default {
       return arr;
     }
   },
+  watch:{
+    ordersData:{
+      deep : true,
+      handler(val){
+        this.orderState[0].count = val.filter(e=> e.orderState==="결제완료").length
+        this.orderState[1].count = val.filter(e=> e.orderState==="결제대기").length
+        this.orderState[2].count = val.filter(e=> e.orderState==="결제실패").length
+      }
+    },
+  },
+
 
   methods: {
     getBookOrders() {

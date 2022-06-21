@@ -63,9 +63,9 @@ public class CommentService {
         }
         return null;
     }
-    //2-1. 추천수 get
-    public List<PopCountInterface> getPopularity(long bid) {
-        return commentRepository.getPopCount(bid,"N");
+    //2-1. 별점 get
+    public List<RatingsCount> getRatings(long bid) {
+        return commentRepository.getRatingsCount(bid,"N");
     }
 
     //2-2. 추천수 update
@@ -124,26 +124,34 @@ public class CommentService {
     //4. 내가 쓴 모든 댓글 불러오기
     public Page<CommentBookMapping> getMyCommentList(SortDTO sortDTO) {
         PageRequest pageRequest = PageRequest.of(sortDTO.getPage() , sortDTO.getSize());
-        //Mid 가져오기
-        return commentBookRepository.findAllByBidAndIsDel(getMemberIdByEmail() ,"N", pageRequest);
-    }
 
-    public Page<CommentBookMapping> getCommentByDate(SortDTO sortDTO) {
-        PageRequest pageRequest = PageRequest.of(sortDTO.getPage() , sortDTO.getSize());
-
-        LocalDate endDate = LocalDate.parse(sortDTO.getToDate(), DateTimeFormatter.ISO_DATE);
-        LocalDate startDate = LocalDate.parse(sortDTO.getFromDate(), DateTimeFormatter.ISO_DATE);
-        int result = endDate.compareTo(startDate);
-        //고정
-        LocalTime endTime = LocalTime.of(23,59,59);
-        LocalTime startTime = LocalTime.of(0,0,0);
-        if(result < 0){
-            return commentBookRepository.findAllByDate(getMemberIdByEmail() ,"N", endDate,startDate,startTime,endTime, pageRequest);
-        }else {
-            return commentBookRepository.findAllByDate(getMemberIdByEmail() ,"N", startDate,endDate,startTime,endTime, pageRequest);
+        //최신순
+        if(sortDTO.getSortType() == 0) {
+            return commentBookRepository.findAllByBidAndIsDel(getMemberIdByEmail(), "N", pageRequest);
         }
+        //추천순
+        if(sortDTO.getSortType() == 1) {
+            return commentBookRepository.findByPopularity(getMemberIdByEmail(), "N", pageRequest);
+        }
+        //별점순
+        if(sortDTO.getSortType() == 2) {
+            return commentBookRepository.findByRatings(getMemberIdByEmail(), "N", pageRequest);
+        }
+        return null;
     }
 
+    //4-1
+    public Total getTotalCount() {
+        int bookCount = commentRepository.countCommentByMidAndIsDel(getMemberIdByEmail() , "N");
+        String avgRatings = String.format("%.2f", commentRepository.avgRatings(getMemberIdByEmail(), "N"));
+        List<RatingsCount> ratingsCount = commentRepository.getTotalPopCount(getMemberIdByEmail(), "N");
+
+        Total total = new Total();
+        total.setTotalCount(bookCount);
+        total.setRatings(avgRatings);
+        total.setRatingsCount(ratingsCount);
+        return total;
+    }
 
     //5. 삭제
     public ApiResponse<Comment> updateIsDelByCid(long cid) {

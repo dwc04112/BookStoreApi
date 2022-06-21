@@ -9,6 +9,5 @@ public class SortDTO {
     private int page;
     private int size;
 
-    private String toDate;
-    private String fromDate;
+    private int selectSort;
 }

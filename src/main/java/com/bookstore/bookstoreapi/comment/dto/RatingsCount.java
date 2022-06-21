@@ -1,6 +1,6 @@
 package com.bookstore.bookstoreapi.comment.dto;
 
-public interface PopCountInterface {
+public interface RatingsCount {
     int getRatings();
     int getCount();
 }

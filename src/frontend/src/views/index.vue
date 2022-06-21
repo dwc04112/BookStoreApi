@@ -8,7 +8,7 @@
 
     <v-row class="mt-9 pa-0">
 
-      <v-col cols="2" class="justify-start d-flex pa-0">
+      <v-col cols="2" sm="3" md="2" class="justify-start d-flex pa-0">
 
         <v-card
             class="main-nav"
@@ -90,7 +90,7 @@
 
 
 
-      <v-col cols="12" md="10" class="pa-0">
+      <v-col cols="12" sm="9" md="10" class="pa-0">
         <router-view></router-view>
       </v-col>
 

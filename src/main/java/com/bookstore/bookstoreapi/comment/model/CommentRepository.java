@@ -1,7 +1,7 @@
 package com.bookstore.bookstoreapi.comment.model;
 
 
-import com.bookstore.bookstoreapi.comment.dto.PopCountInterface;
+import com.bookstore.bookstoreapi.comment.dto.RatingsCount;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -31,7 +31,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     //pop count
     @Query(value = "select c.ratings, count(c.ratings) as count FROM Comment c where c.bid=:bid and c.isDel=:isDel group by c.ratings order by c.ratings DESC ", nativeQuery = true)
-    List<PopCountInterface> getPopCount(@Param("bid") Long bid, @Param("isDel") String isDel);
+    List<RatingsCount> getRatingsCount(@Param("bid") Long bid, @Param("isDel") String isDel);
 
     //pop update
     @Transactional
@@ -43,8 +43,18 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     Comment findTopByOrderByCidDesc();
 
 
-    //내가 쓴 댓글
+    //4. 내가 쓴 댓글
+    //불러오기
     List<Comment> findCommentByMidAndIsDel(Long mid, String isDel);
+    //4-1 count
+    Integer countCommentByMidAndIsDel(Long mid, String isDel);
+    //4-1 ratings
+    @Query("select avg(c.ratings) from Comment c where c.mid=?1 and c.isDel = ?2")
+    Double avgRatings(long mid, String isDel);
+    //4-1
+    //pop count
+    @Query(value = "select c.ratings, count(c.ratings) as count FROM Comment c where c.mid=:mid and c.isDel=:isDel group by c.ratings order by c.ratings DESC ", nativeQuery = true)
+    List<RatingsCount> getTotalPopCount(@Param("mid") Long mid, @Param("isDel") String isDel);
 
 
     //댓글 삭제

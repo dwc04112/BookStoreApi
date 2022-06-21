@@ -3,7 +3,7 @@
 
     <v-row>
       <v-col cols=12 md="3">
-        <v-card height="100%" class="align-center flex-column d-flex" color="transparent" tile elevation="0">
+        <v-card color="transparent" class="justify-center d-flex align-center flex-column" tile elevation="0">
           <v-sheet class="align-center justify-center flex-column d-flex" color="transparent">
             <v-avatar
                 color="grey"
@@ -12,103 +12,65 @@
             <strong class="pt-5" style="color: rgb(190,190,190); font-size: 20px">{{ $store.state.memberStore.nickName }}</strong>
           </v-sheet>
           <v-divider class="ma-2" style="width: 60%" dark></v-divider>
+
+          <div class="d-flex align-center">
+            <span class="nav-text pt-3 pa-1">나의 총 댓글 수</span>
+            <strong
+                class="pa-1"
+                :class="totalComment.totalCount > 0 ? 'yellow--text text--darken-2' : 'grey--text text--darken-1'"
+                style="font-size: 30px"
+            >{{totalComment.totalCount}}</strong>
+            <span class="nav-text pt-3 pa-1">개</span>
+          </div>
+
+          <v-divider class="ma-2 mt-3" style="width: 60%" dark></v-divider>
+
+          <v-row class="pb-6 pt-4 pr-3">
+            <span class="nav-text pt-5 pr-2">평균 별점</span>
+            <span class="pt-1 yellow--text text--darken-2" style="font-weight: bold;font-size: 30px">{{totalComment.ratings}}</span>
+            <span class="pt-6" style="color:rgb(160,160,160); font-size: 16px"> /4</span>
+          </v-row>
+            <div
+                v-for="(data,index) in ratingList"
+                :key="index"
+                class="pb-3" style="width: 55%"
+            >
+              <h5 style="color:rgb(160,160,160);">{{data.rating}} star &nbsp;({{data.per}}%)</h5>
+              <v-progress-linear
+                  :value="data.value"
+                  color="yellow darken-2"
+                  background-color="rgb(40,40,40)"
+                  height="22"
+                  rounded
+                  disabled="true"
+                  style="border: rgb(40,40,40) 1px solid"
+              ></v-progress-linear>
+            </div>
+          <v-divider class="ma-2 mt-4" style="width: 60%" dark></v-divider>
         </v-card>
       </v-col>
 
 
-      <v-col cols="12" md="7" class="pb-8">
-        <div class="mb-8">
-          <span class="main-title">나의댓글</span>
+      <v-col cols="12" md="7" class="pb-8 ml-md-4">
+        <div class="mb-4">
+          <span class="main-title">나의후기 모아보기</span>
         </div>
 
-        <v-row class="mb-6 pa-0 align-center" style="background-color: rgb(40,40,40);">
-          <v-col cols="12" md="5" class="justify-center d-flex ml-md-6">
-            <v-btn-toggle
-                dense
-                dark
-                rounded
-                active-class="grey grey--text text--darken-4"
-                v-model="selectMonth"
-            >
-              <v-btn
-                  v-for="(month,i) in autoMonth"
-                  :key="i"
-                  :value="month"
-                  @click="setDate(month)"
-              >
-                <span>{{ month }}월</span>
-              </v-btn>
-            </v-btn-toggle>
-          </v-col>
-
-          <v-col cols="12" md="6">
-            <v-row class="justify-center align-center d-flex">
-              <v-col cols="5">
-                <v-menu
-                    v-model="menu1"
-                    :close-on-content-click="false"
-                    :nudge-right="35"
-                    transition="scale-transition"
-                    offset-y
-                    min-width="auto"
-                >
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-text-field
-                        v-model="fromDate"
-                        prepend-icon="mdi-calendar"
-                        readonly
-                        hide-details
-                        v-bind="attrs"
-                        v-on="on"
-                        dark
-                        outlined
-                        dense
-                    ></v-text-field>
-                  </template>
-                  <v-date-picker
-                      v-model="fromDate"
-                      @input="(menu1 = false) || (selectMonth = null)"
-                  ></v-date-picker>
-                </v-menu>
-              </v-col>
-              <v-icon size="15px" class="white--text">mdi-tilde</v-icon>
-              <v-col cols="4">
-                <v-menu
-                    v-model="menu2"
-                    :close-on-content-click="false"
-                    :nudge-right="35"
-                    transition="scale-transition"
-                    offset-y
-                    min-width="auto"
-                    locale="zh-cn"
-                >
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-text-field
-                        v-model="toDate"
-                        readonly
-                        hide-details
-                        v-bind="attrs"
-                        v-on="on"
-                        dark
-                        outlined
-                        dense
-                    ></v-text-field>
-                  </template>
-                  <v-date-picker
-                      v-model="toDate"
-                      @input="(menu2 = false) || (selectMonth = null)"
-                  ></v-date-picker>
-                </v-menu>
-              </v-col>
-              <v-col cols="1" class="align-center d-flex">
-                <v-btn elevation="0" fab x-small @click="searchByDate">
-                  <v-icon>mdi-magnify</v-icon>
-                </v-btn>
-              </v-col>
-            </v-row>
-          </v-col>
-        </v-row>
-
+        <!-- 정렬 선택 -->
+        <v-chip-group dark mandatory class="mb-4">
+          <v-chip
+              filter :filter-icon="sortChip[index].icon"
+              color="rgb(220,220,220)"
+              style="background-color: rgb(40,40,40)"
+              active-class="red darken-4 grey--text text--lighten-2"
+              v-for="(data,index) in sortChip"
+              :key="index"
+              :value="index"
+              @click="setSelectSort(index)"
+          >
+            <span class="top-chip-text">{{data.text}}</span>
+          </v-chip>
+        </v-chip-group>
 
         <v-row class="pb-4 align-center pa-0" style="background-color: rgb(30,30,30)">
           <v-col class="pa-0 align-center"  v-show="noComments">
@@ -257,8 +219,8 @@
 export default {
   name: "MyCommentComponent",
   data: () => ({
-        selectKeyword: 1,   //선택된 키워드
         commentData : [],
+        totalComment : [], // count & avg ratings
         noComments : false,
 
         //page
@@ -270,23 +232,24 @@ export default {
         dialog : false,     //삭제 확인 메시지
         snackbar : false,   //삭제 성공? 실패?
 
-        selectMonth: null,
-        month : new Date().getMonth()+1,  //0~11로 출력
-        fromDate : (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
-        toDate: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
-        menu1: false,
-        menu2: false,
+        selectSort:0,
+        sortChip :
+            [
+              {'text' : '최신순', 'icon' : 'mdi-clock' },
+              {'text' : '인기순', 'icon' : 'mdi-thumb-up'},
+              {'text' : '별점순', 'icon' : 'mdi-star'},
+            ],
+
+        //추천도
+        interval: {},
+        ratingList:[
+          {rating:4 ,value: 0, per:0 , count: 0},
+          {rating:3 ,value: 0, per:0 , count: 0},
+          {rating:2 ,value: 0, per:0 , count: 0},
+          {rating:1 ,value: 0, per:0 , count: 0},
+        ],
       }
   ),
-  computed:{
-    autoMonth(){
-      let arr = [];
-      for (let i = this.month-5; i <= this.month; i++) {
-        arr.push(i);
-      }
-      return arr;
-    }
-  },
 
   watch: {
     snackbar(val) {
@@ -297,10 +260,48 @@ export default {
   },
 
   methods: {
+    getTotalInfo(){
+      this.$axios.get("comment/myTotal/")
+          .then(response => {
+            this.totalComment = response.data;
+            for(let i = 0; i<4; i++) {
+              //역순으로 리스트에 데이터 넣기
+              //별이 4개면 -> 0번째 리스트에 , 3개면 -> 1번째
+              if(response.data.ratingsCount[i]==null){
+                continue;
+              }
+              this.ratingList[(this.ratingList.length - 1) - (response.data.ratingsCount[i].ratings - 1)].count = response.data.ratingsCount[i].count
+              this.ratingList[(this.ratingList.length - 1) - (response.data.ratingsCount[i].ratings - 1)].per = Math.round(response.data.ratingsCount[i].count / response.data.totalCount * 100);
+            }
+            this.startBuffer()
+          }).catch(error => {
+            console.log(error.response);
+      })
+    },
+    //그래프 동작
+    startBuffer(){
+      for(let i = 0 ; i<4; i++) {
+        this.interval = setInterval(() => {
+          if (this.ratingList[i].value === this.ratingList[i].per) {
+            return (this.ratingList[i].per)
+          }this.ratingList[i].value += 1
+        }, 25)
+      }
+    },
+
+    //정렬 설정 후 불러오기
+    //설정 안하고 바로 불러오면 다시 불러올때 (페이지 넘기거나할때) 초기화돼서
+    setSelectSort(index){
+      this.selectSort = index
+      this.page = 1   //페이지도 초기화
+      this.getBookComment();
+    },
+
     getBookComment() {
       let data = {}
       data.page = this.page -1
       data.size = this.size
+      data.sortType = this.selectSort
       this.$axios.post("comment/myComment", JSON.stringify(data), {
         headers: {
           "Content-Type": `application/json`,
@@ -313,33 +314,6 @@ export default {
       }).catch(error => {
         console.log(error.response);
       })
-    },
-
-    searchByDate(){
-      let data = {}
-      data.page = this.page -1
-      data.size = this.size
-      data.toDate = this.toDate
-      data.fromDate = this.fromDate
-      this.$axios.post("comment/range", JSON.stringify(data), {
-        headers: {
-          "Content-Type": `application/json`,
-        },
-      }).then(response => {
-        this.commentData = response.data.content;
-        this.totalPages = response.data.totalPages;
-
-        this.noComments = response.data.content.length === 0;
-      }).catch(error => {
-        console.log(error.response);
-      })
-    },
-    setDate(month){
-      let nowDate = new Date();
-      let lastDay = new Date(nowDate.getFullYear(),month,0).getDate()
-      month = month >= 10 ? month : '0' + month;
-      this.fromDate = nowDate.getFullYear()+"-"+month+"-01"
-      this.toDate = nowDate.getFullYear()+"-"+month+"-"+lastDay
     },
 
     //댓글 삭제
@@ -374,12 +348,19 @@ export default {
   },
 
   mounted() {
+    this.getTotalInfo();
     this.getBookComment();
   }
 }
 </script>
 
 <style scoped>
+.nav-text{
+  color: rgb(170,170,170);
+  font-size: 15px;
+  font-weight: bold;
+}
+
 .main-title{
   font-size: 24px;
   font-weight: bold;
@@ -393,7 +374,10 @@ export default {
   color: rgb(120,120,120);
   font-size: 13px;
 }
-
+.top-chip-text{
+  font-weight: bold;
+  font-size: 16px;
+}
 
 .date-text{
   color: rgb(120,120,120);

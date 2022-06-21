@@ -31,22 +31,19 @@ public class CommentController {
     //2. 해당 Book id 댓글. sort by ( 0-default 최신순 , 1-추천순 , 2-인기순 )
     @PostMapping(value = "/")
     public Page<Comment> getCommentById(@RequestBody SortDTO sortDTO)throws Exception{
-        log.debug("sortType : " + sortDTO);
         return commentService.getCommentById(sortDTO);
     }
 
 
-    //2-1 추천수 get
+    //2-1 별점 get
     @GetMapping(value = "/pop/{bid}")
-    public List<PopCountInterface> getPopularity(@PathVariable long bid){
-        log.debug("get pop : " + bid);
-        return commentService.getPopularity(bid);
+    public List<RatingsCount> getRatings(@PathVariable long bid){
+        return commentService.getRatings(bid);
     }
 
     //2-2. 추천수 update
     @PostMapping(value = "/pop")
     public ApiResponse<Comment> updatePopularity(@RequestBody PopularityDTO popularityDTO)throws Exception{
-        log.debug("hi : " + popularityDTO.toString());
         return commentService.updatePopularity(popularityDTO);
     }
 
@@ -56,16 +53,15 @@ public class CommentController {
         return commentService.postComment(commentDTO);
     }
 
-    //4. 내가 쓴 모든 댓글 불러오기
+    //4. 내가 쓴 모든 댓글 불러오기  sort by ( 0-default 최신순 , 1-추천순 , 2-인기순 )
     @PostMapping(value = "/myComment")
     public Page<CommentBookMapping> getPopularity(@RequestBody SortDTO sortDTO){
         return commentService.getMyCommentList(sortDTO);
     }
-
-    @PostMapping(value = "/range")
-    public Page<CommentBookMapping> getCommentByDate(@RequestBody SortDTO sortDTO){
-        log.debug("date : " + sortDTO.getFromDate() +" , " + sortDTO.getToDate());
-        return commentService.getCommentByDate(sortDTO);
+    //4-1.
+    @GetMapping(value = "/myTotal")
+    public Total getTotalCount(){
+        return commentService.getTotalCount();
     }
 
     //5. 댓글 삭제
