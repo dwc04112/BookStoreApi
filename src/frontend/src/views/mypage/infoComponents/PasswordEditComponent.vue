@@ -1,12 +1,12 @@
 <template>
   <v-row style="background-color: rgb(40,40,40); min-height: 500px">
 
-    <v-col cols="12" md="5" class="red lighten-2 pt-8">
+    <v-col cols="12" md="4" class="red lighten-2 pt-8">
       <v-row class="justify-center">
         <v-col cols="11">
-          <span class="white--text" style="font-size: 22px; font-weight: bold">Change password</span>
+          <span class="white--text" style="font-size: 20px; font-weight: bold">비밀번호 변경</span>
         </v-col>
-        <v-col cols="12" class="align-center pt-md-8 pb-8 d-flex justify-center">
+        <v-col cols="12" class="align-center pt-md-12 pb-8 d-flex justify-center">
           <v-icon size="185" color="white">
             mdi-lock
           </v-icon>
@@ -14,10 +14,10 @@
       </v-row>
     </v-col>
 
-    <v-col cols="12" md="7" class="pt-8">
+    <v-col cols="12" md="8" class="pt-8">
       <v-row class="justify-center align-center">
         <v-col cols="11">
-          <span class="item-text">Old password</span>
+          <span class="item-text">현재 비밀번호</span>
           <v-text-field
               outlined dense dark
               class="pt-1 text-fields"
@@ -29,7 +29,7 @@
 
 
         <v-col cols="11">
-          <span class="item-text">New password</span>
+          <span class="item-text">새로운 비밀번호</span>
           <v-text-field
               outlined dense dark
               class="pt-1 text-fields"
@@ -53,7 +53,7 @@
 
 
         <v-col cols="11">
-          <span class="item-text">Confirm new password</span>
+          <span class="item-text">비밀번호 확인</span>
           <v-text-field
               outlined dense dark
               class="pt-1 text-fields white--text"
@@ -72,7 +72,7 @@
         </v-col>
 
 
-        <v-col cols="11" class="justify-center d-flex">
+        <v-col cols="11" class="justify-center">
           <span :class="numPass ? 'blue--text text--lighten-2' : 'red--text text--lighten-2'"  class="security-text"> 숫자와 </span>
           <span :class="smallPass ? 'blue--text text--lighten-2' : 'red--text text--lighten-2'"  class="security-text"> &nbsp;소문자를 포함하여 </span>
           <span :class="minPass ? 'blue--text text--lighten-2' : 'red--text text--lighten-2'" class="security-text"> &nbsp;10 ~ 16자리 이여야 합니다. </span>
@@ -180,7 +180,7 @@ export default {
   color: rgb(240,240,240);
 }
 .security-text{
-  font-size: 12px;
+  font-size: 14px;
 }
 
 

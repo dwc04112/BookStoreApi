@@ -81,11 +81,10 @@
       <v-btn class="top-icon" icon @click="myLink('/wish')">
         <v-icon>mdi-heart</v-icon>
       </v-btn>
-
-      <v-btn icon class="top-icon" @click="myLink('/home')">
-        <v-icon>mdi-account</v-icon>
+      <v-btn fab text>
+        <v-avatar size="31" color="blue">
+        </v-avatar>
       </v-btn>
-
 
     </v-app-bar>
 </template>

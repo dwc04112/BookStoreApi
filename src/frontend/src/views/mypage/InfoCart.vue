@@ -13,19 +13,23 @@
           </v-sheet>
           <v-divider class="ma-2" style="width: 60%" dark></v-divider>
 
-          <span style="font-weight: bold; color:rgb(180,180,180);">
-            <strong class="yellow--text text--darken-2">{{totalCount}}</strong>
-            권을 선택하셨습니다
-          </span>
+          <div class="d-flex align-center">
+            <strong
+                style="font-size: 30px"
+                :class="totalCount > 0 ? 'yellow--text text--darken-2' : 'grey--text text--darken-1'"
+            >{{totalCount}}</strong>
+            <span class="nav-text pt-3 pa-1">권을 선택하셨습니다</span>
+          </div>
 
           <v-divider class="ma-2" style="width: 60%" dark></v-divider>
 
-          <span class="nav-text mb-4" >총 결제금액
-            <strong style="font-size: 25px" class="yellow--text text--darken-2">{{totalAmount}}
-            </strong> 원
-          </span>
+          <div class="d-flex align-center">
+            <span class="nav-text pt-3 pa-1" >총 결제금액  </span>
+            <strong style="font-size: 30px" class="yellow--text text--darken-2 pa-1">{{totalAmount}}</strong>
+            <span class="nav-text pt-3 pa-1">원</span>
+          </div>
 
-          <v-btn color="yellow darken-2" tile width="60%" height="50px" dark @click="linkOrder" :disabled="selected.length<1">
+          <v-btn color="yellow darken-2" class="mt-2" tile width="60%" height="50px" dark @click="linkOrder" :disabled="selected.length<1">
             <span style="font-weight: bold; font-size: 20px; color: rgb(40,40,40)">결제하기</span>
           </v-btn>
         </v-card>
@@ -51,7 +55,7 @@
               class="mt-1 mr-4"
               rounded small
               elevation="0"
-              @click="selectDelete">
+              @click="dialog = true">
             <span style="font-size: 15px">선택삭제</span>
             <v-icon class="pl-1" size="17">mdi-delete</v-icon>
           </v-btn>
@@ -165,7 +169,43 @@
     </v-row>
 
 
-      <!--right nav End-->
+    <!--삭제 확인 메시지-->
+    <v-dialog
+        max-width="400"
+        v-model="dialog"
+    >
+      <v-card rounded color="rgb(55,55,55)" tile dark>
+        <div class="pa-4 pb-6 pt-6" style="font-weight: lighter; font-size: 15px">정말 선택한 책을 삭제할까요?</div>
+        <v-card-actions class="justify-end" style="background-color: rgb(50,50,50)">
+          <v-btn
+              rounded
+              text
+                @click="dialog=false"
+          >Close</v-btn>
+          <v-btn
+              class="ml-2"
+              rounded
+              elevation="0"
+              color="red"
+              @click="selectDelete()"
+          >Commit</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <v-snackbar
+        transition="dialog-bottom-transition"
+        elevation="0"
+        color="white"
+        rounded
+        v-model="snackbar"
+    >
+      <div>
+        <v-icon color="blue" size="30" class="pr-2">mdi-checkbox-marked-circle</v-icon>
+        <span class="black--text">삭제되었습니다.</span>
+      </div>
+    </v-snackbar>
+
 
 
   </v-container>
@@ -186,6 +226,8 @@ export default {
       totalAmount : 0,
 
       selected :[],
+      dialog:false, //삭제확인 Dialog
+      snackbar:false, //확인 msg
     }
   },
   watch: {
@@ -213,8 +255,16 @@ export default {
       let total = this.bookData.filter(e => val.includes(e.cartId))
       this.totalCount = total.map(e=>e.bookCount).reduce((prev,curr) => prev + curr,0)
       this.totalAmount = total.map(e => (e.bookSalePrice * e.bookCount)).reduce((prev,curr) => prev + curr,0)
-    }
+    },
+
+    // 삭제 확인 msg
+    snackbar(val) {
+      val && setTimeout(() => {
+        this.snackbar = false
+      }, 4000)
+    },
   },
+
 
   methods: {
 
@@ -222,16 +272,13 @@ export default {
       this.$axios.get('cart/')
           .then(response => {
             this.bookData = response.data;
-          //  this.selected = response.data.map(e=>e.cartId)
             for(let i =0; i<response.data.length; i++){
-              // this.$set(this.bookData[i],'select', true)
               this.$set(this.bookData[i],'fixCount',response.data[i].bookCount) //수량변경용 fixCount
             }
             if(response.data.length === 0){
               this.noCart = true;
             }
             this.selected=[]
-
           })
           .catch(error => {
             console.log(error.response);
@@ -259,7 +306,6 @@ export default {
       let data = {};
       data.cartId = this.bookData[index].cartId;
       data.bookCount = this.bookData[index].fixCount;
-
       this.$axios.post("cart/count",JSON.stringify(data),{
         headers: {
           "Content-Type": `application/json`,
@@ -278,12 +324,20 @@ export default {
       this.$axios.delete("cart/"+cartIdList)
           .then(response=>{
             console.log(response.data)
-            alert("선택한 책이 성공적으로 삭제되었습니다.")
-
             this.getBookInfo();
+            this.dialog = false
+            this.snackbarDelay();
           }).catch(error =>{
             console.log(error.response);
           })
+    },
+    snackbarDelay(){
+      clearTimeout(this._timerId)
+      // delay new call 500ms
+      this._timerId = setTimeout(() => {
+        // maybe : this.fetch_data()
+        this.snackbar = true;
+      }, 600)
     },
 
     //주문으로 이동
@@ -303,11 +357,17 @@ export default {
 
   mounted() {
     this.getBookInfo();
+    window.scrollTo(0, 0);
   }
 }
 </script>
 
 <style lang="scss">
+.nav-text{
+  color: rgb(170,170,170);
+  font-size: 15px;
+  font-weight: bold;
+}
 .main-title{
   font-size: 24px;
   font-weight: bold;
@@ -346,10 +406,7 @@ export default {
 .nav-menu{
   outline: rgb(160,160,160) 1.5px solid;
 }
-.nav-text{
-  color: rgb(180,180,180);
-  font-size: 17px;
-}
+
 
 .book-count .v-input__control .v-input__slot {
   background-color: transparent !important;

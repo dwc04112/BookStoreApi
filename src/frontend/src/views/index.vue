@@ -160,6 +160,7 @@ export default {
           {icon:'mdi-library', name:'Wish List', link:'/my/wish', color:'green lighten-1', show:true},
           {icon:'mdi-book', name:'Comment', link:'/my/comment', color:'blue lighten-1', show:true},
           {icon:'mdi-book', name:'Order', link:'/my/order', color:'blue lighten-1', show:true},
+          {icon:'mdi-book', name:'infoEdit', link:'/my/infoEdit', color:'blue lighten-1', show:true},
         ],
 
         totalList: [

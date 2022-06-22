@@ -17,14 +17,14 @@
                :key="data.state"
                class="pa-1 d-flex align-center"
           >
-            <span class="book-state pa-1">{{data.state}}</span>
+            <span class="nav-text pt-3 pa-1">{{data.state}}</span>
             <strong
                 class="pa-1"
                 :class="data.count > 0 ? 'yellow--text text--darken-2' : 'grey--text text--darken-1'"
-                style="font-size: 23px"
+                style="font-size: 30px"
             >{{data.count}}</strong>
 
-            <span class="book-state pa-1">건</span>
+            <span class="nav-text pt-3 pa-1">건</span>
           </div>
           <v-divider class="ma-2" style="width: 60%" dark></v-divider>
         </v-card>
@@ -304,6 +304,11 @@ export default {
 </script>
 
 <style lang="scss">
+.nav-text{
+  color: rgb(170,170,170);
+  font-size: 15px;
+  font-weight: bold;
+}
 .main-title{
   font-size: 24px;
   font-weight: bold;

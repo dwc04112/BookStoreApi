@@ -3,7 +3,7 @@
 
     <v-row>
       <v-col cols=12 md="3">
-        <v-card height="100%" class="align-center flex-column d-flex" color="transparent" tile elevation="0">
+        <v-card class="align-center flex-column d-flex" color="transparent" tile elevation="0">
           <v-sheet class="align-center justify-center flex-column d-flex" color="transparent">
             <v-avatar
                 color="grey"
@@ -12,70 +12,76 @@
             <strong class="pt-5" style="color: rgb(190,190,190); font-size: 20px">{{ $store.state.memberStore.nickName }}</strong>
           </v-sheet>
           <v-divider class="ma-2" style="width: 60%" dark></v-divider>
+          <v-col cols="7" class="pa-0 pt-1 pb-3">
+            <v-chip-group
+                class="mb-4"
+                active-class="primary darken-4"
+                v-model="selectWishTitle"
+                mandatory
+                column
+                dark
+            >
+              <v-chip
+                  filter
+                  v-for="(wish,index) in wishlistTitle"
+                  :key="index"
+                  :value="wish.titleNum"
+                  :close="titleDelete"
+                  @click="titleDelete = false"
+                  @click.stop="getWishList(wish.titleNum)"
+                  @click:close="setDelete(wish.titleNum)"
+              >
+               {{wish.wishlistTitle}}
+              </v-chip>
+            </v-chip-group>
+            <v-chip
+                @click.stop="titleDelete=true"
+                class="red lighten-1 white--text"
+                active-class="red white--text"
+                filter
+            >
+              <span class="pl-1 pr-1">Edit</span>
+              <v-icon class="white--text" size="19">mdi-wrench</v-icon>
+            </v-chip>
+          </v-col>
+
+          <v-divider class="ma-2" style="width: 60%" dark></v-divider>
+
         </v-card>
       </v-col>
 
 
 
-
-
       <v-col cols="12" md="7" class="pb-8 ml-md-4">
-        <div class="mb-4">
-          <span class="main-title">나의 찜목록</span>
+        <div class="mb-8">
+          <span class="main-title">나의 위시리스트</span>
         </div>
 
-        <v-chip-group
-            class="mb-4"
-            active-class="primary"
-            v-model="selectWishTitle"
-            mandatory
-            dark
-        >
-          <v-chip
-              filter
-              v-for="(wish,index) in wishlistTitle"
-              :key="index"
-              :value="wish.titleNum"
-              :close="titleDelete"
-              @click="titleDelete = false"
-              @click.stop="getWishList(wish.titleNum)"
-              @click:close="setDelete(wish.titleNum)"
-          >
-            {{wish.wishlistTitle}}
-          </v-chip>
+        <v-row class="pb-4 align-center pa-0" style="background-color: rgb(30,30,30)">
 
 
-          <v-chip
-              @click.stop="titleDelete=true"
-              class="red lighten-1 white--text"
-              active-class="red white--text"
-              filter
-          >
-            <span class="pl-1 pr-1">Edit</span>
-            <v-icon class="white--text" size="19">mdi-wrench</v-icon>
-          </v-chip>
-        </v-chip-group>
+          <v-checkbox
+              dark class="mb-3 ml-4"
+              disabled
+              off-icon="mdi-check white--text"
+              :label="this.selectWidList.length+'권 선택'"
+              v-show="showSelect"
+              hide-details/>
+          <v-spacer></v-spacer>
 
-        <v-row style="background-color: rgb(30,30,30)" class="pb-4">
-          <v-col cols="4" class="white--text mt-2">
-            <div v-show="showSelect" >
-              <v-icon color="white" size="20">mdi-check</v-icon>
-              <span class="pl-1"> {{this.selectWidList.length}}권 선택</span>
-            </div>
+          <v-spacer/>
+          <div class="pa-2 pt-3 pr-3">
+            <v-btn icon>
+              <v-icon @click="showSelectSet"  :color=" showSelect ? 'blue' : 'rgb(180,180,180)'"
+              >{{ showSelect ? 'mdi-check-circle' : 'mdi-check-circle-outline' }}</v-icon>
+            </v-btn>
+          </div>
+
+
+          <v-col cols="12" class="pa-0 mb-3 mt-1">
+            <v-divider style="background-color: rgb(180,180,180); border: rgb(180,180,180) solid 1px"></v-divider>
           </v-col>
 
-          <v-col cols="8" class="justify-end d-flex pb-0 mb-0">
-            <div class="pb-2">
-              <v-btn icon>
-                <v-icon @click="showSelectSet"  :color=" showSelect ? 'blue' : 'rgb(180,180,180)'"
-                >{{ showSelect ? 'mdi-check-circle' : 'mdi-check-circle-outline' }}</v-icon>
-              </v-btn>
-            </div>
-          </v-col>
-
-          <v-col cols="12" class="pa-0 ma-0">
-            <v-divider style="background-color: rgb(180,180,180); border: rgb(180,180,180) solid 1px"/>
-          </v-col>
           <!--List Card-->
           <v-col cols="12"
                  class="book-list-col no-gutters ml-md-4"
@@ -155,7 +161,7 @@
     >
       <div>
         <v-icon color="blue" size="30" class="pr-2">mdi-checkbox-marked-circle</v-icon>
-        <span class="black--text">삭제되었습니다.</span>
+        <span class="black--text">{{ successMsg }}.</span>
       </div>
     </v-snackbar>
 
@@ -200,7 +206,7 @@ export default {
     wishBooks: [],
 
 
-    selectWishTitle: 0,
+    selectWishTitle: null,
     titleDelete : false,
 
 
@@ -214,6 +220,7 @@ export default {
     deleteDialog : false,
     deleteTitle : null,
     snackbar : false,
+    successMsg: '',
 
     page : 1,
     pageCount: 0,
@@ -311,7 +318,7 @@ export default {
             console.log(response.data)
             this.getWishTitle()  //선택된 타이틀 번호로 타이틀 다시받기 (리로드)
             this.deleteDialog =false
-            this.snackbarDelay();
+            this.snackbarDelay("위시리스트를 삭제했습니다");
           }).catch(error =>{
             console.log(error.response);
           })
@@ -322,20 +329,22 @@ export default {
       this.$axios.delete("wish/"+widArr)
           .then(response=>{
             console.log(response.data)
-            this.getWishList(this.selectKeyword)  //선택된 키워드 번호로 책목록 다시받기 (리로드)
+            this.getWishList(this.selectWishTitle)  //선택된 키워드 번호로 책목록 다시받기 (리로드)
             this.deleteDialog =false
-            this.snackbarDelay();
+            this.snackbarDelay("선택한 책을 삭제했습니다");
           }).catch(error =>{
             console.log(error.response);
           })
     },
-    snackbarDelay(){
+
+    snackbarDelay(str){
+      this.successMsg = str;
       clearTimeout(this._timerId)
       // delay new call 500ms
       this._timerId = setTimeout(() => {
         // maybe : this.fetch_data()
         this.snackbar = true;
-      }, 400)
+      }, 600)
     },
 
 
@@ -345,8 +354,8 @@ export default {
       this.$axios.get("cart/fromWish/"+widArr)
           .then(response=>{
             console.log(response.data)
-            alert(response.data.data + "번 책을 장바구니에 추가했습니다")
-            this.getWishList(this.selectKeyword)  //선택된 키워드 번호로 책목록 다시받기 (리로드)
+            this.getWishList(this.selectWishTitle)  //선택된 키워드 번호로 책목록 다시받기 (리로드)
+            this.snackbarDelay("성공적으로 장바구니에 추가했습니다");
           }).catch(error =>{
         console.log(error.response);
       })
@@ -359,7 +368,8 @@ export default {
   },
 
   mounted() {
-    this.getWishTitle()
+    this.getWishTitle();
+    window.scrollTo(0, 0);
   }
 }
 </script>

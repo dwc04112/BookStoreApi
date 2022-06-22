@@ -1,33 +1,46 @@
 <template>
   <v-container fluid class="align-center">
-    <v-row class=" pa-0 ma-0 justify-center align-center">
-      <v-col cols="11" md="10" class="no-gutters pa-0 ma-0 mt-10">
-        <span class="main-title">개인정보 수정</span>
-      </v-col>
-    </v-row>
 
-    <v-row class=" pa-0 ma-0 justify-center align-center">
-      <v-col cols="11" md="10" class="pa-0 ma-0 mt-6">
-        <v-chip-group
-            class="ma-0 pa-0 pb-1"
-            mandatory
-            active-class="red lighten-1 white--text"
-            dark
-        >
-          <v-chip
-              v-for="(data,index) in topChip"
-              :key="index"
-              filter
-              @click="setInfoComponents(data.link)"
-          >
-            {{data.name}}
-          </v-chip>
-        </v-chip-group>
-      </v-col>
-    </v-row>
 
-    <v-row class=" pa-0 ma-0 justify-center align-center">
-      <v-col cols="12" md="10" class="ma-0 pa-0 pl-1 pr-1 mt-6" >
+    <v-row class=" pa-0">
+      <v-col cols=12 md="3">
+        <v-card class="align-center flex-column d-flex" color="transparent" tile elevation="0">
+          <v-sheet class="align-center justify-center flex-column d-flex" color="transparent">
+            <v-avatar
+                color="grey"
+                size="110">
+            </v-avatar>
+            <strong class="pt-5" style="color: rgb(190,190,190); font-size: 20px">{{ $store.state.memberStore.nickName }}</strong>
+          </v-sheet>
+          <v-divider class="ma-2" style="width: 60%" dark></v-divider>
+
+          <v-col cols="7" class="pa-0 pt-1 pb-3">
+            <v-chip-group
+                mandatory
+                column
+                active-class="red darken-2 white--text"
+                dark
+            >
+              <v-chip
+                  v-for="(data,index) in topChip"
+                  :key="index"
+                  filter
+                  @click="setInfoComponents(data.link)"
+              >
+                {{data.name}}
+              </v-chip>
+            </v-chip-group>
+          </v-col>
+
+          <v-divider class="ma-2 mt-0" style="width: 60%" dark></v-divider>
+        </v-card>
+      </v-col>
+
+      <v-col cols="12" md="7" class="pb-8 ml-md-4">
+        <div class="mb-8">
+          <span class="main-title">개인정보 수정</span>
+        </div>
+
         <component
             :key="componentKey"
             :is="component"

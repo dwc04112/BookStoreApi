@@ -33,7 +33,7 @@
             <div
                 v-for="(data,index) in ratingList"
                 :key="index"
-                class="pb-3" style="width: 55%"
+                class="pb-2" style="width: 55%"
             >
               <h5 style="color:rgb(160,160,160);">{{data.rating}} star &nbsp;({{data.per}}%)</h5>
               <v-progress-linear
@@ -325,7 +325,6 @@ export default {
             this.getBookComment();
             this.setDialog(0);
             this.snackbarDelay();
-            // this.$emit('childKey')
           }).catch(error =>{
         console.log(error.response);
       })
@@ -338,7 +337,7 @@ export default {
 
     snackbarDelay(){
       clearTimeout(this._timerId)
-      // delay new call 500ms
+      // delay new call 600ms
       this._timerId = setTimeout(() => {
         // maybe : this.fetch_data()
         this.snackbar = true;
@@ -350,6 +349,7 @@ export default {
   mounted() {
     this.getTotalInfo();
     this.getBookComment();
+    window.scrollTo(0, 0);
   }
 }
 </script>
