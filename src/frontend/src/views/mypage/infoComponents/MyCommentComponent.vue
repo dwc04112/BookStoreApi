@@ -8,8 +8,11 @@
             <v-avatar
                 color="grey"
                 size="110">
+              <img :src="this.$store.state.memberStore.userData.profilePicture"
+                   style="object-fit: cover"
+                   alt=""/>
             </v-avatar>
-            <strong class="pt-5" style="color: rgb(190,190,190); font-size: 20px">{{ $store.state.memberStore.nickName }}</strong>
+            <strong class="pt-5" style="color: rgb(190,190,190); font-size: 20px">{{ $store.state.memberStore.userData.nickName }}</strong>
           </v-sheet>
           <v-divider class="ma-2" style="width: 60%" dark></v-divider>
 

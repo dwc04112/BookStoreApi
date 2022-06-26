@@ -71,6 +71,12 @@ const routes = [
                         name: 'InfoEdit',
                         component: () =>  import('@/views/mypage/InfoEdit')
                     },
+                    {
+                        path: 'infoProfile',
+                        name: 'InfoProfile',
+                        component: () =>  import('@/views/mypage/infoComponents/InfoProfile')
+                    },
+
                 ]
             },
         ]

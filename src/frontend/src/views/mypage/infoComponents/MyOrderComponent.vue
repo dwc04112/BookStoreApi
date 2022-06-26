@@ -8,8 +8,11 @@
             <v-avatar
                 color="grey"
                 size="110">
+              <img :src="this.$store.state.memberStore.userData.profilePicture"
+                   style="object-fit: cover"
+                   alt=""/>
             </v-avatar>
-            <strong class="pt-5" style="color: rgb(190,190,190); font-size: 20px">{{ $store.state.memberStore.nickName }}</strong>
+            <strong class="pt-5" style="color: rgb(190,190,190); font-size: 20px">{{ $store.state.memberStore.userData.nickName }}</strong>
           </v-sheet>
           <v-divider class="ma-2" style="width: 60%" dark></v-divider>
 
@@ -249,7 +252,7 @@ export default {
       deep : true,
       handler(val){
         this.orderState[0].count = val.filter(e=> e.orderState==="결제완료").length
-        this.orderState[1].count = val.filter(e=> e.orderState==="결제대기").length
+        this.orderState[1].count = val.filter(e=> e.orderState==="결제대기중").length
         this.orderState[2].count = val.filter(e=> e.orderState==="결제실패").length
       }
     },

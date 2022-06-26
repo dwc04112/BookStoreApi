@@ -1,0 +1,16 @@
+package com.bookstore.bookstoreapi.member.DTO;
+
+import lombok.Data;
+import lombok.Getter;
+
+@Data
+@Getter
+public class MemberDTO {
+    private Long mid;
+    private String email;
+    private String password;
+    private String nickName;
+    private String fullName;
+    private String phoneNum;
+    private String profilePicture;
+}

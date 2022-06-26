@@ -89,22 +89,15 @@ export default {
                 if (response.status === 200) {
                   alert("로그인 성공")
                   this.$store.dispatch('login',response.data);
-                  this.$router.push('/');
                 }
               })
-              .catch(error =>{
-                console.log(error.response);
-              })
-              /*
               .catch(error =>{
                 console.log(error.response);
                 if(error.response.status===401){
                   alert("인증오류. 아이디와 비밀번호를 확인해주세요");
                   this.password = null; this.email = null;
                 }
-              });
-
-               */
+              })
         } catch (error) {
           console.error(error);
         }

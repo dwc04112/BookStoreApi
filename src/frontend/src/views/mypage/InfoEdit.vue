@@ -9,8 +9,11 @@
             <v-avatar
                 color="grey"
                 size="110">
+              <img :src="this.$store.state.memberStore.userData.profilePicture"
+                   style="object-fit: cover"
+                   alt=""/>
             </v-avatar>
-            <strong class="pt-5" style="color: rgb(190,190,190); font-size: 20px">{{ $store.state.memberStore.nickName }}</strong>
+            <strong class="pt-5" style="color: rgb(190,190,190); font-size: 20px">{{ $store.state.memberStore.userData.nickName }}</strong>
           </v-sheet>
           <v-divider class="ma-2" style="width: 60%" dark></v-divider>
 
@@ -18,12 +21,14 @@
             <v-chip-group
                 mandatory
                 column
+                v-model="selectChip"
                 active-class="red darken-2 white--text"
                 dark
             >
               <v-chip
                   v-for="(data,index) in topChip"
                   :key="index"
+                  :value="data.name"
                   filter
                   @click="setInfoComponents(data.link)"
               >
@@ -38,12 +43,13 @@
 
       <v-col cols="12" md="7" class="pb-8 ml-md-4">
         <div class="mb-8">
-          <span class="main-title">개인정보 수정</span>
+          <span class="main-title">{{selectChip}}</span>
         </div>
 
         <component
             :key="componentKey"
             :is="component"
+            @childLink ="setInfoComponents"
         >
         </component>
       </v-col>
@@ -59,13 +65,17 @@ export default {
   components: {InfoEditComponent},
   data () {
     return {
+      selectChip:'',
       topChip : [
-        {name:'회원정보 수정',link:'InfoEditComponent'},
+        {name:'프로필 수정',link:'InfoProfile'},
+        {name:'연락처 정보 수정',link:'InfoEditComponent'},
         {name:'비밀번호 변경',link:'PasswordEditComponent'},
       ],
 
+
+
       //컴포넌트
-      setComponent: 'InfoEditComponent', //불러올 컴포넌트
+      setComponent: 'InfoProfile', //불러올 컴포넌트
       componentKey: 0 // reload component
     }
   },

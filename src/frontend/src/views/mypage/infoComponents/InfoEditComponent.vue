@@ -1,157 +1,200 @@
 <template>
-    <v-row style="background-color: rgb(40,40,40); min-height: 500px">
+  <v-row class="align-center justify-end pa-0" style="background-color: rgb(30,30,30)">
+    <v-col cols="12" class="pa-0">
 
-      <v-col cols="12" md="4" class="red lighten-2 pt-8">
-        <v-row class="justify-center">
-          <v-col cols="11">
-            <span class="white--text" style="font-size: 20px; font-weight: bold">회원정보 수정</span>
-          </v-col>
-          <v-col cols="12" class="d-flex justify-center pt-md-8 pb-12">
-            <v-avatar color="white" size="195" >
-              <img
-                  :src="imageUrl"
-                  style="object-fit: cover"
+      <v-simple-table dark>
+        <tbody>
+        <tr style="height: 80px">
+          <td class="name-td"><span style="font-size: 16px">이름</span></td>
+          <td class="content-td">
+            <v-col>
+              <v-text-field
+                  outlined dense dark text
+                  hide-details
+                  class="text-fields white--text justify-start"
+                  :placeholder="nameHolder"
+                  disabled
               >
-            </v-avatar>
-            <div class="file-div">
-              <input @change="upload" type="file" id="file" accept="image/png, image/jpeg">
-              <label class="input-label" for="file">Edit</label>
-            </div>
-          </v-col>
-        </v-row>
-      </v-col>
-
-      <v-col cols="12" md="8" class="pt-8">
-        <v-row class="justify-center">
+              </v-text-field>
+            </v-col>
+          </td>
+        </tr>
 
 
+        <tr style="height: 80px">
+          <td class="name-td"><span style="font-size: 16px">이메일</span></td>
+          <td class="content-td">
+            <v-col>
+              <v-text-field
+                  outlined dense dark text
+                  hide-details
+                  class="text-fields white--text justify-start"
+                  :placeholder="emailHolder"
+                  v-model="email"
+              >
+              </v-text-field>
+            </v-col>
+          </td>
+        </tr>
 
-          <v-col cols="10" class="pa-0">
-            <span class="item-text">이름</span>
-            <v-text-field
-                outlined dense dark
-                class="pt-1 text-fields"
-                v-model="nameField"
-            >
-            </v-text-field>
-          </v-col>
+        <tr style="height: 80px">
+          <td class="name-td"><span style="font-size: 16px">핸드폰</span></td>
+          <td class="content-td">
+            <v-col>
+              <v-row no-gutters class="ma-0 pa-0">
+                <v-select
+                    v-model="phoneNum1"
+                    :items="phoneItems"
+                    dense
+                    dark
+                    style="max-width: 85px"
+                    outlined
+                    hide-details
+                ></v-select>
+                <v-text-field
+                    outlined dense dark
+                    hide-details
+                    class="user-text ml-2"
+                    style="max-width: 85px"
+                    v-model="phoneNum2"
+                ></v-text-field>
+                <v-text-field
+                    outlined dense dark
+                    hide-details
+                    class="user-text ml-2"
+                    style="max-width: 85px"
+                    v-model="phoneNum3"
+                ></v-text-field>
+              </v-row>
+            </v-col>
+          </td>
+        </tr>
+        </tbody>
+      </v-simple-table>
+    </v-col>
 
-          <v-col cols="10" class="pa-0">
-            <span class="item-text">닉네임</span>
-            <v-text-field
-                outlined dense dark
-                class="pt-1 text-fields"
-                v-model="nickField"
-            >
-            </v-text-field>
-          </v-col>
-
-
-          <v-col cols="10" class="pa-0">
-            <span class="item-text">이메일</span>
-            <v-text-field
-                outlined dense dark
-                class="pt-1 text-fields white--text"
-                v-model="emailField"
-            >
-            </v-text-field>
-          </v-col>
-
-          <v-col cols="10" class="pa-0">
-            <span class="white--text item-text">주소</span>
-            <v-text-field
-                outlined dense dark
-                class="pt-1 text-fields"
-                v-model="nickField"
-            >
-            </v-text-field>
-          </v-col>
-
-          <v-col cols="11" class="justify-end d-flex pb-6">
-            <v-btn
-                rounded
-                width="200px"
-                class="red lighten-2 update-btn"
-            >
-              <span style="color: rgb(40,40,40)">Update</span>
-            </v-btn>
-          </v-col>
-
-        </v-row>
-      </v-col>
-
-    </v-row>
+    <v-btn
+        color="blue"
+        class="white--text ma-4 mt-8"
+        rounded
+        :disabled="(phoneNum2.length<1 || phoneNum3.length<1) &&email.length<1"
+        @click="orderDataCheck"
+    ><span style="font-weight: bold; font-size: 15px">저장하기</span></v-btn>
+  </v-row>
 </template>
 
 <script>
+// const { IMP } = window;
 export default {
   name: "InfoEditComponent",
   data () {
     return {
-      imageUrl:'',
+    //  impCode : 'imp10391932 ',
+      nameHolder : this.$store.state.memberStore.userData.fullName,
+      emailHolder : this.$store.state.memberStore.email,
+      phoneNumHolder : this.$store.state.memberStore.userData.phoneNum,
 
-      nameField : this.$store.state.memberStore.fullName,
-      nickField : this.$store.state.memberStore.nickName,
-      emailField : this.$store.state.memberStore.email,
+      phoneItems : ['010','011','016','017','018','019'],
+      phoneNum1 : '010',
+      phoneNum2 : '',
+      phoneNum3 : '',
+
+      num : '',
+      email : '',
     }
   },
+
+
   methods:{
-    upload(e) {
-      let imageFile = e.target.files; // 업로드한 파일의 데이터가 여기있음.
-      let url = URL.createObjectURL(imageFile[0]); // 파일의 필요한 데이터만을 url 변수에 넣음
-      console.log("url : "+url); // 확인
-      this.imageUrl = url; // 미리 작성해둔 imageUrl : ' ' 변수에 가지고있는 경로데이터를 넣는다
+    editInfo(){
+      let data = {}
+      data.phoneNum = this.num;
+      data.email = this.email;
+      this.$axios.post("user/info",JSON.stringify(data),{
+        headers: {
+          "Content-Type": `application/json`,
+        },
+      }).then(response => {
+        console.log(response.data)
+      }).catch(error => {
+        console.log(error.response);
+      })
+    },
+    orderDataCheck(){
+      if(this.phoneNum2!==''|| this.phoneNum3!=='') {
+        if (this.phoneNum2.length < 3 || this.phoneNum3.length < 4) {
+          alert("연락처를 확인해주세요")
+          return false;
+        }else{
+          this.num = this.phoneNum1+"-"+this.phoneNum2+"-"+this.phoneNum3
+        }
+      }else{
+        this.num = '';
+      }
+
+      let emailRule=/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i; //이메일 정규식
+      if(this.email!==''){
+        if (!emailRule.test(this.email)) {
+          alert("이메일을 확인해주세요")
+          return false;
+        }
+      }else{
+         this.email='';
+      }
+
+      this.editInfo();
     },
 
+
+    /*
+    //휴대폰 인증 > 다날 유료결제시 사용가능
+    certification() {
+      //1. 객체 초기화 (가맹점 식별코드 삽입)
+      IMP.init(this.impCode);
+      // IMP.certification(param, callback) 호출
+      IMP.certification(
+        {
+          popup : true
+        },  rsp => { // callback
+            console.log(rsp);
+            if (rsp.success) {
+              let data = {};
+              data.imp_uid= rsp.imp_uid;
+              console.log(data)
+              this.$axios.post("payments/certification/",JSON.stringify(data),{
+                headers: {
+                  "Content-Type": `application/json`,
+                },
+              }).then(response=>{
+                console.log(response.data)
+              }).catch(error =>{
+                console.log(error.response);
+              })
+
+            } else {
+              let msg = '결제에 실패하였습니다.';
+              msg += '에러내용 : ' + rsp.error_msg;
+              console.log(msg)
+            }
+          });
+    },
+
+ */
   },
 
 }
 </script>
 
-<style scoped>
-.profile-btn{
-  position: absolute;
-  margin-top: 155px;
-  margin-left: 110px;
-  background-color: white;
-  border-width: 2px;
-  border-color: rgb(60,60,60);
+<style lang="scss">
+.name-td{
+  width: 35%;
 }
-.item-text{
-  font-size: 16px;
-  color: rgb(240,240,240);
+.content-td{
+  background-color: rgb(35,35,35);
 }
-.file-div{
-  position: absolute;
-  margin-top: 155px;
-  margin-left: 110px;
+tbody {
+tr:hover {
+  background-color: transparent !important;
 }
-.file-div .input-img {
-  display: inline-block;
-  height: 40px;
-  padding: 0 10px;
-  vertical-align: middle;
-  border: 1px solid rgb(140,140,140);
-  color: #999999;
-  width: 100%;
-}
-.input-label {
-  display: inline-block;
-  padding: 10px 20px;
-  color: #fff;
-  vertical-align: middle;
-  background-color: rgb(50,50,50);
-  cursor: pointer;
-  height: 43px;
-  border-radius: 70px;
-  margin-left: 10px;
-}
-.file-div input[type="file"] {
-  position: absolute;
-  width: 0;
-  height: 0;
-  padding: 0;
-  overflow: hidden;
-  border: 0;
 }
 </style>

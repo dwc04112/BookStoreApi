@@ -5,7 +5,6 @@ import javax.persistence.*;
 
 @Entity
 @Getter
-@Setter
 @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member {
@@ -20,16 +19,28 @@ public class Member {
     private String password;
     private String nickName;
     private String fullName;
+    private String phoneNum;
+    private String profilePicture;
 
-    public Member(String email, String password, String nickName, String fullName) {
+    public void updatePicture(String profilePicture){
+        this.profilePicture = profilePicture;
+    }
+
+    public void updateNickName(String nickName){
+        this.nickName = nickName;
+    }
+
+    public Member(String email, String password, String nickName, String fullName, String phoneNum, String profilePicture) {
         this.email = email;
         this.password = password;
         this.nickName = nickName;
         this.fullName = fullName;
+        this.phoneNum = phoneNum;
+        this.profilePicture = profilePicture;
     }
 
-    public static Member createMember(String email, String password, String nickName, String fullName){
-        return new Member(email, password, nickName, fullName );
+    public static Member createMember(String email, String password, String nickName, String fullName, String phoneNum, String profilePicture){
+        return new Member(email, password, nickName, fullName, phoneNum, profilePicture);
     }
 
 }

@@ -6,7 +6,6 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -16,8 +15,8 @@ public interface MemberRepository extends CrudRepository<Member , Long> {
     @Query("select mid From Member where email= ?1")
     Long getMemberIdByEmail(String email);
 
-    @Query("select m.mid, m.fullName, m.nickName FROM Member m where m.email=?1")
-    List<Object[]> findMemberByEmail(String email);
+    @Query("select m.mid as mid, m.fullName as fullName, m.nickName as nickName,m.phoneNum as phoneNum , m.profilePicture as profilePicture FROM Member m where m.email=?1")
+    Optional<SimpleInfo> findSimpleInfo(String email);
 
 
     @Query("SELECT count (m.nickName) FROM Member m where m.nickName=?1")

@@ -2,22 +2,31 @@ package com.bookstore.bookstoreapi.security.controller;
 
 
 import com.bookstore.bookstoreapi.common.ApiResponse;
+import com.bookstore.bookstoreapi.member.DTO.MemberDTO;
+import com.bookstore.bookstoreapi.member.DTO.UpdatePassDto;
 import com.bookstore.bookstoreapi.member.Member;
 import com.bookstore.bookstoreapi.member.MemberRepository;
+import com.bookstore.bookstoreapi.member.MemberService;
+import com.bookstore.bookstoreapi.member.SimpleInfo;
 import com.bookstore.bookstoreapi.security.service.JwtUserDetailsService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+import jdk.internal.org.objectweb.asm.TypeReference;
 import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Objects;
 import java.util.Optional;
 
 
@@ -28,19 +37,20 @@ public class MemberController {
 
     final MemberRepository memberRepository;
     final PasswordEncoder passwordEncoder;
+    final MemberService memberService;
 
     @Autowired
     private JwtUserDetailsService userDetailsService;
 
     @PostMapping("/api/member")
-    public String saveMember(@RequestBody MemberDto memberDto){
+    public String saveMember(@RequestBody MemberDTO memberDto){
         memberRepository.save(Member.createMember(memberDto.getEmail(),
-                passwordEncoder.encode(memberDto.getPassword()) , memberDto.getNickName(), memberDto.getFullName() ));
+                passwordEncoder.encode(memberDto.getPassword()) , memberDto.getNickName(), memberDto.getFullName(), memberDto.getPhoneNum(), memberDto.getProfilePicture()));
         return "success";
     }
 
     @PostMapping("/signup/doublecheck")
-    public Integer doubleCheck(@RequestBody MemberDto memberDto){
+    public Integer doubleCheck(@RequestBody MemberDTO memberDto){
         log.debug("닉네임? : "+ memberDto.getNickName());
         String nick = memberDto.getNickName();
         return check(nick);
@@ -50,11 +60,19 @@ public class MemberController {
         return memberRepository.getMemberByNickname(nick);
     }
 
+    @PostMapping("/user/info")
+    public SimpleInfo getUserInfo(@RequestBody MemberDTO memberDto){
+        log.debug("user info " + memberDto);
+        memberService.editInfo(memberDto);
+        return null;
+    }
 
+    @SneakyThrows
+    @PostMapping("/user/profile")
+    public MemberDTO editProfile(@RequestParam("nick")String nickName, @RequestParam("file")MultipartFile multipartFile) {
 
-    @PostMapping("/user/edit")
-    public String editUserInfo(@RequestBody MemberDto memberDto){
-        log.debug("Member : " + memberDto);
+        return memberService.editProfile( nickName.replace("\"", ""), multipartFile);
+/*
         if(memberDto.getNickName()!=null){
          memberRepository.EditMemberNickName(memberDto.getNickName(), memberDto.getMid());
          return "successful edit nickname !";
@@ -63,7 +81,8 @@ public class MemberController {
             memberRepository.EditMemberName(memberDto.getFullName(),memberDto.getMid());
             return "successful edit name !";
         }
-        return null;
+
+ */
     }
 
     @PostMapping("/edit/password")
@@ -89,18 +108,3 @@ public class MemberController {
     }
 }
 
-@Data
-class MemberDto{
-    private Long mid;
-    private String email;
-    private String password;
-    private String nickName;
-    private String fullName;
-}
-
-@Data
-@Getter
-class UpdatePassDto{
-    private String oldPassword;
-    private String newPassword;
-}

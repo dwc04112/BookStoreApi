@@ -24,6 +24,7 @@ public class PaymentsController {
     @ResponseBody
     @PostMapping("/complete")
     public ApiResponse<String> getOrderInfo(@RequestBody ImportDTO importDTO)throws Exception{
+        log.debug("imp data : " + importDTO);
         return paymentsService.getOrderInfo(importDTO);
     }
 
@@ -39,6 +40,16 @@ public class PaymentsController {
     @GetMapping("/{orderId}")
     public ApiResponse<PayAndOrderItems> getPaymentsByOrderId(@PathVariable Long orderId) throws Exception{
         return paymentsService.getPaymentById(orderId);
+    }
+
+    //휴대폰 인증 > 다날 유료결제시 사용가능
+    @ResponseBody
+    @PostMapping("/certification")
+    public ApiResponse<String> certification(@RequestBody ImportDTO importDTO)throws Exception{
+
+
+        paymentsService.phoneCertification(importDTO.getImp_uid());
+        return null;
     }
 
 }

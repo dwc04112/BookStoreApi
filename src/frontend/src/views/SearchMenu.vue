@@ -11,6 +11,7 @@
           <v-icon>mdi-home</v-icon>
         </v-btn>
 
+
         <v-btn class="top-menu-btn" @click="drawMenu" icon>
           <font-awesome-icon style="font-size: 24px" icon="fa-solid fa-2x fa-bars"/>
         </v-btn>
@@ -70,7 +71,6 @@
             </div>
           </v-expand-transition>
         </v-card>
-
       <v-spacer></v-spacer>
 
 
@@ -81,8 +81,13 @@
       <v-btn class="top-icon" icon @click="myLink('/wish')">
         <v-icon>mdi-heart</v-icon>
       </v-btn>
-      <v-btn fab text>
+      <v-btn fab text disabled>
         <v-avatar size="31" color="blue">
+          <img
+              :src="imgUrl"
+              style="object-fit: cover"
+              alt=""
+          >
         </v-avatar>
       </v-btn>
 
@@ -92,11 +97,14 @@
 <script>
 export default {
   name: "SearchMenu",
-  data: () => ({
-    completeData : [],
-    inputMsg : '',
-    autoSearchList : false,
-  }),
+  data () {
+    return {
+      completeData : [],
+      inputMsg : '',
+      autoSearchList : false,
+      imgUrl : this.$store.state.memberStore.userData.profilePicture
+   }
+  },
   watch: {
     inputMsg(val) {
       if (!val) {
@@ -144,7 +152,7 @@ export default {
             .then(response => {
               this.completeData = response.data
             }).catch(error => {
-          console.log(error.response);
+              console.log(error.response);
         })
       }
     },
@@ -187,6 +195,8 @@ export default {
       this.$router.push({name: 'DetailView' ,query: {bid}});
     },
   },
+  mounted() {
+  }
 }
 </script>
 

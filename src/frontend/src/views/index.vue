@@ -142,6 +142,7 @@ export default {
   components: {SearchMenu},
   data: () => ({
         selectList:0,
+        componentKey:0,
         detailTag : [
           { main: '소설', num: '00', },
           { main : '시/에세이', num: '01', },
@@ -221,9 +222,11 @@ export default {
     searchByCategory(num){
      this.$router.push({name:'search',query:{category:num}})
     },
+
   },
 
   mounted() {
+
   }
 }
 </script>

@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,7 +54,6 @@ public class PaymentsService {
             if(body!=null){
                 entity = new HttpEntity<>(body.toString(), headers);
             }
-
             ResponseEntity<PaymentsDTO> response = rt.postForEntity(API_URL+url, entity, PaymentsDTO.class);
             log.debug("post Rsp : " + response);
 
@@ -68,6 +68,32 @@ public class PaymentsService {
         }
         return null;
     }
+
+    //Get Request
+    private ApiResponse<PaymentsDTO> getRequest(String auth,String url){
+
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Authorization",auth);
+
+            HttpEntity<String> entity = new HttpEntity<>(headers);
+
+            log.debug(url);
+            ResponseEntity<PaymentsDTO> response = rt.exchange(API_URL+url, HttpMethod.GET, entity, PaymentsDTO.class);
+            log.debug("get Rsp : " + response);
+
+            if(response.getStatusCodeValue() == 200){
+                return new ApiResponse<>(true, response.getBody() );
+            }else{
+                return new ApiResponse<>(false, response.getBody() );
+            }
+
+        }catch (Exception e){
+            log.debug("Exception (postRequest) : "+ e);
+        }
+        return null;
+    }
+
 
     // 토큰 받아오기
     private AccessToken getAuth() {
@@ -113,6 +139,11 @@ public class PaymentsService {
 
         AccessToken auth = new AccessToken();
 
+        //토큰이 없으면?
+        if(auth.getToken() == null){
+            return Objects.requireNonNull(getAuth()).getToken();
+        }
+
         //시간 지났으면 재발급
         if(auth.getExpired_at() <  nowUnixTime){
             return Objects.requireNonNull(getAuth()).getToken();
@@ -123,12 +154,12 @@ public class PaymentsService {
 
     //결제부분
     public ApiResponse<String> getOrderInfo(ImportDTO importDTO) {
+
         try {
             ApiResponse<PaymentsDTO> response = postRequest(getToken(), "/payments/"+importDTO.getImp_uid(), null);
             if(response==null){
                 throw new Exception();
             }
-
             if(!response.isSuccess()){
                 return new ApiResponse<>(false, "결제 정보 불러오기를 실패했습니다. 에러코드 "+ response.getData().getCode());
             }else{
@@ -232,12 +263,20 @@ public class PaymentsService {
 
         Payments payments = paymentsRepository.getPaymentsByOrderId(orderId);
         if(payments==null){
-            return new ApiResponse<>(false, "결제 정보가 없습니다.");
+            PayAndOrderItems payAndOrderItems = new PayAndOrderItems();
+            payAndOrderItems.setItems(orders);
+            return new ApiResponse<>(true,"결제 중단한 요청",payAndOrderItems);
         }
 
         PayAndOrderItems payAndOrderItems = new PayAndOrderItems();
         payAndOrderItems.setPayments(payments);
         payAndOrderItems.setItems(orders);
         return new ApiResponse<>(true,payAndOrderItems);
+    }
+
+    //휴대폰 인증 > 다날 유료결제시 사용가능
+    public void phoneCertification(String imp_uid) {
+        log.debug("certification  : " + imp_uid);
+        ApiResponse<PaymentsDTO> response = getRequest(getToken(), "/certification/"+imp_uid);
     }
 }
