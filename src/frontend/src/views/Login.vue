@@ -1,71 +1,61 @@
 <template>
-
-  <v-main>
-    <v-container
-        style="position: relative; top: 10%; margin-left: 10%"
-        class="text-xs-center"
-    >
-      <v-layout row wrap class="text-xs-center">
-        <v-flex>
-          <v-card flat class="mx-auto" max-width="800">
-            <v-row style="margin-top: 60px">
-              <v-col>
-                <v-form style="width: 400px; height: 300px">
-                  <div class="mx-3">
-                    userId
-                    <div class="mx-1">
-                      <v-text-field
-                          placeholder="email"
-                          v-model="email"
-                          required >
-                      </v-text-field>
-                    </div>
-                  </div>
-                  <div class="mx-3">
-                    userPassword
-                    <div class="mx-1">
-                      <v-text-field
-                          placeholder="password"
-                          type="password"
-                          v-model="password"
-                          required >
-                      </v-text-field>
-                    </div>
-                  </div>
-                  <v-card-actions>
-                    <v-btn color="#2c4f91" dark large block @click="loginSubmit" >
-                      Login
-                    </v-btn >
-                  </v-card-actions>
-                  <v-card-actions>
-                    <v-btn
-                        text
-                        color="teal accent-6"
-                        @click="signLink"
-                    >
-                      Sign-Up
-                    </v-btn>
-                    <v-btn
-                        text
-                        color="teal accent-6"
-                        @click="reveal = true"
-                    >
-                      Edit
-                    </v-btn>
-                  </v-card-actions>
-                </v-form>
-              </v-col>
-            </v-row>
-          </v-card>
-        </v-flex>
-      </v-layout>
-    </v-container>
-  </v-main>
+  <v-container fluid class="pa-0">
+    <SearchMenu></SearchMenu>
+    <v-row class="ma-0 align-center" style="background-color: rgb(20,20,20); height: 100vh">
+      <v-col class="pa-0 justify-center d-flex">
+        <v-card rounded flat width="400px" color="rgb(40,40,40)">
+          <div style="height: 24px; background-color: rgb(30,30,30)" class="align-center justify-end d-flex">
+            <v-btn width="14px" elevation="0" height="14px" color="yellow darken-2 mr-2" fab></v-btn>
+            <v-btn width="14px" elevation="0" height="14px" color="red darken-2 mr-2" fab></v-btn>
+          </div>
+          <v-divider dark></v-divider>
+          <div class="pa-3">
+            <div class="pa-3 pb-5">
+              <v-text-field
+                  outlined
+                  placeholder="email"
+                  v-model="email"
+                  required dark>
+              </v-text-field>
+              <v-text-field
+                  outlined hide-details
+                  placeholder="password"
+                  type="password"
+                  v-model="password"
+                  required dark>
+              </v-text-field>
+            </div>
+            <v-card-actions>
+              <v-btn color="#2c4f91" dark large rounded block @click="loginSubmit" >
+                <span style="font-size: 17px; font-weight: bold">Login</span>
+              </v-btn >
+            </v-card-actions>
+            <v-card-actions>
+              <v-btn
+                  color="teal accent-6 white--text"
+                  @click="signLink" rounded
+              >
+                <span style="color: rgb(45,45,45);">Sign-up</span>
+              </v-btn>
+              <v-btn
+                  color="teal accent-6" rounded
+                  @click="$router.push({path:'/'})"
+              >
+                <span style="color: rgb(45,45,45);">Home</span>
+              </v-btn>
+            </v-card-actions>
+          </div>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
+import SearchMenu from "@/views/SearchMenu";
 export default {
   name: "Login.vue",
+  components: {SearchMenu},
   data () {
     return {
       email: 'test@gmail.com',
@@ -86,9 +76,11 @@ export default {
             },
           })
               .then((response) => {
+                console.log(response.data)
                 if (response.status === 200) {
                   alert("로그인 성공")
                   this.$store.dispatch('login',response.data);
+                  this.$router.push({path:'/'})
                 }
               })
               .catch(error =>{

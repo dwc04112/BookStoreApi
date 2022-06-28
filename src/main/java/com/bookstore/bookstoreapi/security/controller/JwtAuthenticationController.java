@@ -3,6 +3,7 @@ package com.bookstore.bookstoreapi.security.controller;
 
 import com.bookstore.bookstoreapi.config.JwtTokenUtil;
 import com.bookstore.bookstoreapi.member.Member;
+import com.bookstore.bookstoreapi.member.MemberRepository;
 import com.bookstore.bookstoreapi.security.service.JwtUserDetailsService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -29,7 +32,7 @@ public class JwtAuthenticationController {
                         authenticationRequest.getPassword());
         final String token = jwtTokenUtil.generateToken(member.getEmail());
         log.debug("success Login");
-        return ResponseEntity.ok(new JwtResponse(token));
+        return ResponseEntity.ok(new JwtResponse(token, member.getEmail()));
     }
 }
 
@@ -43,4 +46,5 @@ class JwtRequest {
 @AllArgsConstructor
 class JwtResponse {
     private String token;
+    private String email;
 }

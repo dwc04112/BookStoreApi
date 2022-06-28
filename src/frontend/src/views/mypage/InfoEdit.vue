@@ -17,7 +17,7 @@
           </v-sheet>
           <v-divider class="ma-2" style="width: 60%" dark></v-divider>
 
-          <v-col cols="7" class="pa-0 pt-1 pb-3">
+          <v-col cols="7" class="pa-0 pt-1 pb-2">
             <v-chip-group
                 mandatory
                 column
@@ -29,7 +29,7 @@
                   v-for="(data,index) in topChip"
                   :key="index"
                   :value="data.name"
-                  filter
+                  filter class="mb-2"
                   @click="setInfoComponents(data.link)"
               >
                 {{data.name}}
@@ -67,15 +67,16 @@ export default {
     return {
       selectChip:'',
       topChip : [
-        {name:'프로필 수정',link:'InfoProfile'},
-        {name:'연락처 정보 수정',link:'InfoEditComponent'},
+        {name:'프로필 수정',link:'EditProfile'},
+        {name:'연락처 수정',link:'InfoEditComponent'},
+        {name:'배송지 수정',link:'AddressList'},
         {name:'비밀번호 변경',link:'PasswordEditComponent'},
       ],
 
 
 
       //컴포넌트
-      setComponent: 'InfoProfile', //불러올 컴포넌트
+      setComponent: 'EditProfile', //불러올 컴포넌트
       componentKey: 0 // reload component
     }
   },
@@ -84,7 +85,9 @@ export default {
     setInfoComponents(data){
       this.setComponent = data
     },
+
   },
+
 
   computed:{
     // 컴포넌트에서 페이지 변경
@@ -100,6 +103,6 @@ export default {
 .main-title{
   font-size: 24px;
   font-weight: bold;
-  color: rgb(240,240,240);
+  color: rgb(180,180,180);
 }
 </style>

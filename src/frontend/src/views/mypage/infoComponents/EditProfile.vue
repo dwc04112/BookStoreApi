@@ -44,9 +44,9 @@
     </v-col>
 
     <v-btn
-        color="blue"
-        class="white--text ma-4 mt-8"
-        rounded
+        color="primary darken-1"
+        class="white--text  ma-4 mt-6 mb-6"
+        rounded width="150px"
         @click="editInfo"
     ><span style="font-weight: bold; font-size: 15px">저장하기</span></v-btn>
   </v-row>
@@ -56,7 +56,7 @@
 import axios from "axios";
 
 export default {
-  name: "InfoProfile",
+  name: "EditProfile",
   data () {
     return {
 

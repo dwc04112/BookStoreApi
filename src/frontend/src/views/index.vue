@@ -18,7 +18,6 @@
             elevation="0"
             color="rgb(40,40,40)"
         >
-
           <v-list color="rgb(40,40,40)">
 
             <v-list-item to="/">
@@ -74,21 +73,13 @@
             </v-list-item>
           </v-list>
 
-          <div class="d-flex justify-center">
-            <v-btn
-                outlined
-                rounded
-                width="200px"
-                class="logout-btn"
-            >
-              로그아웃
-            </v-btn>
+          <div class="d-flex justify-center pa-4">
+            <v-btn color="red darken-2" dark large rounded block @click="logout" >
+              <span style="font-size: 17px; font-weight: bold">Logout</span>
+            </v-btn >
           </div>
         </v-card>
       </v-col>
-
-
-
 
       <v-col cols="12" sm="9" md="10" class="pa-0">
         <router-view></router-view>
@@ -157,40 +148,13 @@ export default {
           { main : '컴퓨터/IT', num: '10', },
         ],
         links: [
-          {icon:'mdi-cart', name:'Cart', link:'/my/cart', color:'orange lighten-1', show:true},
-          {icon:'mdi-library', name:'Wish List', link:'/my/wish', color:'green lighten-1', show:true},
-          {icon:'mdi-book', name:'Comment', link:'/my/comment', color:'blue lighten-1', show:true},
-          {icon:'mdi-book', name:'Order', link:'/my/order', color:'blue lighten-1', show:true},
-          {icon:'mdi-book', name:'infoEdit', link:'/my/infoEdit', color:'blue lighten-1', show:true},
+          {icon:'mdi-cart', name:'Cart', link:'/my/cart',  show:true},
+          {icon:'mdi-library', name:'Wish List', link:'/my/wish', show:true},
+          {icon:'mdi-book', name:'Comment', link:'/my/comment', show:true},
+          {icon:'mdi-book', name:'Order', link:'/my/order',  show:true},
+          {icon:'mdi-book', name:'infoEdit', link:'/my/infoEdit',  show:true},
         ],
 
-        totalList: [
-          {
-            name:'Category',
-            child: [
-              { main: '소설', num: '00', },
-              { main : '시/에세이', num: '01', },
-              { main : '자기계발', num: '02', },
-              { main : '인문', num: '03', },
-              { main : '역사/문화', num: '04', },
-              { main : '종교', num: '05', },
-              { main : '정치/사회', num: '06', },
-              { main : '예술/대중문화', num: '07', },
-              { main : '과학', num: '08', },
-              { main : '기술/공학', num: '09', },
-              { main : '컴퓨터/IT', num: '10', },
-            ],
-          },
-          {
-            name:'My Page',
-            child: [
-              {icon:'mdi-cart', main:'Cart', link:'../my/cart'},
-              {icon:'mdi-library', main:'Wish List', link:'../my/wish'},
-              {icon:'mdi-book', main:'Comment', link:'../my/comment'},
-              {icon:'mdi-book', main:'Order', link:'../my/order'},
-            ],
-          },
-        ],
 
         bySearch: '',
 
@@ -222,6 +186,11 @@ export default {
     searchByCategory(num){
      this.$router.push({name:'search',query:{category:num}})
     },
+    logout(){
+      this.$store.dispatch('logout').then(()=>
+          this.$router.push({path:'/login'})
+      )
+    }
 
   },
 
@@ -237,12 +206,12 @@ export default {
   color: white;
 }
 .v-list-item--active {
-  background-color: red;
+  background-color: #D32F2F;
 }
 
 
 .v-list-group--active {
-  color: red !important;
+  color: #D32F2F !important;
 }
 
 .sub-slide-enter{

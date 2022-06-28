@@ -11,6 +11,9 @@
           <v-icon>mdi-home</v-icon>
         </v-btn>
 
+        <v-btn class="top-icon" icon @click="myLink('/wish')">
+          <v-icon>mdi-heart</v-icon>
+        </v-btn>
 
         <v-btn class="top-menu-btn" @click="drawMenu" icon>
           <font-awesome-icon style="font-size: 24px" icon="fa-solid fa-2x fa-bars"/>
@@ -78,17 +81,9 @@
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
 
-      <v-btn class="top-icon" icon @click="myLink('/wish')">
-        <v-icon>mdi-heart</v-icon>
-      </v-btn>
-      <v-btn fab text disabled>
-        <v-avatar size="31" color="blue">
-          <img
-              :src="imgUrl"
-              style="object-fit: cover"
-              alt=""
-          >
-        </v-avatar>
+
+      <v-btn  class="top-icon" icon @click="$router.push({path:'/login'})">
+        <v-icon>mdi-account</v-icon>
       </v-btn>
 
     </v-app-bar>
@@ -102,7 +97,6 @@ export default {
       completeData : [],
       inputMsg : '',
       autoSearchList : false,
-      imgUrl : this.$store.state.memberStore.userData.profilePicture
    }
   },
   watch: {

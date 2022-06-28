@@ -60,12 +60,18 @@ public class MemberController {
         return memberRepository.getMemberByNickname(nick);
     }
 
+    //로그인 정보로 정보 받아오기
     @PostMapping("/user/info")
     public SimpleInfo getUserInfo(@RequestBody MemberDTO memberDto){
-        log.debug("user info " + memberDto);
-        memberService.editInfo(memberDto);
-        return null;
+        return memberService.getUserInfo(memberDto);
     }
+
+    @PostMapping("/edit/info")
+    public Member editEmail(@RequestBody MemberDTO memberDto) {
+        log.debug("data : "+memberDto);
+        return memberService.editInfo(memberDto);
+    }
+
 
     @SneakyThrows
     @PostMapping("/user/profile")

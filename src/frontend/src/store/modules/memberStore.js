@@ -1,5 +1,4 @@
 import axios from "axios";
-import router from "@/router/index.js"
 
 const userData = () => {
     return {
@@ -51,9 +50,10 @@ const memberStore = {
         login ({commit, dispatch}, payload){
             commit('initData')
             let data = {};
-            data.email = JSON.parse(atob(payload.token.split('.')[1])).jti;
+            data.email = payload.email
             data.token = payload.token
             commit('loginData', data)
+
             dispatch('getUserInfo', data.email)
         },
 
@@ -68,9 +68,9 @@ const memberStore = {
                 })
         },
 
-        getUserInfo: function ({commit}, context) {
+        getUserInfo: function ({commit}, payload) {
             let data = {};
-            data.email = context
+            data.email = payload
             axios.post('/user/info', JSON.stringify(data), {
                 headers: {
                     "Content-Type": `application/json`,
@@ -84,20 +84,21 @@ const memberStore = {
                     data.phoneNum = res.data.phoneNum
                     data.profilePicture = res.data.profilePicture
                     commit('putUserInfo', data)
-                    router.push({path:'/'})
                 })
                 .catch((error) => {
                     console.log(error.res)
                 })
         },
 
-
-        updateProfile: function ({commit}, context) {
+/*
+        updateProfile: function ({commit}, payload) {
             let data = {};
-            data.nickName = context.nickName;
-            data.profilePicture = context.profilePicture;
+            data.nickName = payload.nickName;
+            data.profilePicture = payload.profilePicture;
             commit('putProfile', data)
         }
+
+ */
 
 
 

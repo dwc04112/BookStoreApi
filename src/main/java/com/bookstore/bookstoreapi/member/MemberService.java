@@ -13,6 +13,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Objects;
 import java.util.Optional;
 
 @Slf4j
@@ -24,11 +25,20 @@ public class MemberService {
     @Value("${profileImg.path}")
     private String uploadFolder;
 
+    private Member memberData(){
+        Optional<Member> memberData = memberRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+        return memberData.orElseThrow(() -> new RuntimeException("no data : find member by email"));
+    }
+
+    public SimpleInfo getUserInfo(MemberDTO memberDto) {
+        Optional<SimpleInfo> member = memberRepository.findSimpleInfo(SecurityContextHolder.getContext().getAuthentication().getName());
+        return member.orElseThrow(() -> new RuntimeException("no data : find member by email"));
+    }
+
 
     @Transactional
     public MemberDTO editProfile(String nickName, MultipartFile multipartFile) {
-        Optional<Member> memberData = memberRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
-        Member data = memberData.orElseThrow(() -> new RuntimeException("no data : find order by order_id"));
+        Member data = memberData();
 
         String imgFileName = data.getMid() + "_" + multipartFile.getOriginalFilename();
         Path imgFilePath = Paths.get(uploadFolder+imgFileName);
@@ -55,13 +65,22 @@ public class MemberService {
             Member result = memberRepository.save(data);
             memberDTO.setProfilePicture(result.getNickName());
         }
-
-
         return memberDTO;
     }
 
-    public void editInfo(MemberDTO memberDto) {
-        Optional<SimpleInfo> member = memberRepository.findSimpleInfo(SecurityContextHolder.getContext().getAuthentication().getName());
-        member.orElseThrow(() -> new RuntimeException("no data : find order by order_id"));
+
+    @Transactional
+    public Member editInfo(MemberDTO memberDto) {
+        Member data = memberData();
+        try{
+            data.updateEmail(memberDto.getEmail());
+            data.updatePhoneNum(memberDto.getPhoneNum());
+            return memberRepository.save(data);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
     }
+
+
 }

@@ -48,7 +48,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
-                .authorizeRequests().antMatchers("/authenticate", "/api/member", "/signup/**").permitAll()
+                .authorizeRequests().antMatchers("/authenticate", "/api/member", "/signup/**","/book/**").permitAll()
                 .antMatchers("/user/**").hasRole("USER")
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
@@ -70,8 +70,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public LogoutSuccessHandler logoutSuccessHandler() {
         CustomLogoutSuccessHandler logoutSuccessHandler = new CustomLogoutSuccessHandler();
-        // logoutSuccessHandler.setDefaultTargetUrl("http://localhost:8081/#/");
-        logoutSuccessHandler.setDefaultTargetUrl("/");
+        logoutSuccessHandler.setDefaultTargetUrl("http://localhost:8090/#/");
         return logoutSuccessHandler;
     }
 }

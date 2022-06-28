@@ -35,6 +35,7 @@ public class CustomLogoutSuccessHandler extends SimpleUrlLogoutSuccessHandler{
             String jwtToken = requestTokenHeader.substring(7);
             LocalTime jwtTokenExpTime = getExpTime(jwtToken);
             Token data = tokenService.insertToken(jwtToken,jwtTokenExpTime);
+            log.debug("final : " + data);
         }else {
             log.warn("JWT Token does not begin with Bearer String");
         }

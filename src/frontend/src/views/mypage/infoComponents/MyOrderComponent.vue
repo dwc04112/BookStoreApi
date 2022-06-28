@@ -129,7 +129,7 @@
         </v-row>
 
         <v-row class="pb-4 align-center pa-0" style="background-color: rgb(30,30,30); min-height: 200px;">
-          <v-col class="pa-0 align-center" v-show="noOrders">
+          <v-col class="pa-5 align-center" v-show="noOrders">
             <v-row class="justify-center mt-6">
               <span style="color:rgb(80,80,80); font-size: 21px; font-weight: bold;">주문내역이 없습니다.</span>
             </v-row>

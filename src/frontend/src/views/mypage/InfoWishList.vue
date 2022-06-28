@@ -25,7 +25,7 @@
                 dark
             >
               <v-chip
-                  filter
+                  filter class="mb-2"
                   v-for="(wish,index) in wishlistTitle"
                   :key="index"
                   :value="wish.titleNum"

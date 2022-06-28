@@ -1,97 +1,98 @@
 <template>
-  <v-row style="background-color: rgb(40,40,40); min-height: 500px">
+  <v-row style="background-color: rgb(40,40,40)">
 
-    <v-col cols="12" md="4" class="red lighten-2 pt-8">
-      <v-row class="justify-center">
-        <v-col cols="11">
-          <span class="white--text" style="font-size: 20px; font-weight: bold">비밀번호 변경</span>
-        </v-col>
-        <v-col cols="12" class="align-center pt-md-12 pb-8 d-flex justify-center">
-          <v-icon size="185" color="white">
-            mdi-lock
-          </v-icon>
-        </v-col>
-      </v-row>
+    <v-col cols="12" class="pa-0">
+
+      <v-simple-table dark>
+        <tbody>
+        <tr style="height: 80px">
+          <td class="name-td"><span style="font-size: 16px">현재 비밀번호</span></td>
+          <td class="content-td">
+            <v-col>
+              <v-text-field
+                  outlined dense dark hide-details
+                  class="pt-1 text-fields"
+                  type="password"
+                  v-model="oldPassword"
+              >
+              </v-text-field>
+            </v-col>
+          </td>
+        </tr>
+
+
+        <tr style="height: 80px">
+          <td class="name-td"><span style="font-size: 16px">새로운 비밀번호</span></td>
+          <td class="content-td">
+            <v-col>
+              <v-text-field
+                  outlined dense dark hide-details
+                  class="pt-1 text-fields"
+                  type="password"
+                  hint=" "
+                  v-model="newPassword"
+                  @keyup="passwordRules(newPassword) "
+                  @focus="passwordRules(newPassword) "
+              >
+                <template v-slot:append>
+                  <v-icon v-if="(smallPass&&minPass&&numPass&&spacePass)&&newPassword.length>0" class="blue--text text--lighten-2">mdi-check</v-icon>
+                  <v-icon v-if="!(smallPass&&minPass&&numPass&&spacePass)&&newPassword.length>0" class="red--text text--lighten-2">mdi-alert</v-icon>
+                </template>
+                <template v-slot:message>
+                  <span v-if="!spacePass" class="red--text text--lighten-2">공백이 포함되면 안됩니다.</span>
+                </template>
+              </v-text-field>
+            </v-col>
+          </td>
+        </tr>
+
+        <tr style="height: 80px">
+          <td class="name-td"><span style="font-size: 16px">비밀번호 확인</span></td>
+          <td class="content-td">
+            <v-col>
+              <v-row no-gutters class="ma-0 pa-0 pt-1">
+                <v-text-field
+                    outlined dense dark
+                    class="pt-1 text-fields white--text"
+                    type="password"
+                    hint=" "
+                    v-model="confirmNewPassword"
+                >
+                  <template v-slot:append>
+                    <v-icon v-if="(matchPass)&&confirmNewPassword.length>0" class="blue--text text--lighten-2">mdi-check</v-icon>
+                    <v-icon v-if="!(matchPass)&&confirmNewPassword.length>0" class="red--text text--lighten-2">mdi-alert</v-icon>
+                  </template>
+                  <template v-slot:message>
+                    <span v-if="!matchPass" class="red--text text--lighten-2" >비밀번호가 일치하지 않습니다.</span>
+                  </template>
+                </v-text-field>
+              </v-row>
+            </v-col>
+          </td>
+        </tr>
+        </tbody>
+      </v-simple-table>
     </v-col>
 
-    <v-col cols="12" md="8" class="pt-8">
-      <v-row class="justify-center align-center">
-        <v-col cols="11">
-          <span class="item-text">현재 비밀번호</span>
-          <v-text-field
-              outlined dense dark
-              class="pt-1 text-fields"
-              type="password"
-              v-model="oldPassword"
-          >
-          </v-text-field>
-        </v-col>
 
 
-        <v-col cols="11">
-          <span class="item-text">새로운 비밀번호</span>
-          <v-text-field
-              outlined dense dark
-              class="pt-1 text-fields"
-              type="password"
-              hint=" "
-              v-model="newPassword"
-              @keyup="passwordRules(newPassword) "
-              @focus="passwordRules(newPassword) "
-          >
-            <template v-slot:append>
-              <v-icon v-if="(smallPass&&minPass&&numPass&&spacePass)&&newPassword.length>0" class="blue--text text--lighten-2">mdi-check</v-icon>
-              <v-icon v-if="!(smallPass&&minPass&&numPass&&spacePass)&&newPassword.length>0" class="red--text text--lighten-2">mdi-alert</v-icon>
-            </template>
-            <template v-slot:message>
-              <span v-if="!spacePass" class="red--text text--lighten-2">공백이 포함되면 안됩니다.</span>
-            </template>
-
-          </v-text-field>
-        </v-col>
+    <v-col cols="12" class="justify-center d-flex pt-6">
+      <span :class="numPass ? 'blue--text text--lighten-2' : 'red--text text--lighten-2'"  class="security-text"> 숫자와 </span>
+      <span :class="smallPass ? 'blue--text text--lighten-2' : 'red--text text--lighten-2'"  class="security-text"> &nbsp;소문자를 포함하여 </span>
+      <span :class="minPass ? 'blue--text text--lighten-2' : 'red--text text--lighten-2'" class="security-text"> &nbsp;10 ~ 16자리 이여야 합니다. </span>
+      <span class="security-text" style="color: rgb(240,240,240);"> &nbsp; 자세히 알아 보기</span>
+    </v-col>
 
 
-
-        <v-col cols="11">
-          <span class="item-text">비밀번호 확인</span>
-          <v-text-field
-              outlined dense dark
-              class="pt-1 text-fields white--text"
-              type="password"
-              hint=" "
-              v-model="confirmNewPassword"
-          >
-            <template v-slot:append>
-              <v-icon v-if="(matchPass)&&confirmNewPassword.length>0" class="blue--text text--lighten-2">mdi-check</v-icon>
-              <v-icon v-if="!(matchPass)&&confirmNewPassword.length>0" class="red--text text--lighten-2">mdi-alert</v-icon>
-            </template>
-            <template v-slot:message>
-              <span v-if="!matchPass" class="red--text text--lighten-2" >비밀번호가 일치하지 않습니다.</span>
-            </template>
-          </v-text-field>
-        </v-col>
-
-
-        <v-col cols="11" class="justify-center">
-          <span :class="numPass ? 'blue--text text--lighten-2' : 'red--text text--lighten-2'"  class="security-text"> 숫자와 </span>
-          <span :class="smallPass ? 'blue--text text--lighten-2' : 'red--text text--lighten-2'"  class="security-text"> &nbsp;소문자를 포함하여 </span>
-          <span :class="minPass ? 'blue--text text--lighten-2' : 'red--text text--lighten-2'" class="security-text"> &nbsp;10 ~ 16자리 이여야 합니다. </span>
-          <span class="security-text" style="color: rgb(240,240,240);"> &nbsp; 자세히 알아 보기</span>
-        </v-col>
-
-
-        <v-col cols="11" class="justify-end d-flex pb-6">
-          <v-btn
-              rounded
-              width="200px"
-              class="red lighten-2 update-btn"
-              @click="checkRules"
-          >
-            <span style="color: rgb(40,40,40)">Update</span>
-          </v-btn>
-        </v-col>
-
-      </v-row>
+    <v-col cols="12" class="justify-end d-flex pb-6 pa-4">
+      <v-btn
+          rounded
+          width="150px"
+          class="red lighten-2 update-btn"
+          @click="checkRules"
+      >
+        <span style="color: rgb(40,40,40); font-size: 15px; font-weight: bold">변경하기</span>
+      </v-btn>
     </v-col>
 
   </v-row>

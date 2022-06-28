@@ -29,6 +29,12 @@ public class Member {
     public void updateNickName(String nickName){
         this.nickName = nickName;
     }
+    public void updateEmail(String email){
+        this.email = email;
+    }
+    public void updatePhoneNum(String phoneNum){
+        this.phoneNum = phoneNum;
+    }
 
     public Member(String email, String password, String nickName, String fullName, String phoneNum, String profilePicture) {
         this.email = email;

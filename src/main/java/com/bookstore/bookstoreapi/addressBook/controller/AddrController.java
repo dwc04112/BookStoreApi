@@ -18,14 +18,31 @@ public class AddrController {
     public final AddrService addrService;
 
     //1. 전체
-    @GetMapping(value = "/")
-    public List<AddressBook> getCommentList(){
+    @GetMapping(value = "/all")
+    public List<AddressBook> getAllAddrList(){
         return addrService.getAllAddr();
     }
 
-    //3. 주소록 추가
+    //2. 내주소록만
+    @GetMapping(value = "/")
+    public List<AddressBook> getMyAddrList(){
+        return addrService.getMyAddr();
+    }
+
+    //3. 주소록 추가 or 수정
     @PostMapping(value = "/")
     public ApiResponse<AddressBook> postComment(@RequestBody AddrDTO addrDTO)throws Exception{
-        return addrService.addAddr(addrDTO);
+        log.debug("0이면 수정, 아니면 추가 : " + addrDTO.getAddrId());
+        if(addrDTO.getAddrId()==0){
+            return addrService.addAddr(addrDTO);
+        }else{
+            return addrService.editAddr(addrDTO);
+        }
+    }
+
+    //2. 내주소록만
+    @DeleteMapping(value = "/{addrId}")
+    public ApiResponse<AddressBook> deleteByAddrId(@PathVariable long addrId){
+        return addrService.deleteByAddrId(addrId);
     }
 }
