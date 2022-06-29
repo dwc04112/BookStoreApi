@@ -1,5 +1,7 @@
 import axios from 'axios';
 import {store} from "@/store";
+import router from "@/router";
+
 
 
 // Add a request interceptor
@@ -36,7 +38,8 @@ axios.interceptors.response.use(function (response) {
         console.log("exception Login page")
     }
     else if(error.response.status===401) {
-        store.commit('loginCheck_401', error.response)
+       // store.commit('loginCheck_401', error.response)
+       router.push({path:'/login'}).then(()=>router.go(0))
     }
     return Promise.reject(error);
 });

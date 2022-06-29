@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import {store} from "@/store";
 
 
 
@@ -35,15 +36,17 @@ const routes = [
                 props: true,
             },
 
-
             {
                 path: '/my',
                 component: () =>  import('@/views/mypage/My'),
+                meta: {
+                    auth: true, //는 경로가 로그인 할 필요가 있음을 나타낸다
+                },
                 children:[
                     {
                         path: 'wish',
                         name: 'InfoWishList',
-                        component: () =>  import('@/views/mypage/InfoWishList')
+                        component: () =>  import('@/views/mypage/InfoWishList'),
                     },
                     {
                         path: 'comment',
@@ -99,7 +102,6 @@ const routes = [
         component: () =>  import('@/views/book/PostBook')
     },
 
-
     {
         path: '/detailView',
         name: 'DetailView',
@@ -127,6 +129,9 @@ const routes = [
         path: '/order',
         name: 'Order',
         component: () =>  import('@/views/order/Order'),
+        meta: {
+            auth: true, //는 경로가 로그인 할 필요가 있음을 나타낸다
+        },
     },
 
 
@@ -260,3 +265,17 @@ const router = new VueRouter({
 });
 
 export default router
+
+
+router.beforeEach((to, from, next) => {
+    if (to.matched.some(record => record.meta.auth)) {
+        if (store.state.memberStore.token) {
+            next();
+        } else {
+            alert("로그인이 필요한 페이지입니다.")
+            router.push({path:'/login'}).then(()=>router.go(0))
+        }
+    }else{
+        next();
+    }
+})

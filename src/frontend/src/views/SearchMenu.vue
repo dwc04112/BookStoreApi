@@ -5,15 +5,14 @@
         elevation="0"
         color="rgb(40,40,40)"
         dense
-        class="justify-center align-center d-flex flex-column"
+        class="justify-center d-flex"
     >
+
         <v-btn class="top-icon" @click="homeLink" icon>
           <v-icon>mdi-home</v-icon>
         </v-btn>
 
-        <v-btn class="top-icon" icon @click="myLink('/wish')">
-          <v-icon>mdi-heart</v-icon>
-        </v-btn>
+
 
         <v-btn class="top-menu-btn" @click="drawMenu" icon>
           <font-awesome-icon style="font-size: 24px" icon="fa-solid fa-2x fa-bars"/>
@@ -55,7 +54,6 @@
                             height="100%"
                             @click="detailView(item.bid)">
                       </v-card>
-
                       <v-list-item-content class="pl-8">
                         <v-list-item-title>
                           <span class="search-list-title" @click="detailView(item.bid)"> {{item.bookTitle}} </span>
@@ -74,22 +72,92 @@
             </div>
           </v-expand-transition>
         </v-card>
+
+        <v-btn class=" search-icon" @click="mainSearch" icon>
+          <v-icon>mdi-magnify</v-icon>
+        </v-btn>
+
+
       <v-spacer></v-spacer>
-
-
-      <v-btn class="ml-2 search-icon" @click="mainSearch" icon>
-        <v-icon>mdi-magnify</v-icon>
+      <v-btn class="top-icon red--text text--darken-2" icon @click="myLink('/wish')">
+        <v-icon>mdi-heart</v-icon>
       </v-btn>
 
-
-      <v-btn  class="top-icon" icon @click="$router.push({path:'/login'})">
-        <v-icon>mdi-account</v-icon>
+      <v-btn class="search-icon teal--text accent-6"  large icon v-show="!loginCheck" @click="$router.push({path:'/login'})">
+        <v-icon>mdi-account-circle</v-icon>
       </v-btn>
+
+      <v-menu
+          bottom
+          min-width="200px"
+          rounded
+          offset-y
+      >
+        <template v-slot:activator="{ on }">
+          <v-btn
+              style="float: right"
+              v-show="loginCheck"
+              icon
+              v-on="on"
+          >
+            <v-avatar
+                color="brown"
+                size="32"
+            >
+              <img :src="$store.state.memberStore.userData.profilePicture" alt="">
+            </v-avatar>
+          </v-btn>
+        </template>
+        <v-card color="rgb(40,40,40)" rounded>
+          <v-list-item-content class="justify-center">
+            <div class="mx-auto text-center">
+              <v-avatar
+                  size="60"
+              >
+                <img :src="$store.state.memberStore.userData.profilePicture" alt="">
+              </v-avatar>
+              <h3 class="grey--text text--lighten-2 mt-3">{{ $store.state.memberStore.userData.nickName }}</h3>
+              <p class="text-caption mt-1 grey--text text--lighten-2">
+                {{ $store.state.memberStore.email }}
+              </p>
+
+              <v-divider dark class="my-3"></v-divider>
+              <v-btn
+                  depressed
+                  rounded
+                  text @click="$router.push({path:'/my/cart'})"
+                  class="grey--text text--lighten-2"
+              >
+                <v-avatar color="teal accent-6" class="mr-2" size="12"></v-avatar>My page
+              </v-btn>
+              <v-divider dark class="my-3"></v-divider>
+              <v-btn
+                  depressed
+                  rounded
+                  text @click="$router.push({path:'/my/infoEdit'})"
+                  class="grey--text text--lighten-2"
+              >
+                <v-avatar color="yellow darken-2" class="mr-2" size="12"></v-avatar>Edit Info
+              </v-btn>
+              <v-divider dark class="my-3"></v-divider>
+              <v-btn
+                  dark rounded text depressed
+                  @click="logout"
+                  class="grey--text text--lighten-2"
+              >
+                <v-avatar color="red darken-2" class="mr-2" size="12"></v-avatar>Logout
+              </v-btn>
+            </div>
+          </v-list-item-content>
+        </v-card>
+      </v-menu>
 
     </v-app-bar>
 </template>
 
 <script>
+
+
 export default {
   name: "SearchMenu",
   data () {
@@ -97,6 +165,9 @@ export default {
       completeData : [],
       inputMsg : '',
       autoSearchList : false,
+
+      loginCheck: this.$store.state.memberStore.loginState,
+      hideMenu : false,
    }
   },
   watch: {
@@ -155,10 +226,10 @@ export default {
     onClickOutside () {
       this.autoSearchList = false
     },
-
     drawMenu(){
      // this.$router.push('drawMenu', true ).catch(()=>{});
-      this.$emit('drawMenu', true )
+      this.hideMenu = ! this.hideMenu
+      this.$emit('drawMenu', this.hideMenu )
     },
 
     //마이페이지 위시리스트 수정으로 넘어가기
@@ -174,6 +245,8 @@ export default {
         this.$router.push({name: 'InfoNavi', params: {AboutTab: pushNum}})
       }
     },
+
+
     homeLink() {
       this.inputMsg = ''
       if(this.$router.history.current.name !== 'About') {
@@ -183,6 +256,11 @@ export default {
     myLink(data){
       this.$router.push({path: "../my"+data})
     },
+    logout(){
+      this.$store.dispatch('logout').then(()=>
+          this.$router.push({path:'/login'})
+      )
+    },
 
     //책 보러가기
     detailView(bid){
@@ -190,6 +268,7 @@ export default {
     },
   },
   mounted() {
+
   }
 }
 </script>

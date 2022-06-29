@@ -12,6 +12,7 @@ const userData = () => {
 
 const memberStore = {
     state: {
+        loginState : false,
         email: '',
         token: '',
         userData : userData(),
@@ -21,9 +22,11 @@ const memberStore = {
         loginData: function (state, data) {
             state.email = data.email
             state.token = data.token
+            state.loginState = true
             console.log("after email? : ", state.email)
         },
         initData (state){
+            state.loginState = false;
             state.email = void 0;
             state.token = void 0;
             state.userData = userData();
@@ -43,7 +46,6 @@ const memberStore = {
             state.userData.phoneNum = data.phoneNum
             state.userData.profilePicture = require('@/assets/profile_imgs/'+data.profilePicture)
         },
-
     },
 
     actions: {
@@ -60,8 +62,8 @@ const memberStore = {
         logout({commit}){
             axios.post("/logout")
                 .then(response => {
-                    console.log(response.data + "로그아웃 처리");
                     commit('initData')
+                    console.log(response.data+"로그아웃처리")
                 })
                 .catch(error =>{
                     console.log(error.response);

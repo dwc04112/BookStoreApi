@@ -317,7 +317,7 @@ export default {
     //종합 추천도 불러오기
     getTotalRating() {
       //clearInterval(this.interval)
-      this.$axios.get("comment/pop/" + this.selectBid)
+      this.$axios.get("comment/" + this.selectBid)
           .then(response=>{
             let totalCount = 0;
             let sumMulti = 0;

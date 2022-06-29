@@ -1,5 +1,5 @@
 <template>
-  <v-row class="align-center justify-end pa-0" style="background-color: rgb(30,30,30);">
+  <v-row class="align-center justify-end pa-0" style="background-color: rgb(40,40,40);">
 
     <v-col class="pa-5 align-center"  v-show="noDataMsg">
       <v-row class="justify-center mt-6">

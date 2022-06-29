@@ -38,14 +38,6 @@ export default {
     }
   },
   methods: {
-    pushLink(data) {
-      if (data == null) {
-        console.log("tab is null")
-      }else{
-        //tab 이동
-        this.moveTabNum = data
-      }
-    },
   },
 
   mounted() {

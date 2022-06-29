@@ -5,88 +5,85 @@
        @searchData="searchByMenu"
        @drawMenu ="drawMenu"
    ></SearchMenu>
-
     <v-row class="mt-9 pa-0">
-
-      <v-col cols="2" sm="3" md="2" class="justify-start d-flex pa-0">
-
+      <v-col cols="12" sm="3" md="12" class="justify-start d-flex pa-0">
         <v-card
             class="main-nav"
-            width="100%"
             min-height="100%"
             tile
             elevation="0"
-            color="rgb(40,40,40)"
         >
-          <v-list color="rgb(40,40,40)">
+          <v-navigation-drawer
+              color="rgb(40,40,40)"
+              v-model="drawer"
+              :mini-variant.sync="mini"
+              permanent
+          >
+            <div class="justify-end d-flex">
+              <v-btn icon color="grey lighten-2" @click="mini=!mini" class="mr-2">
+                <v-icon>{{ mini ? 'mdi-arrow-right-drop-circle-outline' : 'mdi-arrow-left-drop-circle-outline' }}</v-icon>
+              </v-btn>
+            </div>
 
-            <v-list-item to="/">
-              <v-list-item-icon>
-                <v-icon color="rgb(190,190,190)">mdi-home</v-icon>
-              </v-list-item-icon>
+            <v-list color="rgb(40,40,40)">
 
-              <v-list-item-title style="color: rgb(190,190,190)">Home</v-list-item-title>
-            </v-list-item>
+              <v-list-item to="/">
+                <v-list-item-icon>
+                  <v-icon color="rgb(190,190,190)">mdi-home</v-icon>
+                </v-list-item-icon>
 
-            <v-list-group
-                :value="true"
-                prepend-icon="mdi-account-circle grey--text"
-            >
-              <template v-slot:activator >
-                 <v-list-item-title style="color: rgb(190,190,190)">Category</v-list-item-title>
-              </template>
-
-
-              <v-list-item
-                  :value="true"
-                  v-for="item in detailTag"
-                  :key="item.main"
-                  v-model="item.active"
-                  link
-                  :to="{
-                    path: `/category/${item.num}`,
-                  }"
-              >
-                <v-list-item-content>
-                  <v-list-item-title style="color: rgb(190,190,190)" v-text="item.main"></v-list-item-title>
-                </v-list-item-content>
-
+                <v-list-item-title style="color: rgb(190,190,190)">Home</v-list-item-title>
               </v-list-item>
 
-            </v-list-group>
-            <v-divider class="ma-6 white" />
+              <v-list-group
+                  :value="false"
+                  prepend-icon="mdi-account-circle grey--text"
+              >
+                <template v-slot:activator >
+                  <v-list-item-title style="color: rgb(190,190,190)">Category</v-list-item-title>
+                </template>
 
-            <v-list-item
-                v-for="(data,index) in links"
-                :key="index"
-                :to="data.link"
-                link
-            >
-              <v-list-item-icon >
-                <v-icon color="rgb(190,190,190)">{{ data.icon }}</v-icon>
-              </v-list-item-icon>
+                <v-list-item
+                    :value="true"
+                    v-for="item in detailTag"
+                    :key="item.main"
+                    v-model="item.active"
+                    link
+                    :to="{
+                    path: `/category/${item.num}`,
+                  }"
+                >
+                  <v-list-item-content>
+                    <v-list-item-title style="color: rgb(190,190,190)" v-text="item.main"></v-list-item-title>
+                  </v-list-item-content>
 
-              <v-list-item-content>
-                <v-list-item-title style="color: rgb(190,190,190)">{{ data.name }}</v-list-item-title>
-              </v-list-item-content>
+                </v-list-item>
 
-            </v-list-item>
-          </v-list>
+              </v-list-group>
+              <v-divider class="ma-6 white" />
 
-          <div class="d-flex justify-center pa-4">
-            <v-btn color="red darken-2" dark large rounded block @click="logout" >
-              <span style="font-size: 17px; font-weight: bold">Logout</span>
-            </v-btn >
-          </div>
+              <v-list-item
+                  v-for="(data,index) in links"
+                  :key="index"
+                  :to="data.link"
+                  link
+              >
+                <v-list-item-icon >
+                  <v-icon color="rgb(190,190,190)">{{ data.icon }}</v-icon>
+                </v-list-item-icon>
+
+                <v-list-item-content>
+                  <v-list-item-title style="color: rgb(190,190,190)">{{ data.name }}</v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list>
+          </v-navigation-drawer>
+
         </v-card>
-      </v-col>
-
-      <v-col cols="12" sm="9" md="10" class="pa-0">
         <router-view></router-view>
       </v-col>
 
     </v-row>
-
     <v-row>
       <v-footer
           dark
@@ -151,11 +148,12 @@ export default {
           {icon:'mdi-cart', name:'Cart', link:'/my/cart',  show:true},
           {icon:'mdi-library', name:'Wish List', link:'/my/wish', show:true},
           {icon:'mdi-book', name:'Comment', link:'/my/comment', show:true},
-          {icon:'mdi-book', name:'Order', link:'/my/order',  show:true},
-          {icon:'mdi-book', name:'infoEdit', link:'/my/infoEdit',  show:true},
+          {icon:'mdi-credit-card', name:'Order', link:'/my/order',  show:true},
+          {icon:'mdi-account-box', name:'infoEdit', link:'/my/infoEdit',  show:true},
         ],
 
-
+        drawer: true,
+        mini : false,
         bySearch: '',
 
         icons: [
@@ -179,18 +177,16 @@ export default {
       this.$router.push({name:'search', query:{search:data}}).catch(()=>{})
     },
     drawMenu(data){
-      if(this.screenX>780){
-        console.log('hi'+data)
+      if(data === true){
+        document.getElementsByClassName("main-nav")[0].style.display = "block";
+      }else{
+        document.getElementsByClassName("main-nav")[0].style.display = "none";
       }
     },
     searchByCategory(num){
      this.$router.push({name:'search',query:{category:num}})
     },
-    logout(){
-      this.$store.dispatch('logout').then(()=>
-          this.$router.push({path:'/login'})
-      )
-    }
+
 
   },
 
@@ -229,11 +225,15 @@ export default {
 .main-nav{
   display: block;
 }
+/*
 @media screen and (max-width: 768px){
-  /* 최상단 검색 */
   .main-nav{
     display: none;
+    position: absolute;
+    width: 50% !important;
+    z-index: 10;
   }
 
 }
+*/
 </style>

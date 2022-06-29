@@ -34,9 +34,8 @@ public class CommentController {
         return commentService.getCommentById(sortDTO);
     }
 
-
     //2-1 별점 get
-    @GetMapping(value = "/pop/{bid}")
+    @GetMapping(value = "/{bid}")
     public List<RatingsCount> getRatings(@PathVariable long bid){
         return commentService.getRatings(bid);
     }

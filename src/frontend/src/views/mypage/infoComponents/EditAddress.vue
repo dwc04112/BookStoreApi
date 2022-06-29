@@ -1,5 +1,5 @@
 <template>
-  <v-row class="align-center justify-end pa-0" style="background-color: rgb(30,30,30)">
+  <v-row class="align-center justify-end pa-0" style="background-color: rgb(40,40,40)">
     <v-col cols="12" class="pa-0">
       <div>{{selectAddr}}</div>
       <v-chip-group

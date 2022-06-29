@@ -1,6 +1,5 @@
 <template>
   <v-container fluid class="pa-0">
-    <SearchMenu></SearchMenu>
     <v-row class="ma-0 align-center" style="background-color: rgb(20,20,20); height: 100vh">
       <v-col class="pa-0 justify-center d-flex">
         <v-card rounded flat width="400px" color="rgb(40,40,40)">
@@ -52,10 +51,8 @@
 </template>
 
 <script>
-import SearchMenu from "@/views/SearchMenu";
 export default {
   name: "Login.vue",
-  components: {SearchMenu},
   data () {
     return {
       email: 'test@gmail.com',

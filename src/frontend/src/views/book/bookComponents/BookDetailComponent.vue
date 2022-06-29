@@ -332,7 +332,7 @@ export default {
       let cartArr = []
       cartArr.push( {bid:this.bookData.bid, bookCount:1})
       this.$store.dispatch('getOrderByDetail', cartArr);
-      this.$router.push({name: 'Order'});
+      this.$router.push({path: '/order'}).catch(()=>console.log('잘못된 접근입니다'))
     },
   },
   mounted() {
