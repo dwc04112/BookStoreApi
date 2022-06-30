@@ -6,37 +6,42 @@ const userData = () => {
         nickName: void 0,
         fullName: void 0,
         phoneNum: void 0,
-        profilePicture : void 0
+        profilePicture : void 0,
     }
 }
 
-const memberStore = {
+const loginData = () => {
+    return {
+        loginState: false,
+        email: void 0,
+        token: void 0,
+    }
+}
+
+const member = {
     state: {
-        loginState : false,
-        email: '',
-        token: '',
-        userData : userData(),
+        loginData: loginData(),
+        userData: userData(),
     },
 
     mutations: {
         loginData: function (state, data) {
-            state.email = data.email
-            state.token = data.token
-            state.loginState = true
-            console.log("after email? : ", state.email)
+            state.loginData.email = data.email
+            state.loginData.token = data.token
+            state.loginData.loginState = true
+            console.log("log State : ", state.loginData)
         },
+
         initData (state){
-            state.loginState = false;
-            state.email = void 0;
-            state.token = void 0;
             state.userData = userData();
+            state.loginData = loginData();
             console.log(state)
         },
 
         putProfile: function (state, data){
-          state.userData.nickName = data.nickName
-          state.userData.profilePicture = require('@/assets/profile_imgs/'+data.profilePicture)
-          console.log(state.userData)
+            state.userData.nickName = data.nickName
+            state.userData.profilePicture = require('@/assets/profile_imgs/'+data.profilePicture)
+            console.log(state.userData)
         },
 
         putUserInfo: function (state, data){
@@ -45,25 +50,35 @@ const memberStore = {
             state.userData.mid = data.mid
             state.userData.phoneNum = data.phoneNum
             state.userData.profilePicture = require('@/assets/profile_imgs/'+data.profilePicture)
+            console.log("putUserInfo : " + state)
         },
     },
 
     actions: {
+
+
+
         login ({commit, dispatch}, payload){
-            commit('initData')
             let data = {};
             data.email = payload.email
             data.token = payload.token
-            commit('loginData', data)
-
-            dispatch('getUserInfo', data.email)
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    commit('loginData', data);
+                    resolve()
+                }, 1000)
+            }).then(()=> dispatch('getUserInfo', data.email))
         },
 
         logout({commit}){
             axios.post("/logout")
-                .then(response => {
-                    commit('initData')
-                    console.log(response.data+"로그아웃처리")
+                .then(() => {
+                    return new Promise((resolve) => {
+                        setTimeout(() => {
+                            commit('initData');
+                            resolve()
+                        }, 1000)
+                    })
                 })
                 .catch(error =>{
                     console.log(error.response);
@@ -85,25 +100,35 @@ const memberStore = {
                     data.mid = res.data.mid
                     data.phoneNum = res.data.phoneNum
                     data.profilePicture = res.data.profilePicture
-                    commit('putUserInfo', data)
+                    return new Promise((resolve) => {
+                        setTimeout(() => {
+                            commit('putUserInfo', data);
+                            resolve()
+                        }, 1000)
+                    })
                 })
                 .catch((error) => {
                     console.log(error.res)
                 })
         },
 
-/*
         updateProfile: function ({commit}, payload) {
             let data = {};
             data.nickName = payload.nickName;
             data.profilePicture = payload.profilePicture;
-            commit('putProfile', data)
-        }
 
- */
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    commit('putProfile', data);
+                    resolve()
+                }, 1000)
+            })
+        }
 
 
 
     },
 }
-export default memberStore;
+
+
+export default member;

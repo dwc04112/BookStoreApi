@@ -8,11 +8,11 @@
             <v-avatar
                 color="grey"
                 size="110">
-              <img :src="this.$store.state.memberStore.userData.profilePicture"
+              <img :src="this.$store.state.member.userData.profilePicture"
                    style="object-fit: cover"
                    alt=""/>
             </v-avatar>
-            <strong class="pt-5" style="color: rgb(190,190,190); font-size: 20px">{{ $store.state.memberStore.userData.nickName }}</strong>
+            <strong class="pt-5" style="color: rgb(190,190,190); font-size: 20px">{{ $store.state.member.userData.nickName }}</strong>
           </v-sheet>
           <v-divider class="ma-2" style="width: 60%" dark></v-divider>
 
@@ -216,11 +216,10 @@
 
 <script>
 export default {
-  name: "MyOrderComponent",
+  name: "Order",
   data: () => ({
     ordersData: [],
     noOrders : false,
-
     selectMonth: null,
     month : new Date().getMonth()+1,  //0~11로 출력
     fromDate : (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),

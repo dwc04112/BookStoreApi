@@ -1,32 +1,33 @@
 <template>
-  <v-container fluid class="pa-0 ma-0" style="background-color: rgb(25,25,25)">
+  <v-container fluid class="pa-0 ma-0" style="background-color: rgb(20,20,20)">
 
-    <v-row class="justify-center align-center" style="background-color: rgb(40,40,40);">
-      <v-col cols="10" md="10" class="pa-0 pt-2 pb-1">
-          <v-chip-group
-              class="top-chip-group"
-              mandatory
-              color="white"
-              next-icon="mdi-chevron-right white--text"
-              prev-icon="mdi-chevron-left white--text"
-              show-arrows
-          >
-            <v-chip
-                v-for="(data,index) in detailTag"
-                :key="index"
-                outlined
-                color="rgb(60,60,60)"
-                text-color="rgb(240,240,240)"
-                class="top-chip"
-                active-class="white"
-                @click="byCategory(data.num)"
-            ><span>{{data.main}}</span>
-            </v-chip>
-          </v-chip-group>
+    <v-row class="justify-center  align-center" style="background-color: rgb(40,40,40);">
+      <v-col cols="10" md="8" class="pt-2 pb-1">
+        <v-chip-group
+            class="top-chip-group"
+            mandatory
+            color="white"
+            next-icon="mdi-chevron-right white--text"
+            prev-icon="mdi-chevron-left white--text"
+            show-arrows
+        >
+          <v-chip
+              v-for="(data,index) in detailTag"
+              :key="index"
+              outlined
+              color="rgb(60,60,60)"
+              text-color="rgb(240,240,240)"
+              class="top-chip"
+              active-class="white"
+              @click="byCategory(data.num)"
+          ><span>{{data.main}}</span>
+          </v-chip>
+        </v-chip-group>
       </v-col>
     </v-row>
 
-    <v-row style="background-color: rgb(25,25,25)">
+
+    <v-row style="background-color: rgb(20,20,20)">
       <!--List Card-->
       <v-col class="no-gutters">
         <div style="text-align: center;" >
@@ -222,85 +223,71 @@
 </template>
 
 <script>
-import vClickOutside from 'v-click-outside';
 import SearchMenu from "@/views/SearchMenu";
 export default {
-  name: "About",
+  name: "search",
   components: {SearchMenu},
-  data: () => ({
-    //메인 데이터
-    bookDatas : [],         //메인 데이터 (타이틀로 검색)
-    bookDataByKeyword : [], //키워드로 검색된 데이터
-    searchByChip : [],      //chip
-    selectTag : '',         //tag
-
-
-    //선택된 책 보기
-    show : {data:false , bid: null},
-    selectBook : '',
-    selectKeywords : '',
-
-
-    //상단 카테고리
-    tab : null,
-    detailTag : [
-      { main : '전체' },
-      { main: '소설', num: '00', },
-      { main : '시/에세이', num: '01', },
-      { main : '자기계발', num: '02', },
-      { main : '인문', num: '03', },
-      { main : '역사/문화', num: '04', },
-      { main : '종교', num: '05', },
-      { main : '정치/사회', num: '06', },
-      { main : '예술/대중문화', num: '07', },
-      { main : '과학', num: '08', },
-      { main : '기술/공학', num: '09', },
-      { main : '컴퓨터/IT', num: '10', },
-    ],
-    completeData : [],
-    inputMsg : '',
+  data: function (){
+    return{
+      //메인 데이터
+      bookDatas : [],         //메인 데이터 (타이틀로 검색)
 
 
 
-    //컴포넌트 관련 데이터 (Dialog)
-    dialog: false,              //wishlist Dialog
-    componentKey: 0,             // reload component
-    wishTab :'WishList',         // 보여줄 컴포넌트 값
-    setBid : '',                 // push to component
+      //선택된 책 보기
+      show : {data:false , bid: null},
+      selectBook : '',
+      selectKeywords : '',
 
 
-  }),
+      //상단 카테고리
+      tab : null,
+      selectTag : [],
+      detailTag : [
+        { main : '전체' },
+        { main: '소설', num: '00', },
+        { main : '시/에세이', num: '01', },
+        { main : '자기계발', num: '02', },
+        { main : '인문', num: '03', },
+        { main : '역사/문화', num: '04', },
+        { main : '종교', num: '05', },
+        { main : '정치/사회', num: '06', },
+        { main : '예술/대중문화', num: '07', },
+        { main : '과학', num: '08', },
+        { main : '기술/공학', num: '09', },
+        { main : '컴퓨터/IT', num: '10', },
+      ],
+      completeData : [],
+      inputMsg : '',
+
+
+
+      //컴포넌트 관련 데이터 (Dialog)
+      dialog: false,              //wishlist Dialog
+      componentKey: 0,             // reload component
+      wishTab :'WishList',         // 보여줄 컴포넌트 값
+      setBid : '',                 // push to component
+
+    }
+  },
 
   watch: {
-    inputMsg(val) {
-      if (!val) {
-        this.completeData=[]
+    $route(to,from){
+      if (to.query !== from.query) {
+        this.searchByMenu(to.query.search)
       }
-      this.fetchEntriesDebounced()
     },
-  },
 
-  directives: {
-    clickOutside: vClickOutside.directive
-  },
 
-  created() {
-    this.$eventBus.$on('searchData', (payload)=>{
-      console.log(payload);
-    });
   },
-
   methods: {
-    //search
-    //Get Main Book Info
-    getBookInfo(){
-      this.$axios.get('book/info')
-          .then(response=>{
+    searchByMenu(val){
+      this.$axios.get("book/search/" + val)
+          .then(response => {
             this.bookDatas = response.data
-          })
-          .catch(error =>{
-            console.log(error.response);
-          })
+          }).catch(error => {
+        console.log(error.response);
+      })
     },
 
     //Select Book Info
@@ -317,7 +304,15 @@ export default {
       this.selectKeywords = book.bookKeyword.split(',')
     },
 
-
+    //카테고리로 검색
+    byCategory(num){
+      this.$axios.get("book/category/"+num)
+          .then(response=>{
+            this.bookDatas = response.data
+          }).catch(error =>{
+        console.log(error.response);
+      })
+    },
     //키워드로 검색
     keywordSearch(data){
       this.$axios.get("book/keyword/"+data)
@@ -327,55 +322,6 @@ export default {
         console.log(error.response);
       })
     },
-
-
-
-    /*
-    * 자동완성
-    * */
-    //DB에 불필요한 데이터 입력 방지위해 입력 기다리기
-    fetchEntriesDebounced() {
-      this.completeData = null;
-      // cancel pending call
-      clearTimeout(this._timerId)
-      // delay new call 500ms
-      this._timerId = setTimeout(() => {
-        // maybe : this.fetch_data()
-        this.completeSearch()
-      }, 500)
-    },
-
-
-    //카테고리로 검색
-    byCategory(num){
-      this.selectTag=null
-      if(num==null){
-        this.getBookInfo()
-      }else{
-        this.$axios.get("book/category/"+num)
-            .then(response=>{
-              this.bookDatas = response.data
-            }).catch(error =>{
-          console.log(error.response);
-        })
-      }
-    },
-
-    //상단 Chip 추가 & 삭제
-    insertChip(data){
-      if (this.searchByChip.indexOf(data) !== -1){
-        this.searchByChip.splice(this.searchByChip.indexOf(data),1)
-      }else {
-        this.searchByChip.push(data)
-      }
-    },
-    removeChip(index){
-      console.log(index)
-      this.searchByChip.splice(index,1)
-    },
-
-
-
 
     /*
     * 컴포넌트 관련 메소드
@@ -405,14 +351,13 @@ export default {
     //cart에 담기
     addCart(bid){
       this.$axios.get("cart/add/"+bid
-       ).then(response=>{
+      ).then(response=>{
         console.log(response.data.message);
         alert("성공적으로 장바구니에 추가했습니다")
       }).catch(error =>{
         console.log(error.response);
       })
     },
-
 
     //책 보러가기
     detailView(bid){
@@ -421,23 +366,24 @@ export default {
     // == 컴포넌트관련 끝 ==
 
 
-
   },
   computed:{
     // 컴포넌트에서 페이지 변경
     component() {
       const wishTab = this.wishTab;
       return () => import(`@/views/wishlist/${wishTab}`);
-    }
+    },
   },
 
   mounted() {
-    this.getBookInfo()
+    this.searchByMenu(this.$route.query.search)
   }
 }
 </script>
 
 <style scoped>
+
+
 
 /* 1. 상단 카테고리 영역 */
 
@@ -446,14 +392,14 @@ export default {
   font-weight: lighter;
 }
 
+
+
 /* 상단 chip */
 
 
 .high-chip span{
   color: black;
 }
-
-
 
 /* 2.책 리스트 영역 */
 
@@ -464,7 +410,7 @@ export default {
   text-align: center;
   height: 100vh;
   position: sticky;
-  top: 55px;
+  top: 40px;
 }
 .inner-select-book{
   position: sticky;
@@ -474,21 +420,8 @@ export default {
   width: 200px;
 }
 
-.sub-slide-enter{
-  transform: translateX(400px);
-  opacity: 1;
-}
-.sub-slide-enter-active,
-.sub-slide-leave-active {
-  transition: all 0.3s ease-out;
-}
-.sub-slide-leave-to {
-  transform: translateX(400px);
-  opacity: 1;
-}
-
 @media screen and (max-width: 768px){
-  /* 최상단 검색 */
+
 
   .select-book-img{
     width: 130px;

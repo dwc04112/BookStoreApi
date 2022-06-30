@@ -38,7 +38,7 @@
 <script>
 import $ from 'jquery'
 
-import About from "@/views/book/About";
+import About from "@/views/book/main/About";
 import MainBook from "@/views/book/MainBook";
 
 
@@ -47,7 +47,6 @@ export default {
   components: {MainBook, About},
   data () {
     return {
-
     }
   },
   methods : {

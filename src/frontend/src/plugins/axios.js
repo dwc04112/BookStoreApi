@@ -1,7 +1,5 @@
 import axios from 'axios';
 import {store} from "@/store";
-import router from "@/router";
-
 
 
 // Add a request interceptor
@@ -11,12 +9,17 @@ axios.interceptors.request.use(function (config) {
         console.log("인증이 필요없는 url : " + document.URL)
         return config;
     }
+    if(store.state.member.loginData.token==null){
+        return config
+    }
+
+
     if(config.url.match("kakao")){
         console.log("kakao Api Request")
         return config;
     }
 
-    config.headers.Authorization = "Bearer "+store.state.memberStore.token;
+    config.headers.Authorization = "Bearer "+store.state.member.loginData.token;
     //this.$router.go(0); //새로고침
     return config;
 }, function (error) {
@@ -39,7 +42,7 @@ axios.interceptors.response.use(function (response) {
     }
     else if(error.response.status===401) {
        // store.commit('loginCheck_401', error.response)
-       router.push({path:'/login'}).then(()=>router.go(0))
+       // this.$router.push({path:'/login'}).then(()=>router.go(0))
     }
     return Promise.reject(error);
 });

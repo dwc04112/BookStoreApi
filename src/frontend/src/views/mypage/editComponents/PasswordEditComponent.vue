@@ -107,7 +107,6 @@ export default {
       oldPassword:'',
       newPassword:'',
       confirmNewPassword:'',
-
       //정규식 검사
       minPass: false,
       numPass: false,

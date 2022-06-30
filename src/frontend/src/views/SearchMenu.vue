@@ -8,11 +8,9 @@
         class="justify-center d-flex"
     >
 
-        <v-btn class="top-icon" @click="homeLink" icon>
+        <v-btn @click="homeLink" icon>
           <v-icon>mdi-home</v-icon>
         </v-btn>
-
-
 
         <v-btn class="top-menu-btn" @click="drawMenu" icon>
           <font-awesome-icon style="font-size: 24px" icon="fa-solid fa-2x fa-bars"/>
@@ -83,7 +81,7 @@
         <v-icon>mdi-heart</v-icon>
       </v-btn>
 
-      <v-btn class="search-icon teal--text accent-6"  large icon v-show="!loginCheck" @click="$router.push({path:'/login'})">
+      <v-btn class="search-icon teal--text accent-6"  large icon v-show="!loginCheck" @click="toLogin()">
         <v-icon>mdi-account-circle</v-icon>
       </v-btn>
 
@@ -104,7 +102,7 @@
                 color="brown"
                 size="32"
             >
-              <img :src="$store.state.memberStore.userData.profilePicture" alt="">
+              <img :src="$store.state.member.userData.profilePicture" alt="">
             </v-avatar>
           </v-btn>
         </template>
@@ -114,11 +112,11 @@
               <v-avatar
                   size="60"
               >
-                <img :src="$store.state.memberStore.userData.profilePicture" alt="">
+                <img :src="$store.state.member.userData.profilePicture" alt="">
               </v-avatar>
-              <h3 class="grey--text text--lighten-2 mt-3">{{ $store.state.memberStore.userData.nickName }}</h3>
+              <h3 class="grey--text text--lighten-2 mt-3">{{ $store.state.member.userData.nickName }}</h3>
               <p class="text-caption mt-1 grey--text text--lighten-2">
-                {{ $store.state.memberStore.email }}
+                {{ $store.state.member.loginData.email }}
               </p>
 
               <v-divider dark class="my-3"></v-divider>
@@ -152,6 +150,22 @@
         </v-card>
       </v-menu>
 
+      <v-dialog
+          max-width="400"
+          v-model="dialog" persistent
+          content-class="my-custom-dialog"
+      >
+        <v-card rounded color="rgb(55,55,55)" tile dark>
+          <div class="pa-4 pb-6 pt-6" style="font-weight: lighter; font-size: 15px">{{dialogMsg}}</div>
+          <v-card-actions class="justify-end" style="background-color: rgb(50,50,50)">
+            <v-btn
+                rounded class="white--text"
+                color="teal accent-6"
+                @click="$router.push({path:'/login'})"
+            >Login</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-app-bar>
 </template>
 
@@ -166,8 +180,11 @@ export default {
       inputMsg : '',
       autoSearchList : false,
 
-      loginCheck: this.$store.state.memberStore.loginState,
+      loginCheck: this.$store.state.member.loginData.loginState,
       hideMenu : false,
+
+      dialog:false,
+      dialogMsg : '',
    }
   },
   watch: {
@@ -247,6 +264,10 @@ export default {
     },
 
 
+    toLogin(){
+      this.dialogMsg="로그인 페이지로 이동합니다"
+      this.dialog=true
+    },
     homeLink() {
       this.inputMsg = ''
       if(this.$router.history.current.name !== 'About') {
@@ -256,9 +277,13 @@ export default {
     myLink(data){
       this.$router.push({path: "../my"+data})
     },
+
+
     logout(){
-      this.$store.dispatch('logout').then(()=>
-          this.$router.push({path:'/login'})
+      this.$store.dispatch('logout').then(()=>{
+          this.dialogMsg="로그아웃 성공. 로그인 페이지로 이동합니다"
+          this.dialog=true
+        }
       )
     },
 
@@ -268,7 +293,6 @@ export default {
     },
   },
   mounted() {
-
   }
 }
 </script>
@@ -286,7 +310,9 @@ export default {
 .main-input >>> .v-input__slot::before {
   border-style: none !important;
 }
-
+>>> .my-custom-dialog {
+  align-self: flex-start;
+}
 .search-list-title{
   color: rgb(180,180,180);
   font-weight: bold;

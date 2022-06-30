@@ -47,6 +47,23 @@
         </v-card>
       </v-col>
     </v-row>
+
+    <v-dialog
+        max-width="400"
+        v-model="dialog" persistent
+        content-class="my-custom-dialog"
+    >
+      <v-card rounded color="rgb(55,55,55)" tile dark>
+        <div class="pa-4 pb-6 pt-6" style="font-weight: lighter; font-size: 15px">{{dialogMsg}}</div>
+        <v-card-actions class="justify-end" style="background-color: rgb(50,50,50)">
+          <v-btn
+              rounded class="white--text"
+              color="teal accent-6"
+              @click="$router.push({path:'/'})"
+          >Home</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -57,7 +74,9 @@ export default {
     return {
       email: 'test@gmail.com',
       password: '',
-      userInfoData:[],
+
+      dialog:false,
+      dialogMsg:'',
     }
   },
   methods: {
@@ -75,14 +94,15 @@ export default {
               .then((response) => {
                 console.log(response.data)
                 if (response.status === 200) {
-                  alert("로그인 성공")
-                  this.$store.dispatch('login',response.data);
-                  this.$router.push({path:'/'})
+                  this.$store.dispatch('login',response.data).then(()=>{
+                    this.dialogMsg="로그인 성공."
+                    this.dialog=true
+                  })
                 }
               })
               .catch(error =>{
                 console.log(error.response);
-                if(error.response.status===401){
+                if(error.response.status === 401){
                   alert("인증오류. 아이디와 비밀번호를 확인해주세요");
                   this.password = null; this.email = null;
                 }
@@ -102,5 +122,7 @@ export default {
 </script>
 
 <style scoped>
-
+>>> .my-custom-dialog {
+  align-self: flex-start;
+}
 </style>

@@ -108,9 +108,9 @@ export default {
   data () {
     return {
     //  impCode : 'imp10391932 ',
-      nameHolder : this.$store.state.memberStore.userData.fullName,
-      email : this.$store.state.memberStore.email,
-      num : this.$store.state.memberStore.userData.phoneNum,
+      nameHolder : this.$store.state.member.userData.fullName,
+      email : this.$store.state.member.loginData.email,
+      num : this.$store.state.member.userData.phoneNum,
 
       dialog: false,
       snackbar : false,
@@ -170,7 +170,7 @@ export default {
 
 
       if(numCheck && emailCheck){
-        if( (this.email === this.$store.state.memberStore.email) &&(this.num === this.$store.state.memberStore.userData.phoneNum) ){
+        if( (this.email === this.$store.state.member.loginData.email) &&(this.num === this.$store.state.member.userData.phoneNum) ){
           return null;
         }else{
           this.editInfo(this.email,this.num)

@@ -217,7 +217,7 @@
 
           <div style="height: 120px"></div>
 
-          <v-timeline-item color="yellow darken-2" fill-dot style="z-index:5">
+          <v-timeline-item color="yellow darken-2" fill-dot style="z-index:5;">
             <v-card class="elevation-2" elevation="0" width="95%" color="rgb(40,40,40)">
               <v-card-title class="mb-4">
                 <v-icon class="pb-1 pr-3 yellow--text text--darken-2" size="36">mdi-book-open-variant</v-icon>
@@ -331,8 +331,10 @@ export default {
     pushLink(){
       let cartArr = []
       cartArr.push( {bid:this.bookData.bid, bookCount:1})
-      this.$store.dispatch('getOrderByDetail', cartArr);
-      this.$router.push({path: '/order'}).catch(()=>console.log('잘못된 접근입니다'))
+      this.$store.dispatch('getOrderByDetail', cartArr)
+          .then(()=>
+              this.$router.push({path: '/order'}).catch(()=>console.log('잘못된 접근입니다'))
+          )
     },
   },
   mounted() {

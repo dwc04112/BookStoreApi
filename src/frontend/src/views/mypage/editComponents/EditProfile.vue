@@ -43,6 +43,23 @@
       </v-simple-table>
     </v-col>
 
+    <v-dialog
+        max-width="400"
+        v-model="dialog"
+    >
+      <v-card rounded color="rgb(55,55,55)" tile dark>
+        <div class="pa-4 pb-6 pt-6" style="font-weight: lighter; font-size: 15px">{{dialogMsg}}</div>
+        <v-card-actions class="justify-end" style="background-color: rgb(50,50,50)">
+          <v-btn
+              rounded
+              text
+              color="blue"
+              @click="$router.push({path:'/'})"
+          >Home</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
     <v-btn
         color="primary darken-1"
         class="white--text  ma-4 mt-6 mb-6"
@@ -59,11 +76,12 @@ export default {
   name: "EditProfile",
   data () {
     return {
-
-      imageUrl: this.$store.state.memberStore.userData.profilePicture,
+      imageUrl: this.$store.state.member.userData.profilePicture,
       imgFile:[],
-      nickHolder : this.$store.state.memberStore.userData.nickName,
+      nickHolder : this.$store.state.member.userData.nickName,
       nickName : "",
+      dialog:false,
+      dialogMsg:'',
     }
   },
 
@@ -89,9 +107,15 @@ export default {
         },
       }).then(response => {
         console.log(response.data)
-        this.$store.dispatch('updateProfile',response.data);
+        this.$store.dispatch('updateProfile',response.data)
+            .then(() => {
+              this.dialogMsg="성공적으로 저장했습니다."
+              this.dialog=true
+            });
       }).catch(error => {
         console.log(error.response);
+        this.dialogMsg="정보 저장 중 오류가 있었습니다."
+        this.dialog=true
       })
     },
   },

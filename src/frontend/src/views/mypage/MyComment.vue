@@ -8,11 +8,11 @@
             <v-avatar
                 color="grey"
                 size="110">
-              <img :src="this.$store.state.memberStore.userData.profilePicture"
+              <img :src="this.$store.state.member.userData.profilePicture"
                    style="object-fit: cover"
                    alt=""/>
             </v-avatar>
-            <strong class="pt-5" style="color: rgb(190,190,190); font-size: 20px">{{ $store.state.memberStore.userData.nickName }}</strong>
+            <strong class="pt-5" style="color: rgb(190,190,190); font-size: 20px">{{ $store.state.member.userData.nickName }}</strong>
           </v-sheet>
           <v-divider class="ma-2" style="width: 60%" dark></v-divider>
 
@@ -33,22 +33,22 @@
             <span class="pt-1 yellow--text text--darken-2" style="font-weight: bold;font-size: 30px">{{totalComment.ratings}}</span>
             <span class="pt-6" style="color:rgb(160,160,160); font-size: 16px"> /4</span>
           </v-row>
-            <div
-                v-for="(data,index) in ratingList"
-                :key="index"
-                class="pb-2" style="width: 55%"
-            >
-              <h5 style="color:rgb(160,160,160);">{{data.rating}} star &nbsp;({{data.per}}%)</h5>
-              <v-progress-linear
-                  :value="data.value"
-                  color="yellow darken-2"
-                  background-color="rgb(40,40,40)"
-                  height="22"
-                  rounded
-                  disabled="true"
-                  style="border: rgb(40,40,40) 1px solid"
-              ></v-progress-linear>
-            </div>
+          <div
+              v-for="(data,index) in ratingList"
+              :key="index"
+              class="pb-2" style="width: 55%"
+          >
+            <h5 style="color:rgb(160,160,160);">{{data.rating}} star &nbsp;({{data.per}}%)</h5>
+            <v-progress-linear
+                :value="data.value"
+                color="yellow darken-2"
+                background-color="rgb(40,40,40)"
+                height="22"
+                rounded
+                disabled="true"
+                style="border: rgb(40,40,40) 1px solid"
+            ></v-progress-linear>
+          </div>
           <v-divider class="ma-2 mt-4" style="width: 60%" dark></v-divider>
         </v-card>
       </v-col>
@@ -78,7 +78,7 @@
         <v-row class="pb-4 align-center pa-0" style="background-color: rgb(30,30,30)">
           <v-col class="pa-0 align-center"  v-show="noComments">
             <v-row class="justify-center mt-6">
-             <span style="color:rgb(80,80,80); font-size: 21px; font-weight: bold;">댓글이 없습니다. 첫번째 댓글을 작성해보세요</span>
+              <span style="color:rgb(80,80,80); font-size: 21px; font-weight: bold;">댓글이 없습니다. 첫번째 댓글을 작성해보세요</span>
             </v-row>
           </v-col>
 
@@ -180,23 +180,23 @@
               max-width="400"
               v-model="dialog"
           >
-              <v-card rounded color="rgb(55,55,55)" tile dark>
-                <div class="pa-4 pb-6 pt-6" style="font-weight: lighter; font-size: 15px">정말 이 댓글을 삭제할까요?</div>
-                <v-card-actions class="justify-end" style="background-color: rgb(50,50,50)">
-                  <v-btn
-                      rounded
-                      text
-                      @click="setDialog(0)"
-                  >Close</v-btn>
-                  <v-btn
-                      class="ml-2"
-                      rounded
-                      elevation="0"
-                      color="red"
-                      @click="deleteComment()"
-                  >Commit</v-btn>
-                </v-card-actions>
-              </v-card>
+            <v-card rounded color="rgb(55,55,55)" tile dark>
+              <div class="pa-4 pb-6 pt-6" style="font-weight: lighter; font-size: 15px">정말 이 댓글을 삭제할까요?</div>
+              <v-card-actions class="justify-end" style="background-color: rgb(50,50,50)">
+                <v-btn
+                    rounded
+                    text
+                    @click="setDialog(0)"
+                >Close</v-btn>
+                <v-btn
+                    class="ml-2"
+                    rounded
+                    elevation="0"
+                    color="red"
+                    @click="deleteComment()"
+                >Commit</v-btn>
+              </v-card-actions>
+            </v-card>
           </v-dialog>
 
           <v-snackbar
@@ -220,7 +220,7 @@
 
 <script>
 export default {
-  name: "MyCommentComponent",
+  name: "MyComment",
   data: () => ({
         commentData : [],
         totalComment : [], // count & avg ratings
@@ -234,7 +234,6 @@ export default {
         setCid : 0,         //삭제할 댓글 id
         dialog : false,     //삭제 확인 메시지
         snackbar : false,   //삭제 성공? 실패?
-
         selectSort:0,
         sortChip :
             [
@@ -278,7 +277,7 @@ export default {
             }
             this.startBuffer()
           }).catch(error => {
-            console.log(error.response);
+        console.log(error.response);
       })
     },
     //그래프 동작

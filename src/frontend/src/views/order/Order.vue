@@ -283,7 +283,7 @@ export default {
         name : '',
         amount : 0,
         buyer_email : 'dwc04112@gmail.com',
-        buyer_name : this.$store.state.memberStore.fullName,
+        buyer_name : this.$store.state.member.userData.fullName,
         buyer_postcode: '',
         buyer_addr: '',
         buyer_detail_addr: '',

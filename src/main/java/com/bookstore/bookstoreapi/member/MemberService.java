@@ -31,7 +31,7 @@ public class MemberService {
     }
 
     public SimpleInfo getUserInfo(MemberDTO memberDto) {
-        Optional<SimpleInfo> member = memberRepository.findSimpleInfo(SecurityContextHolder.getContext().getAuthentication().getName());
+        Optional<SimpleInfo> member = memberRepository.findSimpleInfo(memberDto.getEmail());
         return member.orElseThrow(() -> new RuntimeException("no data : find member by email"));
     }
 
@@ -40,7 +40,7 @@ public class MemberService {
     public MemberDTO editProfile(String nickName, MultipartFile multipartFile) {
         Member data = memberData();
 
-        String imgFileName = data.getMid() + "_" + multipartFile.getOriginalFilename();
+        String imgFileName = data.getMid() + "mid" + multipartFile.getOriginalFilename();
         Path imgFilePath = Paths.get(uploadFolder+imgFileName);
 
         MemberDTO memberDTO = new MemberDTO();
@@ -48,7 +48,7 @@ public class MemberService {
         if(multipartFile.getSize() !=0){
             try{
                 if(data.getProfilePicture() != null){
-                    File file = new File(uploadFolder+ data.getProfilePicture());
+                    File file = new File(uploadFolder+data.getProfilePicture());
                     file.delete();
                 }
                 Files.write(imgFilePath, multipartFile.getBytes());
@@ -58,12 +58,14 @@ public class MemberService {
             data.updatePicture(imgFileName);
             Member result = memberRepository.save(data);
             memberDTO.setProfilePicture(result.getProfilePicture());
+            memberDTO.setNickName(result.getNickName());
         }
 
         if(nickName!=null && nickName.length()>0){
             data.updateNickName(nickName);
             Member result = memberRepository.save(data);
-            memberDTO.setProfilePicture(result.getNickName());
+            memberDTO.setProfilePicture(result.getProfilePicture());
+            memberDTO.setNickName(result.getNickName());
         }
         return memberDTO;
     }

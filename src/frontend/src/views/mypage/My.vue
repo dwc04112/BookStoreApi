@@ -13,9 +13,6 @@
 export default {
   name: "My",
   data: () => ({
-
-
-
         icons: [
           'mdi-facebook',
           'mdi-twitter',

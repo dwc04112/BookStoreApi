@@ -9,11 +9,11 @@
             <v-avatar
                 color="grey"
                 size="110">
-              <img :src="this.$store.state.memberStore.userData.profilePicture"
+              <img :src="this.$store.state.member.userData.profilePicture"
                    style="object-fit: cover"
                    alt=""/>
             </v-avatar>
-            <strong class="pt-5" style="color: rgb(190,190,190); font-size: 20px">{{ $store.state.memberStore.userData.nickName }}</strong>
+            <strong class="pt-5" style="color: rgb(190,190,190); font-size: 20px">{{ $store.state.member.userData.nickName }}</strong>
           </v-sheet>
           <v-divider class="ma-2" style="width: 60%" dark></v-divider>
 
@@ -59,7 +59,7 @@
 </template>
 
 <script>
-import InfoEditComponent from "@/views/mypage/infoComponents/InfoEditComponent";
+import InfoEditComponent from "@/views/mypage/editComponents/InfoEditComponent";
 export default {
   name: "InfoEdit",
   components: {InfoEditComponent},
@@ -80,7 +80,6 @@ export default {
       componentKey: 0 // reload component
     }
   },
-
   methods:{
     setInfoComponents(data){
       this.setComponent = data
@@ -93,7 +92,7 @@ export default {
     // 컴포넌트에서 페이지 변경
     component() {
       let setComponent = this.setComponent
-      return () => import(`@/views/mypage/infoComponents/${setComponent}`);
+      return () => import(`@/views/mypage/editComponents/${setComponent}`);
     }
   },
 }

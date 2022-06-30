@@ -5,12 +5,13 @@
        @searchData="searchByMenu"
        @drawMenu ="drawMenu"
    ></SearchMenu>
+
     <v-row class="mt-9 pa-0">
-      <v-col cols="12" sm="3" md="12" class="justify-start d-flex pa-0">
+      <v-col cols="12" sm="11" md="12" class="justify-start d-flex pa-0 main-nav">
         <v-card
             class="main-nav"
             min-height="100%"
-            tile
+            tile v-show="true"
             elevation="0"
         >
           <v-navigation-drawer
@@ -82,8 +83,10 @@
         </v-card>
         <router-view></router-view>
       </v-col>
-
     </v-row>
+
+
+
     <v-row>
       <v-footer
           dark
@@ -151,10 +154,10 @@ export default {
           {icon:'mdi-credit-card', name:'Order', link:'/my/order',  show:true},
           {icon:'mdi-account-box', name:'infoEdit', link:'/my/infoEdit',  show:true},
         ],
-
         drawer: true,
-        mini : false,
+        mini : true,
         bySearch: '',
+        categoryList : false,
 
         icons: [
           'mdi-facebook',
@@ -165,23 +168,18 @@ export default {
       }
   ),
   watch:{
+    categoryList(val){
 
+        console.log(val)
+
+    }
   },
   methods: {
-    linkTo(data){
-      this.selectList = data
-      this.$router.replace({path: this.links[data].link })
-    },
-
     searchByMenu(data){
       this.$router.push({name:'search', query:{search:data}}).catch(()=>{})
     },
     drawMenu(data){
-      if(data === true){
-        document.getElementsByClassName("main-nav")[0].style.display = "block";
-      }else{
-        document.getElementsByClassName("main-nav")[0].style.display = "none";
-      }
+      console.log(data)
     },
     searchByCategory(num){
      this.$router.push({name:'search',query:{category:num}})
@@ -225,15 +223,12 @@ export default {
 .main-nav{
   display: block;
 }
-/*
+
 @media screen and (max-width: 768px){
   .main-nav{
     display: none;
-    position: absolute;
-    width: 50% !important;
-    z-index: 10;
   }
 
 }
-*/
+
 </style>

@@ -1,7 +1,8 @@
 <template>
   <v-container class="ma-0 pa-0">
     <v-row class="yellow darken-2 pa-5">
-      <v-col cols="3" md="3" offset-md="1" class="mt-5">
+
+      <v-col cols="12" md="3" offset-md="1" class="mt-5">
         <v-rating
             :value="totalRating"
             color="rgb(60,60,60)"
@@ -10,19 +11,21 @@
             readonly
             half-increments
             length="4"
-            size="32"
+            size="42"
         ></v-rating>
-        <span class="pl-2" style="color:rgb(60,60,60); font-weight: bold;font-size: 24px">{{totalRating}}</span>
-        <span style="color:rgb(60,60,60); font-size: 16px"> / 4</span>
+        <span v-show="totalCount!==0" class="pl-2" style="color:rgb(60,60,60); font-weight: bold;font-size: 24px">{{totalRating}}</span>
+        <span v-show="totalCount!==0" style="color:rgb(60,60,60); font-size: 16px"> / 4</span>
+        <span v-show="totalCount===0" class="pl-2" style="font-weight: bold;color:rgb(80,80,80);">별점이 없어요...</span>
         <div class="pl-2" style="color:rgb(60,60,60); font-size: 16px" >{{totalCount}} ratings</div>
       </v-col>
 
-      <v-col cols="1" offset="1" md="1" offset-md="0" >
+      <v-col cols="1" md="1" class="ml-md-6 ml-3">
         <v-divider vertical style="background-color:rgb(60,60,60); border: rgb(60,60,60) 1px solid;"></v-divider>
       </v-col>
 
-      <v-col cols="7" md="6">
+      <v-col cols="10" md="6">
         <div
+            class="rating-none"
             v-for="(data,index) in ratingList"
             :key="index"
         >
@@ -39,7 +42,7 @@
               </v-progress-linear>
             </v-col>
 
-            <v-col cols="3" >
+            <v-col cols="3">
               <h4 style="color:rgb(60,60,60);">{{data.per}} %</h4>
             </v-col>
           </v-row>
@@ -120,7 +123,7 @@
 
 
           <!-- 댓글 없을때 -->
-          <v-col cols="12" class="pa-0 mt-12 mb-3 text-center" v-show="noComments">
+          <v-col cols="12" class="pa-0 mt-12 mb-16 text-center" v-show="noComments">
             <span style="color:rgb(80,80,80); font-size: 21px; font-weight: bold;">댓글이 없습니다. 첫번째 댓글을 작성해보세요</span>
           </v-col>
 
@@ -278,8 +281,8 @@ export default {
       }else {
         let data = {}
         data.bid = this.selectBid;
-        data.mid = this.$store.state.memberStore.mid;
-        data.nickName = this.$store.state.memberStore.nickName;
+        data.mid = this.$store.state.member.userData.mid;
+        data.nickName = this.$store.state.member.userData.nickName;
         data.ratings = this.writeRating;
         data.content = this.writeComment;
         this.$axios.post("comment/write", JSON.stringify(data), {
@@ -411,5 +414,6 @@ export default {
     font-weight: bold;
     font-size: 18px;
   }
+
 }
 </style>

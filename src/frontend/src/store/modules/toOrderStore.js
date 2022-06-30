@@ -20,17 +20,31 @@ const toOrderStore = {
 
         // cart에서 주문목록 받아오기
         getOrderByCart({commit}, payload){
-            commit('clearState')
-            commit('setOrder', payload)
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    commit('clearState');
+                    resolve()
+                }, 500)
+            }).then(()=>  commit('setOrder', payload))
         },
 
         // detail에서 주문목록 받아오기
         getOrderByDetail({commit}, payload){
-            commit('clearState')
-            commit('setOrder', payload)
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    commit('clearState');
+                    resolve()
+                }, 500)
+            }).then(()=>  commit('setOrder', payload))
         },
+
         clearOrderState({commit}){
-            commit('clearState')
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    commit('clearState');
+                    resolve()
+                }, 500)
+            })
         }
     },
 }

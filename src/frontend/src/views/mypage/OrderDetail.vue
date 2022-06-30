@@ -8,11 +8,11 @@
             <v-avatar
                 color="grey"
                 size="110">
-              <img :src="this.$store.state.memberStore.userData.profilePicture"
+              <img :src="this.$store.state.member.userData.profilePicture"
                    style="object-fit: cover"
                    alt=""/>
             </v-avatar>
-            <strong class="pt-5" style="color: rgb(190,190,190); font-size: 20px">{{ $store.state.memberStore.userData.nickName }}</strong>
+            <strong class="pt-5" style="color: rgb(190,190,190); font-size: 20px">{{ $store.state.member.userData.nickName }}</strong>
           </v-sheet>
           <v-divider class="ma-2" style="width: 60%" dark></v-divider>
         </v-card>
@@ -171,7 +171,6 @@ export default {
     orderData : [],
 
     cancelDialog : false,
-
     //가상계좌 환불입력목록
     refund_holder : null,
     refund_bank : null,
