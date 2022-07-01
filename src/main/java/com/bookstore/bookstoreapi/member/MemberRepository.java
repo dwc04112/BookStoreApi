@@ -1,15 +1,21 @@
 package com.bookstore.bookstoreapi.member;
 
+import com.bookstore.bookstoreapi.member.DTO.MemberByAdmin;
+import com.bookstore.bookstoreapi.member.DTO.SimpleInfo;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface MemberRepository extends CrudRepository<Member , Long> {
+
+    List<MemberByAdmin> findMemberByIsDel(String isDel);
+
     Optional<Member> findByEmail(String email);
 
     Optional<Member> findByMid(Long mid);
@@ -17,7 +23,7 @@ public interface MemberRepository extends CrudRepository<Member , Long> {
     @Query("select mid From Member where email= ?1")
     Long getMemberIdByEmail(String email);
 
-    @Query("select m.mid as mid, m.fullName as fullName, m.nickName as nickName,m.phoneNum as phoneNum , m.profilePicture as profilePicture FROM Member m where m.email=?1")
+    @Query("select m.mid as mid, m.fullName as fullName, m.nickName as nickName,m.phoneNum as phoneNum , m.profilePicture as profilePicture, m.userRule as userRule FROM Member m where m.email=?1")
     Optional<SimpleInfo> findSimpleInfo(String email);
 
 

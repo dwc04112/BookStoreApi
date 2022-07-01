@@ -34,7 +34,13 @@ public class OrderController {
     //주문 및 주문아이템 등록
     @PostMapping("/")
     public ApiResponse<Long> setCartList(@RequestBody SetOrderDTO setOrderDTO) throws Exception {
-        log.debug("order test : "+setOrderDTO);
+        log.debug("order controller : "+setOrderDTO);
         return orderService.setCartList(setOrderDTO);
+    }
+    //결제 중단
+    @GetMapping("/stop/{orderId}")
+    public ApiResponse<Long> stopCartList(@PathVariable Long orderId) throws Exception {
+        log.debug("order controller : "+orderId);
+        return orderService.stopPayments(orderId);
     }
 }

@@ -2,6 +2,7 @@ package com.bookstore.bookstoreapi.payments.service;
 
 
 import com.bookstore.bookstoreapi.common.ApiResponse;
+import com.bookstore.bookstoreapi.member.MemberRepository;
 import com.bookstore.bookstoreapi.order.model.Orders;
 import com.bookstore.bookstoreapi.payments.dto.ImportDTO;
 import com.bookstore.bookstoreapi.payments.dto.PayAndOrderItems;
@@ -20,6 +21,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
@@ -33,6 +35,7 @@ import java.util.Optional;
 public class PaymentsService {
     final OrderService orderService;
     final PaymentsRepository paymentsRepository;
+    final MemberRepository memberRepository;
 
     final String API_URL = "https://api.iamport.kr";
     final String api_key = "9482270387652782";
@@ -273,7 +276,6 @@ public class PaymentsService {
         payAndOrderItems.setItems(orders);
         return new ApiResponse<>(true,payAndOrderItems);
     }
-
     //휴대폰 인증 > 다날 유료결제시 사용가능
     public void phoneCertification(String imp_uid) {
         log.debug("certification  : " + imp_uid);

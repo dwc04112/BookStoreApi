@@ -3,6 +3,8 @@ package com.bookstore.bookstoreapi.member.DTO;
 import lombok.Data;
 import lombok.Getter;
 
+import java.time.LocalDate;
+
 @Data
 @Getter
 public class MemberDTO {
@@ -12,5 +14,7 @@ public class MemberDTO {
     private String nickName;
     private String fullName;
     private String phoneNum;
+    private String userRule;
     private String profilePicture;
+    private LocalDate createDate;
 }

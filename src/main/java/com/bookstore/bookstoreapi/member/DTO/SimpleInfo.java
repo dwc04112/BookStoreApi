@@ -1,4 +1,4 @@
-package com.bookstore.bookstoreapi.member;
+package com.bookstore.bookstoreapi.member.DTO;
 
 public interface SimpleInfo {
     Long getMid();
@@ -6,4 +6,5 @@ public interface SimpleInfo {
     String getNickName();
     String getPhoneNum();
     String getProfilePicture();
+    String getUserRule();
 }

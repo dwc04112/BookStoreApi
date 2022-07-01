@@ -1,6 +1,8 @@
 package com.bookstore.bookstoreapi.member;
 
+import com.bookstore.bookstoreapi.member.DTO.MemberByAdmin;
 import com.bookstore.bookstoreapi.member.DTO.MemberDTO;
+import com.bookstore.bookstoreapi.member.DTO.SimpleInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,7 +15,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Objects;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -84,5 +86,8 @@ public class MemberService {
         return null;
     }
 
+    public List<MemberByAdmin> getMemberByAdmin(){
+        return memberRepository.findMemberByIsDel("N");
+    }
 
 }

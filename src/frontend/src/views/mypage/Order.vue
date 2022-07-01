@@ -191,7 +191,8 @@
                     </v-row>
                   </v-col>
 
-                  <v-col cols="3" md="2" class="pa-5 mt-5 mb-5">
+                  <v-col cols="3" md="2" class="pa-5 mt-5 mb-5 d-flex align-center justify-center">
+                    <v-avatar :color="getColor(data.orderState)" size="13" class="mr-2"/>
                     <span class="book-state">{{data.orderState}}</span>
                   </v-col>
                 </v-row>
@@ -295,6 +296,13 @@ export default {
       month = month >= 10 ? month : '0' + month;
       this.fromDate = nowDate.getFullYear()+"-"+month+"-01"
       this.toDate = nowDate.getFullYear()+"-"+month+"-"+lastDay
+    },
+
+    getColor (stateText) {
+      if (stateText === '결제중단') return 'yellow darken-4'
+      else if (stateText === '결제실패') return 'red darken-4'
+      else if (stateText === '결제취소') return 'red darken-4'
+      else return 'green darken-4'
     },
   },
 

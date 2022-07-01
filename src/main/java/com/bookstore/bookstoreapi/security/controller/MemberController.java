@@ -7,14 +7,8 @@ import com.bookstore.bookstoreapi.member.DTO.UpdatePassDto;
 import com.bookstore.bookstoreapi.member.Member;
 import com.bookstore.bookstoreapi.member.MemberRepository;
 import com.bookstore.bookstoreapi.member.MemberService;
-import com.bookstore.bookstoreapi.member.SimpleInfo;
+import com.bookstore.bookstoreapi.member.DTO.SimpleInfo;
 import com.bookstore.bookstoreapi.security.service.JwtUserDetailsService;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.module.SimpleModule;
-import jdk.internal.org.objectweb.asm.TypeReference;
-import lombok.Data;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Optional;
+import java.time.LocalDate;
 
 
 @Slf4j
@@ -44,8 +38,9 @@ public class MemberController {
 
     @PostMapping("/api/member")
     public String saveMember(@RequestBody MemberDTO memberDto){
+
         memberRepository.save(Member.createMember(memberDto.getEmail(),
-                passwordEncoder.encode(memberDto.getPassword()) , memberDto.getNickName(), memberDto.getFullName(), memberDto.getPhoneNum(), memberDto.getProfilePicture()));
+                passwordEncoder.encode(memberDto.getPassword()) , memberDto.getNickName(), memberDto.getFullName(), memberDto.getPhoneNum(), memberDto.getProfilePicture(), "user" , LocalDate.now(), "N" ));
         return "success";
     }
 
@@ -72,23 +67,10 @@ public class MemberController {
         return memberService.editInfo(memberDto);
     }
 
-
     @SneakyThrows
     @PostMapping("/user/profile")
     public MemberDTO editProfile(@RequestParam("nick")String nickName, @RequestParam("file")MultipartFile multipartFile) {
-
         return memberService.editProfile( nickName.replace("\"", ""), multipartFile);
-/*
-        if(memberDto.getNickName()!=null){
-         memberRepository.EditMemberNickName(memberDto.getNickName(), memberDto.getMid());
-         return "successful edit nickname !";
-        }
-        else if(memberDto.getFullName()!=null){
-            memberRepository.EditMemberName(memberDto.getFullName(),memberDto.getMid());
-            return "successful edit name !";
-        }
-
- */
     }
 
     @PostMapping("/edit/password")

@@ -1,6 +1,7 @@
 package com.bookstore.bookstoreapi.payments.controller;
 
 import com.bookstore.bookstoreapi.common.ApiResponse;
+import com.bookstore.bookstoreapi.member.MemberRepository;
 import com.bookstore.bookstoreapi.payments.dto.ImportDTO;
 import com.bookstore.bookstoreapi.payments.dto.PayAndOrderItems;
 import com.bookstore.bookstoreapi.payments.model.Payments;
@@ -9,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -20,6 +22,7 @@ import java.util.Optional;
 @RequestMapping(value = "/payments")
 public class PaymentsController {
     private final PaymentsService paymentsService;
+
 
     @ResponseBody
     @PostMapping("/complete")

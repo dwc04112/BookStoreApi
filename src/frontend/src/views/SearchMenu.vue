@@ -118,6 +118,13 @@
               <p class="text-caption mt-1 grey--text text--lighten-2">
                 {{ $store.state.member.loginData.email }}
               </p>
+              <v-btn v-show="$store.state.member.userData.userRule==='admin'"
+                     rounded small color="grey lighten-2" class="mb-1"
+                     @click="$router.push({path:'/admin/order'})"
+              >
+                <v-avatar color="red darken-4" class="mr-1" size="8"/>{{ $store.state.member.userData.userRule }}
+              </v-btn>
+
 
               <v-divider dark class="my-3"></v-divider>
               <v-btn

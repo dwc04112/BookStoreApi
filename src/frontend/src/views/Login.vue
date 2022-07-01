@@ -72,7 +72,7 @@ export default {
   name: "Login.vue",
   data () {
     return {
-      email: 'test@gmail.com',
+      email: 'dwc04112@gmail.com',
       password: '',
 
       dialog:false,

@@ -488,6 +488,15 @@ export default {
           let msg = '결제에 실패하였습니다.';
           msg += '에러내용 : ' + rsp.error_msg;
           console.log(msg)
+
+          this.$axios.get("order/stop/"+rsp.merchant_uid)
+              .then(response=>{
+                console.log(response.data)
+                //order state 초기화
+                this.$store.dispatch('clearOrderState');
+              }).catch(error =>{
+                console.log(error.response);
+              })
         }
       });
     },

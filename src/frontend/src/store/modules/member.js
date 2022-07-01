@@ -7,6 +7,7 @@ const userData = () => {
         fullName: void 0,
         phoneNum: void 0,
         profilePicture : void 0,
+        userRule : void 0,
     }
 }
 
@@ -50,6 +51,7 @@ const member = {
             state.userData.mid = data.mid
             state.userData.phoneNum = data.phoneNum
             state.userData.profilePicture = require('@/assets/profile_imgs/'+data.profilePicture)
+            state.userData.userRule = data.userRule
             console.log("putUserInfo : " + state)
         },
     },
@@ -100,6 +102,7 @@ const member = {
                     data.mid = res.data.mid
                     data.phoneNum = res.data.phoneNum
                     data.profilePicture = res.data.profilePicture
+                    data.userRule = res.data.userRule
                     return new Promise((resolve) => {
                         setTimeout(() => {
                             commit('putUserInfo', data);

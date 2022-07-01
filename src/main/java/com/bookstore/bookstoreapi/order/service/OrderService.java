@@ -187,9 +187,29 @@ public class OrderService {
             return false;
         }
     }
+    public ApiResponse<Long> stopPayments(Long orderId) {
+        try {
+            Optional<Orders> orderData = ordersRepository.findOrdersByOrderIdAndIsDel(orderId, "N");
+            Orders data = orderData.orElseThrow(() -> new RuntimeException("no data : find order by order_id"));
+            data.updateOrderState("결제중단");
+            data.updateIsDel("Y");
+            Orders result = ordersRepository.save(data);
+            return new ApiResponse<>(true,"결제 중단된 주문정보를 처리했습니다. 주문번호 : "+result.getOrderId() + ", state : " + result.getOrderState());
+        }catch (Exception e){
+            log.debug("Exception (updateState) : "+ e);
+        }
+        return null;
+    }
+
+
 
     public Orders getOrderByPayments(Long orderId) throws Exception{
         return ordersRepository.findOrdersByMidAndOrderIdAndIsDel(getMemberIdByEmail(),orderId,"N");
+    }
+
+
+    public List<Orders> findOrdersByAdmin(){
+        return ordersRepository.findOrdersBy();
     }
 
 }

@@ -122,7 +122,30 @@ const routes = [
         name: 'Home',
         component: () =>  import('@/views/Home')
     },
+    {
+        path: '/admin',
+        name: 'Admin',
+        component: () =>  import('@/views/admin/Admin'),
+        children: [
+            {
+                path: 'order',
+                component: () => import(/* webpackChunkName: "about" */ '../views/admin/management/AdminOrder'),
+            },
+            {
+                path: 'order/:orderId',
+                component: () =>  import('@/views/admin/management/AdminOrderDetail'),
+            },
+            {
+                path: 'comment',
+                component: () => import(/* webpackChunkName: "about" */ '../views/admin/management/AdminComment'),
+            },
 
+            {
+                path: 'member',
+                component: () => import(/* webpackChunkName: "about" */ '../views/admin/management/AdminMember'),
+            },
+        ]
+    },
     {
         path: '/login',
         name: 'Login',

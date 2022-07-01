@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -169,4 +170,23 @@ public class CommentService {
         }
     }
 
+    @Transactional
+    public String updateIsDelByAdmin(List<Long> cidArr){
+        log.debug("Admin :: delete Cid list : " + cidArr);
+        try {
+            if(cidArr.size() ==0){
+                throw new Exception("no data :: cid List");
+            }else{
+                for(long cid: cidArr){
+                    Optional<Comment> commentData = commentRepository.findCommentByCidAndIsDel(cid,"N");
+                    Comment data = commentData.orElseThrow(() -> new RuntimeException("no data"));
+                    data.updateIsDel("Y");
+                    commentRepository.save(data);
+                }
+            }
+        }catch (Exception e){
+            log.debug("Exception (updateIsDelByAdmin) : "+ e);
+        }
+        return null;
+    }
 }

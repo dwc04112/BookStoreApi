@@ -18,4 +18,6 @@ public interface OrdersRepository extends JpaRepository<Orders, Long> {
     Orders findOrdersByMidAndOrderIdAndIsDel(Long mid, Long orderId, String isDel);
 
     Optional<Orders> findOrdersByOrderIdAndIsDel(Long orderId, String isDel);
+
+    List<Orders> findOrdersBy();
 }

@@ -2,6 +2,7 @@ package com.bookstore.bookstoreapi.member;
 
 import lombok.*;
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -21,11 +22,13 @@ public class Member {
     private String fullName;
     private String phoneNum;
     private String profilePicture;
+    private String userRule;
+    private LocalDate createDate;
+    private String isDel;
 
     public void updatePicture(String profilePicture){
         this.profilePicture = profilePicture;
     }
-
     public void updateNickName(String nickName){
         this.nickName = nickName;
     }
@@ -36,17 +39,20 @@ public class Member {
         this.phoneNum = phoneNum;
     }
 
-    public Member(String email, String password, String nickName, String fullName, String phoneNum, String profilePicture) {
+    public Member(String email, String password, String nickName, String fullName, String phoneNum, String profilePicture, String userRule, LocalDate createDate,String isDel) {
         this.email = email;
         this.password = password;
         this.nickName = nickName;
         this.fullName = fullName;
         this.phoneNum = phoneNum;
         this.profilePicture = profilePicture;
+        this.userRule = userRule;
+        this.createDate = createDate;
+        this.isDel = isDel;
     }
 
-    public static Member createMember(String email, String password, String nickName, String fullName, String phoneNum, String profilePicture){
-        return new Member(email, password, nickName, fullName, phoneNum, profilePicture);
+    public static Member createMember(String email, String password, String nickName, String fullName, String phoneNum, String profilePicture, String userRule, LocalDate createDate,String isDel){
+        return new Member(email, password, nickName, fullName, phoneNum, profilePicture, userRule , createDate, isDel);
     }
 
 }
