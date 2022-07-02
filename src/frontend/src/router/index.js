@@ -89,11 +89,7 @@ const routes = [
         name: 'MainBook',
         component: () =>  import('@/views/book/MainBook')
     },
-    {
-        path: '/post',
-        name: 'PostBook',
-        component: () =>  import('@/views/book/PostBook')
-    },
+
     {
         path: '/detailView',
         name: 'DetailView',
@@ -143,6 +139,15 @@ const routes = [
             {
                 path: 'member',
                 component: () => import(/* webpackChunkName: "about" */ '../views/admin/management/AdminMember'),
+            },
+
+            {
+                path: 'postBook',
+                component: () =>  import('@/views/admin/editBook/PostBook')
+            },
+            {
+                path: 'writeBook',
+                component: () =>  import('@/views/admin/editBook/writebook')
             },
         ]
     },

@@ -105,6 +105,7 @@ export default {
           {icon:'mdi-credit-card', name:'Order', link:'/admin/order',  show:true},
           {icon:'mdi-book', name:'Comment', link:'/admin/comment', show:true},
           {icon:'mdi-account-box', name:'member', link:'/admin/member',  show:true},
+          {icon:'mdi-account-box', name:'postBook', link:'/admin/postBook',  show:true},
         ],
         drawer: true,
         bySearch: '',

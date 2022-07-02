@@ -1,26 +1,26 @@
 <template>
-  <v-app>
-    <v-container>
-      <v-layout>
-        <v-flex>
+  <v-container>
+    <v-col cols="12" md="10" offset-md="1" class="pa-16">
 
-      <v-row class="inner_row">
-        <h1 style="color: #404040">도서 등록</h1>
-      </v-row>
-
-      <v-row style="justify-content: right">
-        <h4 style="color: #404040;">* 표시는 필수 입력사항 입니다</h4>
-      </v-row>
-
-      <v-row>
-        <v-card class="name_card" elevation="0" style="border-radius: 0; border: 1.5px gray solid ; border-collapse: collapse" color="#EEEEEE">
+        <v-row class="pa-0">
           <v-card-title>
-            도서 이름
+            <h3 style="color: rgb(200,200,200)">도서 등록</h3>
           </v-card-title>
-        </v-card>
-        <v-card class="input_card" elevation="0" style="border-radius: 0; border-top : 1.5px gray solid; border-right: 1.5px gray solid; border-bottom: 1.5px gray solid;">
-          <v-row class="inner_row">
-            <v-col cols="12" sm="11" >
+        </v-row>
+
+        <v-row style="justify-content: right">
+          <h4 style="color: rgb(200,200,200)">* 표시는 필수 입력사항 입니다</h4>
+        </v-row>
+
+        <v-row>
+          <v-card class="name_card" elevation="0" style="border-radius: 0; border: 1.5px gray solid ; border-collapse: collapse" color="#EEEEEE">
+            <v-card-title>
+              도서 이름
+            </v-card-title>
+          </v-card>
+          <v-card class="input_card" elevation="0" style="border-radius: 0; border-top : 1.5px gray solid; border-right: 1.5px gray solid; border-bottom: 1.5px gray solid;">
+            <v-row class="inner_row">
+              <v-col cols="12" sm="11" >
                 <v-text-field
                     label="*제목"
                     v-model="title"
@@ -28,112 +28,111 @@
                     append-outer-icon="mdi-magnify"
                     @click:append-outer="searchTitle(title)"
                 ></v-text-field>
-            </v-col>
+              </v-col>
 
-            <v-col cols="12" sm="11" >
-              <v-text-field
-                  style="margin-bottom: 2%"
-                  label="*부제목"
-                  v-model="sub_title"
-                  :rules="[rules.required]"
-              ></v-text-field>
-            </v-col>
-          </v-row>
-        </v-card>
-      </v-row>
+              <v-col cols="12" sm="11" >
+                <v-text-field
+                    style="margin-bottom: 2%"
+                    label="*부제목"
+                    v-model="sub_title"
+                    :rules="[rules.required]"
+                ></v-text-field>
+              </v-col>
+            </v-row>
+          </v-card>
+        </v-row>
 
 
 
-      <v-row>
-        <v-card class="name_card" elevation="0"  style="border-radius: 0; border-left: 1.5px gray solid; border-right: 1.5px gray solid;"  color="#EEEEEE">
-          <v-card-title>
-            출판 정보
-          </v-card-title>
-        </v-card>
-        <v-card class="input_card" elevation="0" style="border-radius: 0; border-right: 1.5px gray solid;" >
-              <v-row class="inner_row" >
-                <v-col cols="12" sm="5" >
-                  <v-text-field
-                      v-model="publisher"
-                      label="*출판사"
-                      :rules="[rules.required]"
-                  ></v-text-field>
-                </v-col>
+        <v-row>
+          <v-card class="name_card" elevation="0"  style="border-radius: 0; border-left: 1.5px gray solid; border-right: 1.5px gray solid;"  color="#EEEEEE">
+            <v-card-title>
+              출판 정보
+            </v-card-title>
+          </v-card>
+          <v-card class="input_card" elevation="0" style="border-radius: 0; border-right: 1.5px gray solid;" >
+            <v-row class="inner_row" >
+              <v-col cols="12" sm="5" >
+                <v-text-field
+                    v-model="publisher"
+                    label="*출판사"
+                    :rules="[rules.required]"
+                ></v-text-field>
+              </v-col>
 
-                <v-col cols="12" sm="5"  offset-sm="1">
+              <v-col cols="12" sm="5"  offset-sm="1">
 
-                  <v-menu
-                      ref="menu"
-                      v-model="menu"
-                      :close-on-content-click="false"
-                      :return-value.sync="date"
-                      transition="scale-transition"
-                      offset-y
-                      min-width="auto"
-                  >
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-text-field
-                          v-model="date"
-                          label="출간일"
-                          readonly
-                          v-bind="attrs"
-                          v-on="on"
-                      ></v-text-field>
-                    </template>
-                    <v-date-picker
+                <v-menu
+                    ref="menu"
+                    v-model="menu"
+                    :close-on-content-click="false"
+                    :return-value.sync="date"
+                    transition="scale-transition"
+                    offset-y
+                    min-width="auto"
+                >
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-text-field
                         v-model="date"
-                        no-title
-                        scrollable
+                        label="출간일"
+                        readonly
+                        v-bind="attrs"
+                        v-on="on"
+                    ></v-text-field>
+                  </template>
+                  <v-date-picker
+                      v-model="date"
+                      no-title
+                      scrollable
+                  >
+                    <v-spacer></v-spacer>
+                    <v-btn
+                        text
+                        color="primary"
+                        @click="menu = false"
                     >
-                      <v-spacer></v-spacer>
-                      <v-btn
-                          text
-                          color="primary"
-                          @click="menu = false"
-                      >
-                        Cancel
-                      </v-btn>
-                      <v-btn
-                          text
-                          color="primary"
-                          @click="$refs.menu.save(date)"
-                      >
-                        OK
-                      </v-btn>
-                    </v-date-picker>
-                  </v-menu>
-                </v-col>
+                      Cancel
+                    </v-btn>
+                    <v-btn
+                        text
+                        color="primary"
+                        @click="$refs.menu.save(date)"
+                    >
+                      OK
+                    </v-btn>
+                  </v-date-picker>
+                </v-menu>
+              </v-col>
 
 
-                <v-col cols="12" sm="5" >
-                  <v-text-field
-                      label="*저자 명"
-                      v-model="author"
-                      :rules="[rules.required]"
-                      style="margin-bottom: 2%"
-                  ></v-text-field>
-                </v-col>
-                <v-col cols="12" sm="5"   offset-sm="1">
-                  <v-text-field
-                      v-model="translator"
-                      label="번역가"
-                      :rules="[rules.required]"
-                      style="margin-bottom: 2%"
-                  ></v-text-field>
-                </v-col>
-              </v-row>
-        </v-card>
-      </v-row>
+              <v-col cols="12" sm="5" >
+                <v-text-field
+                    label="*저자 명"
+                    v-model="author"
+                    :rules="[rules.required]"
+                    style="margin-bottom: 2%"
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12" sm="5"   offset-sm="1">
+                <v-text-field
+                    v-model="translator"
+                    label="번역가"
+                    style="margin-bottom: 2%"
+                ></v-text-field>
+              </v-col>
+            </v-row>
+          </v-card>
+        </v-row>
 
-      <v-row>
-        <v-card class="name_card" elevation="0"  style=" border-radius: 0; border: 1.5px gray solid;" color="#EEEEEE">
+        <v-row>
+          <v-card class="name_card" elevation="0"  style=" border-radius: 0; border: 1.5px gray solid;" color="#EEEEEE">
             <v-card-title>
               도서 정보
             </v-card-title>
-        </v-card>
+          </v-card>
 
-        <v-card class="input_card" elevation="0"  style="border-radius: 0; border-right: 1.5px gray solid; border-bottom: 1.5px gray solid; border-top: 1.5px gray solid;" >
-          <v-row class="inner_row">
+          <v-card class="input_card" elevation="0"  style="border-radius: 0; border-right: 1.5px gray solid; border-bottom: 1.5px gray solid; border-top: 1.5px gray solid;" >
+            <v-row class="inner_row">
               <v-col cols="12" sm="5" >
                 <v-text-field
                     v-model="isbn"
@@ -185,156 +184,135 @@
                     dense
                 ></v-text-field>
               </v-col>
+            </v-row>
+          </v-card>
         </v-row>
-      </v-card>
-    </v-row>
 
 
-      <v-row>
-        <v-card class="name_card" elevation="0" style="border-radius: 0; border-left: 1.5px gray solid; border-right: 1.5px gray solid;"  color="#EEEEEE" >
-          <v-card-title>
-            도서 소개
-          </v-card-title>
-        </v-card>
+        <v-row>
+          <v-card class="name_card" elevation="0" style="border-radius: 0; border-left: 1.5px gray solid; border-right: 1.5px gray solid;"  color="#EEEEEE" >
+            <v-card-title>
+              도서 소개
+            </v-card-title>
+          </v-card>
 
-        <v-card class="input_card" elevation="0" style="border-radius: 0; border-right: 1.5px gray solid;" >
-          <v-row class="inner_row">
-                <v-col cols="12" sm="11"  >
-                  <v-textarea
-                      style="margin-top: 30px ;"
-                      v-model="content"
-                      label="책 소개"
-                      auto-grow
-                      outlined
-                      row-height="40"
-                  ></v-textarea>
-                </v-col>
-          </v-row>
-          <v-row class="inner_row">
-            <v-col cols="12" sm="11"  >
-              <v-textarea
-                  style="margin-top: -6% ;"
-                  v-model="index"
-                  label="책 목차"
-                  auto-grow
-                  outlined
-                  row-height="40"
-              ></v-textarea>
-            </v-col>
-          </v-row>
-          <v-row class="inner_row">
-            <v-col cols="12" sm="11"  >
-              <v-textarea
-                  style="margin-top: -6% ;"
-                  v-model="preview"
-                  label="출판사 서평"
-                  auto-grow
-                  outlined
-                  row-height="40"
-              ></v-textarea>
-            </v-col>
-          </v-row>
-        </v-card>
+          <v-card class="input_card" elevation="0" style="border-radius: 0; border-right: 1.5px gray solid;" >
+            <v-row class="inner_row">
+              <v-col cols="12" sm="11"  >
+                <v-textarea
+                    style="margin-top: 30px ;"
+                    v-model="content"
+                    label="책 소개"
+                    auto-grow
+                    outlined
+                    row-height="40"
+                ></v-textarea>
+              </v-col>
+            </v-row>
+            <v-row class="inner_row">
+              <v-col cols="12" sm="11"  >
+                <v-textarea
+                    style="margin-top: -6% ;"
+                    v-model="index"
+                    label="책 목차"
+                    auto-grow
+                    outlined
+                    row-height="40"
+                ></v-textarea>
+              </v-col>
+            </v-row>
+            <v-row class="inner_row">
+              <v-col cols="12" sm="11"  >
+                <v-textarea
+                    style="margin-top: -6% ;"
+                    v-model="preview"
+                    label="출판사 서평"
+                    auto-grow
+                    outlined
+                    row-height="40"
+                ></v-textarea>
+              </v-col>
+            </v-row>
+          </v-card>
+        </v-row>
+
+
+
+
+        <v-row>
+          <v-card class="name_card" elevation="0" style="border-radius: 0; border: 1.5px gray solid;" color="#EEEEEE">
+            <v-card-title>
+              도서 태그
+            </v-card-title>
+          </v-card>
+
+          <v-card class="input_card" elevation="0" style="border-radius: 0; border-right: 1.5px  gray solid; border-bottom: 1.5px gray solid; border-top: 1.5px gray solid;">
+            <v-row class="inner_row" >
+              <v-col cols="12" sm="5">
+                <v-select
+                    v-model="selectedTag"
+                    :items="detailTag"
+                    item-text="main"
+                    item-value="sub"
+                    label="*Tag"
+                >
+                </v-select>
+              </v-col>
+              <v-col cols="12" sm="5"  offset-sm="1">
+                <v-select
+                    v-model="selectedSubTag"
+                    :items="selectedTag"
+                    item-text="subMain"
+                    item-value="num"
+                    label="*subTag"
+                >
+                </v-select>
+              </v-col>
+
+
+              <v-col cols="12" sm="11">
+                <v-combobox
+                    style="margin-bottom: 2%"
+                    v-model="keyword"
+                    :items="items"
+                    :search-input.sync="search"
+                    hide-selected
+                    hint="최대 5가지 키워드를 입력해주세요"
+                    label="키워드를 입력해주세요"
+                    multiple
+                    persistent-hint
+                    small-chips
+                >
+                  <template v-slot:no-data>
+                    <v-list-item>
+                      <v-list-item-content>
+                        <v-list-item-title>
+                          <kbd>Enter</kbd> 를 눌러 <strong>{{ search }}</strong> 키워드를 등록
+                        </v-list-item-title>
+                      </v-list-item-content>
+                    </v-list-item>
+                  </template>
+                </v-combobox>
+              </v-col>
+            </v-row>
+          </v-card>
+        </v-row>
+
+        <v-row class="justify-end pt-6">
+          <v-col cols="2" class="justify-end">
+            <v-btn
+                @click="commit"
+                rounded
+                min-width="130"
+                elevation="0"
+                class="blue white--text"
+            ><h3>등록하기</h3>
+            </v-btn>
+          </v-col>
       </v-row>
 
-
-
-
-      <v-row>
-        <v-card class="name_card" elevation="0" style="border-radius: 0; border: 1.5px gray solid;" color="#EEEEEE">
-          <v-card-title>
-            도서 태그
-          </v-card-title>
-        </v-card>
-
-        <v-card class="input_card" elevation="0" style="border-radius: 0; border-right: 1.5px  gray solid; border-bottom: 1.5px gray solid; border-top: 1.5px gray solid;">
-          <v-row class="inner_row" >
-                <v-col cols="12" sm="5">
-                  <v-select
-                      v-model="selectedTag"
-                      :items="detailTag"
-                      item-text="main"
-                      item-value="sub"
-                      label="*Tag"
-                  >
-                  </v-select>
-                </v-col>
-                <v-col cols="12" sm="5"  offset-sm="1">
-                  <v-select
-                      v-model="selectedSubTag"
-                      :items="selectedTag"
-                      item-text="subMain"
-                      item-value="num"
-                      label="*subTag"
-                  >
-                  </v-select>
-                </v-col>
-
-
-                <v-col cols="12" sm="11">
-                  <v-combobox
-                      style="margin-bottom: 2%"
-                      v-model="keyword"
-                      :items="items"
-                      :search-input.sync="search"
-                      hide-selected
-                      hint="최대 5가지 키워드를 입력해주세요"
-                      label="키워드를 입력해주세요"
-                      multiple
-                      persistent-hint
-                      small-chips
-                  >
-                    <template v-slot:no-data>
-                      <v-list-item>
-                        <v-list-item-content>
-                          <v-list-item-title>
-                            <kbd>Enter</kbd> 를 눌러 <strong>{{ search }}</strong> 키워드를 등록
-                          </v-list-item-title>
-                        </v-list-item-content>
-                      </v-list-item>
-                    </template>
-                  </v-combobox>
-                </v-col>
-          </v-row>
-        </v-card>
-      </v-row>
-
-
-
-          <v-row justify="center" style="margin-bottom: 5%; margin-top: 5%">
-            <v-col cols="12" sm="1">
-              <v-btn
-                  @click="cancel"
-                  elevation="0"
-                  color="#EEEEEE"
-                  style="border: gray 1.5px solid; background-color: #EEEEEE"
-                  width="150%"
-              >
-                <h3>취소</h3>
-              </v-btn>
-            </v-col>
-
-            <v-col cols="12" sm="1" offset-sm="1" >
-              <v-btn
-                  @click="commit"
-                  outlined
-                  elevation="0"
-                  style="border: gray 1.5px solid; background-color: #EEEEEE"
-                  width="150%"
-              ><h3>등록</h3></v-btn>
-            </v-col>
-          </v-row>
-
-      <div>{{selectedTag}}</div>
-      <div>{{selectedSubTag}}</div>
-
-
-
-
-        </v-flex>
-      </v-layout>
-    </v-container>
-  </v-app>
+    </v-col>
+  </v-container>
 </template>
 
 <script>
@@ -575,6 +553,7 @@ export default {
           })
       }
     },
+
     searchIsbn(isbn){
       console.log(isbn)
       if (isbn !== undefined && isbn !== "") {
@@ -590,7 +569,7 @@ export default {
               let info = response.data.documents[0]
               this.title = info.title
               this.author = info.authors
-              this.translator = <info className="translator"></info>
+              this.translator = info.translators[0]
               this.content = info.contents
               this.price = info.price
               this.sale_price = info.sale_price
@@ -620,7 +599,9 @@ export default {
       bookData.bookAuthor = this.author.toString()
       bookData.bookPublisher = this.publisher
       bookData.bookPublishedDate = this.date
-      bookData.bookTranslator = this.translator.toString()
+
+      bookData.bookTranslator = this.translator
+
       bookData.bookIsbn = this.isbn
       bookData.bookPage = Number(this.page)
       bookData.bookPrice = Number(this.price)
@@ -631,7 +612,10 @@ export default {
       bookData.bookIndex = this.index
       bookData.bookPreview = this.preview
       bookData.bookTag = this.selectedSubTag
-      bookData.bookKeyword = this.keyword.toString()
+      if(this.bookKeyword!==''){
+        bookData.bookKeyword = this.keyword.toString()
+      }
+
 
       this.$axios.post('book/',JSON.stringify(bookData),{
         headers: {
@@ -640,7 +624,7 @@ export default {
       }).then(response=>{
         console.log(response.data)
         alert("책 등록신청을 완료하였습니다.");
-        this.$router.push({path: './'});
+        this.$router.go(0)
       }).catch(error =>{
         console.log(error.response);
       })
@@ -657,15 +641,10 @@ export default {
       },
   },
 }
+
 </script>
 
-<style scoped>
-.size_field{
-  display: flex;
-  width: 20%;
-  float: left;
-}
-
+<style lang="scss">
 .name_card{
   display: flex;
   align-items: center;
