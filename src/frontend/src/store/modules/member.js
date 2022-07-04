@@ -33,6 +33,7 @@ const member = {
             console.log("log State : ", state.loginData)
         },
 
+
         initData (state){
             state.userData = userData();
             state.loginData = loginData();
@@ -57,8 +58,6 @@ const member = {
     },
 
     actions: {
-
-
 
         login ({commit, dispatch}, payload){
             let data = {};
@@ -126,7 +125,17 @@ const member = {
                     resolve()
                 }, 1000)
             })
-        }
+        },
+
+        loginCheck_401: function ({commit}){
+                return new Promise((resolve) => {
+                    setTimeout(() => {
+                        commit('initData');
+                        resolve()
+                    }, 1000)
+                }
+            )
+        },
 
 
 

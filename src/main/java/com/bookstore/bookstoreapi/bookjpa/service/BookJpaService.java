@@ -24,14 +24,14 @@ public class BookJpaService {
     final BookRepository bookRepository;
     final MemberRepository memberRepository;
 
-    // 리스트 가져오기
-    public List<Book> getBookList() {
-        return bookRepository.findBookByIsDel("N");
+    // 리스트 가져오기 by admin
+    public List<BookDataDTO> getBookByAdmin() {
+        return bookRepository.findBookBy();
     }
 
     //1-1 about 화면
-    public List<BookMainDTO> getBookList2() {
-        return bookRepository.findBookBy();
+    public List<BookMainDTO> getBookList() {
+        return bookRepository.findBookByIsDel("N");
     }
     //1-2 main 화면
     public List<BookMainDetailInterface> getBookListMain(){
@@ -71,7 +71,7 @@ public class BookJpaService {
     //책 등록
     public ApiResponse<Book> postBook(BookDTO bookDTO) {
         long newBookBidValue = this.getNewBookBidValue(bookRepository);
-        long memberId = getMemberIdByEmail(memberRepository);
+        long memberId = getMemberIdByEmail();
         log.debug("member id : "+memberId);
 
         Book postData = Book.builder()
@@ -116,48 +116,34 @@ public class BookJpaService {
     }
 
     //SecurityContextHolder에 저장된 사용자Email을 통해 사용자 Mid를 가져오는 로직
-    private Long getMemberIdByEmail(MemberRepository memberRepository) {
+    private Long getMemberIdByEmail() {
         String memberEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         return memberRepository.getMemberIdByEmail(memberEmail);
     }
 
-    //책 삭제 ( isDel "N" -> "Y" )
+    //책 상태변경 ( isDel "N" -> "Y" & "Y" -> "N" ) * admin 에서만
     public ApiResponse<Book> updateIsDelBookById(long bid) {
-        Optional<Book> bookData = bookRepository.findBookByBidAndIsDel(bid, "N");
+        Optional<Book> bookData = bookRepository.findBookByBid(bid);
         Book data = bookData.orElseThrow(() -> new RuntimeException("no data"));
-        //북 오너 정보와 매치 필요
-        long midByLoginInfo = getMemberIdByEmail(memberRepository);
 
-        if (data.getMid() == midByLoginInfo) {
+        if (data.getIsDel().equals("N")){
             data.updateIsDel("Y");
-            bookRepository.save(data);
-            return new ApiResponse<>(true, "board id " + bid +" is successfully deleted", data);
+            Book result = bookRepository.save(data);
+            return new ApiResponse<>(true, "board id " + bid +" is successfully update", result);
+        } else if(data.getIsDel().equals("Y")) {
+            data.updateIsDel("N");
+            Book result = bookRepository.save(data);
+            return new ApiResponse<>(true, "board id " + bid +" is successfully update", result);
         } else {
             return new ApiResponse<>(false, "failed to delete board id " + bid);
         }
     }
 
     //여기서부터 책 검색
+    //타이틀로 검색
     public List<BookMainInterface> searchBook(String searchData) {
         searchData = searchData.replace('+','|');
-        //타이틀로 검색
         return bookRepository.searchByTitleAndKeyword(searchData,"N");
-
-        /*
-        List<BookMainInterface> searchByTitle = bookRepository.searchByRegExp( searchData , "N") ;
-        //키워드로 검색
-        List<BookMainInterface> searchByKeyword = bookRepository.searchByRegExpKeyword( searchData , "N");
-
-
-
-
-        Map<String , List<BookMainInterface> > searchMap = new HashMap<String, List<BookMainInterface>>();
-        searchMap.put("title",searchByTitle);
-        searchMap.put("keyword",searchByKeyword);
-
-        return searchMap;
-
-         */
     }
 
     //자동완성 : 입력한 값 like 책 가져오기
@@ -165,12 +151,13 @@ public class BookJpaService {
         searchTitle = searchTitle.replace('+','|');
         return bookRepository.searchByRegExp(searchTitle,"N");
     }
-
+    //책 키워드로 검색
     public List<BookMainInterface> searchBookByKeyword(String selectKeyword) {
         return bookRepository.searchByRegExpKeyword(selectKeyword,"N");
     }
-
+    //책 태그(카테고리) 검색
     public List<BookMainDTO> searchByMainTag(String bookTag) {
         return bookRepository.findBookByBookTagStartingWithAndIsDel(bookTag, "N");
     }
+
 }

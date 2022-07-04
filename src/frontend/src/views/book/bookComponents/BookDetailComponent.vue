@@ -16,51 +16,49 @@
           </v-row>
           <v-row class="ma-0 ma-0 ml-3">
             <v-col cols="1" class="ma-0 pa-0 ml-5" >
-              <v-divider class="grey darken-3" style="border-width: 1.5px;" vertical></v-divider>
+              <v-divider style="background-color: rgb(170,70,70);border-width: 1.5px;" vertical></v-divider>
             </v-col>
             <v-col cols="8" class="pa-0 ma-0 nav-menu-sub-text">
-              <v-col class="pa-1">
+              <v-col class="pa-1" @click="moveScroll('content_id')">
                 책 소개
                 <v-icon class="pb-1 pl-3" size="18" color="yellow darken-2">mdi-book</v-icon>
-
               </v-col>
-              <v-col class="pa-1">
+              <v-col class="pa-1" @click="moveScroll('index_id')">
                 책 목차
               </v-col>
-              <v-col class="pa-1">
+              <v-col class="pa-1" @click="moveScroll('preview_id')">
                 출간자 서평
               </v-col>
             </v-col>
           </v-row>
 
           <v-row class="pa-0 ma-1 ml-3 ">
-            <v-col cols="12" class="nav-menu-main-text">2. 댓글 및 평점</v-col>
+            <v-col cols="12" class="nav-menu-main-text" @click="moveScroll('comment_id')">2. 댓글 및 평점</v-col>
           </v-row>
           <v-row class="ma-0 pa-0 ml-3">
             <v-col cols="1" class="ma-0 pa-0 ml-5" >
-              <v-divider class="grey darken-3" style="border-width: 1.5px;" vertical></v-divider>
+              <v-divider style="background-color: rgb(170,70,70); border-width: 1.5px;" vertical></v-divider>
             </v-col>
             <v-col cols="8" class="pa-0 ma-0 nav-menu-sub-text">
-              <v-col class="pa-1">
+              <v-col class="pa-1"  @click="moveScroll('comment_id')">
                 별점
                 <v-icon class="pb-1 pl-3" size="18" color="yellow darken-2">mdi-star</v-icon>
               </v-col>
-              <v-col class="pa-1">
+              <v-col class="pa-1"  @click="moveScroll('comment_id')">
                 댓글
               </v-col>
             </v-col>
           </v-row>
-          <v-row class="pa-0 ma-1 ml-3 pb-12">
+          <v-row class="pa-0 ma-1 ml-3 pb-8">
             <v-col cols="12" class="nav-menu-main-text">3. 비슷한 책 추천</v-col>
           </v-row>
-
           <v-row
               class="pa-0 ma-1 mb-5"
               v-for="(item,index) in payItems"
               :key="index"
           >
             <v-btn icon color="rgb(40,40,40)" height="45px" width="200px"
-                   class="pay-card align-center d-flex flex-column ml-4"
+                   class="pay-card align-center d-flex flex-column"
                    @click="pushLink(item.link)"
             >
               <span class="white--text pl-2" style="font-size: 16px">{{ item.text }}</span>
@@ -68,7 +66,6 @@
             </v-btn>
           </v-row>
         </v-card>
-
       </v-col>
     </v-row>
     <!-- 우측 Nav 끝-->
@@ -173,7 +170,7 @@
         <!-- 이미지와 메인정보 끝-->
 
         <!-- 세부정보 -->
-        <v-row class="yellow darken-2">
+        <v-row class="yellow darken-2" id="content_id">
           <v-col
               cols="3" md="2"
               class="yellow darken-2 align-center justify-center d-flex flex-column"
@@ -201,7 +198,7 @@
             </v-card>
           </v-timeline-item>
 
-          <div style="height: 120px" ></div>
+          <div style="height: 120px" id="index_id"></div>
 
           <v-timeline-item color="yellow darken-2" fill-dot>
             <v-card class="elevation-2" elevation="0" width="95%" color="rgb(40,40,40)">
@@ -215,13 +212,13 @@
             </v-card>
           </v-timeline-item>
 
-          <div style="height: 120px"></div>
+          <div style="height: 120px" id="preview_id"></div>
 
-          <v-timeline-item color="yellow darken-2" fill-dot style="z-index:5;">
+          <v-timeline-item color="yellow darken-2" fill-dot style="z-index:5;" >
             <v-card class="elevation-2" elevation="0" width="95%" color="rgb(40,40,40)">
               <v-card-title class="mb-4">
                 <v-icon class="pb-1 pr-3 yellow--text text--darken-2" size="36">mdi-book-open-variant</v-icon>
-                <span class="grey--text text--lighten-1" style="font-size: 30px; font-weight: bold">
+                <span class="grey--text text--lighten-1"  style="font-size: 30px; font-weight: bold">
                   출간자 서평
                 </span>
               </v-card-title>
@@ -231,7 +228,7 @@
             </v-card>
           </v-timeline-item>
 
-          <div style="height: 80px"></div>
+          <div style="height: 80px" id="comment_id"></div>
         </v-timeline>
 
 
@@ -243,12 +240,12 @@
         >
           <v-row>
             <v-col>
-              <CommentComponent
-                v-bind:selectBid="bid"
-                :key="componentKey"
-                @childKey="componentKey++"
-              >
-              </CommentComponent>
+                <CommentComponent
+                  v-bind:selectBid="bid"
+                  :key="componentKey"
+                  @childKey="componentKey++"
+                >
+                </CommentComponent>
             </v-col>
           </v-row>
         </v-lazy>
@@ -336,6 +333,12 @@ export default {
               this.$router.push({path: '/order'}).catch(()=>console.log('잘못된 접근입니다'))
           )
     },
+
+    moveScroll(data){
+      let div = document.getElementById(data)
+      let abTop = window.pageYOffset + div.getBoundingClientRect().top;
+      this.$vuetify.goTo(abTop)
+    }
   },
   mounted() {
     this.getBookDetail()
@@ -346,13 +349,7 @@ export default {
 </script>
 
 <style scoped>
-.v-progress-circular {
-  margin: 1rem;
-}
 
-.title-br{
-  display: none;
-}
 
 .price-card{
   outline: rgb(170,170,170) 1.5px solid;
@@ -368,8 +365,11 @@ export default {
 
 .nav-menu-main-text{
   color: rgb(200,200,200);
-
-  font-size: 14px;
+  font-size: 16px;
+  font-weight: bold;
+  white-space:nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .nav-menu-sub-text{
   color: rgb(200,200,200);

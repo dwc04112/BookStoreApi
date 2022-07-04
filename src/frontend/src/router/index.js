@@ -80,24 +80,27 @@ const routes = [
         ]
     },
 
-    // *****
-    // Book
 
-
+    {
+        path: '/login',
+        name: 'Login',
+        component: () =>  import('@/views/Login')
+    },
+    {
+        path: '/signup',
+        name: 'SignUp',
+        component: () =>  import('@/views/SignUp')
+    },
     {
         path: '/mainBook',
         name: 'MainBook',
         component: () =>  import('@/views/book/MainBook')
     },
-
     {
         path: '/detailView',
         name: 'DetailView',
         component: () =>  import('@/views/book/DetailView')
     },
-
-    // *****
-    //Order
     {
         path: '/order',
         name: 'Order',
@@ -107,12 +110,8 @@ const routes = [
         },
     },
 
+
     //mainMenu
-    {
-        path: '/SearchMenu',
-        name: 'SearchMenu',
-        component: () =>  import('@/views/SearchMenu')
-    },
     {
         path: '/home',
         name: 'Home',
@@ -146,16 +145,12 @@ const routes = [
                 component: () =>  import('@/views/admin/editBook/PostBook')
             },
             {
-                path: 'writeBook',
-                component: () =>  import('@/views/admin/editBook/writebook')
+                path: 'editBook',
+                component: () =>  import('@/views/admin/editBook/EditBook')
             },
         ]
     },
-    {
-        path: '/login',
-        name: 'Login',
-        component: () =>  import('@/views/Login')
-    },
+
 
 ]
 

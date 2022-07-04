@@ -38,11 +38,18 @@ public class MemberController {
 
     @PostMapping("/api/member")
     public String saveMember(@RequestBody MemberDTO memberDto){
-
-        memberRepository.save(Member.createMember(memberDto.getEmail(),
+         memberRepository.save(Member.createMember(memberDto.getEmail(),
                 passwordEncoder.encode(memberDto.getPassword()) , memberDto.getNickName(), memberDto.getFullName(), memberDto.getPhoneNum(), memberDto.getProfilePicture(), "user" , LocalDate.now(), "N" ));
         return "success";
     }
+
+    @PostMapping("/api/profile")
+    public String saveProfile(@RequestParam("email")String email, @RequestParam("file")MultipartFile multipartFile) {
+        log.debug("회원가입 프로필 : " + email + " file : " + multipartFile.getOriginalFilename());
+        return memberService.saveProfile( email.replace("\"", ""), multipartFile);
+    }
+
+
 
     @PostMapping("/signup/doublecheck")
     public Integer doubleCheck(@RequestBody MemberDTO memberDto){
@@ -70,6 +77,7 @@ public class MemberController {
     @SneakyThrows
     @PostMapping("/user/profile")
     public MemberDTO editProfile(@RequestParam("nick")String nickName, @RequestParam("file")MultipartFile multipartFile) {
+        log.debug("프로필 수정 : " + nickName + " file : " + multipartFile.getOriginalFilename());
         return memberService.editProfile( nickName.replace("\"", ""), multipartFile);
     }
 

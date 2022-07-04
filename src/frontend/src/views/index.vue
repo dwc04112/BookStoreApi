@@ -1,6 +1,5 @@
 <template>
   <v-container fluid class="align-center" style="background-color: rgb(25,25,25)">
-
    <SearchMenu
        @searchData="searchByMenu"
        @drawMenu ="drawMenu"

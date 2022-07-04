@@ -1,5 +1,8 @@
 package com.bookstore.bookstoreapi.bookjpa.dto;
 
+import lombok.Data;
+
+@Data
 public class BookMainDetailDTO {
     private String bookThumb;
     private String bookTitle;

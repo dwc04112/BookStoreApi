@@ -22,15 +22,11 @@ public class BookJpaController {
 
     public final BookJpaService bookJpaService;
 
-    @GetMapping("/")
-    public List<Book> getBookList(){
-        return bookJpaService.getBookList();
-    }
 
     //1-1 about 화면
     @GetMapping("/info")
-    public List<BookMainDTO> getBookList2(){
-        return bookJpaService.getBookList2();
+    public List<BookMainDTO> getBookList(){
+        return bookJpaService.getBookList();
     }
     //1-2 main 화면
     @GetMapping("/main")
@@ -63,12 +59,6 @@ public class BookJpaController {
         log.debug("post data : " + bookDTO);
         log.debug("책 등록");
         return bookJpaService.postBook(bookDTO);
-    }
-
-    //책 삭제
-    @DeleteMapping("/{bid}")
-    public ApiResponse<Book> updateIsDelBookById(@PathVariable long bid){
-        return bookJpaService.updateIsDelBookById(bid);
     }
 
 

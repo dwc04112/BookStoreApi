@@ -102,7 +102,7 @@
                 color="brown"
                 size="32"
             >
-              <img :src="$store.state.member.userData.profilePicture" alt="">
+              <img :src="$store.state.member.userData.profilePicture" v-show="$store.state.member.userData.profilePicture !== void 0" alt="">
             </v-avatar>
           </v-btn>
         </template>
@@ -112,7 +112,11 @@
               <v-avatar
                   size="60"
               >
-                <img :src="$store.state.member.userData.profilePicture" alt="">
+                <img
+                  v-show="$store.state.member.userData.profilePicture !== void 0"
+                  :src="$store.state.member.userData.profilePicture"
+                  alt=""
+                >
               </v-avatar>
               <h3 class="grey--text text--lighten-2 mt-3">{{ $store.state.member.userData.nickName }}</h3>
               <p class="text-caption mt-1 grey--text text--lighten-2">

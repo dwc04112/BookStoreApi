@@ -31,8 +31,8 @@
               <v-divider class="ma-6 white" />
 
               <v-list-item
-                  v-for="(data,index) in links"
-                  :key="index"
+                  v-for="data in links"
+                  :key="data.name"
                   :to="data.link"
                   link
               >
@@ -44,7 +44,27 @@
                   <v-list-item-title style="color: rgb(190,190,190)">{{ data.name }}</v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
+
+              <v-divider class="ma-6 white" />
+
+              <v-list-item
+                  v-for="data in links2"
+                  :key="data.name"
+                  :to="data.link"
+                  link
+              >
+                <v-list-item-icon >
+                  <v-icon color="rgb(190,190,190)">{{ data.icon }}</v-icon>
+                </v-list-item-icon>
+
+                <v-list-item-content>
+                  <v-list-item-title style="color: rgb(190,190,190)">{{ data.name }}</v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+
+
             </v-list>
+
           </v-navigation-drawer>
 
         </v-card>
@@ -101,12 +121,21 @@ export default {
   data: () => ({
         selectList:0,
         componentKey:0,
+
+
         links: [
+
+
           {icon:'mdi-credit-card', name:'Order', link:'/admin/order',  show:true},
           {icon:'mdi-book', name:'Comment', link:'/admin/comment', show:true},
           {icon:'mdi-account-box', name:'member', link:'/admin/member',  show:true},
-          {icon:'mdi-account-box', name:'postBook', link:'/admin/postBook',  show:true},
         ],
+
+        links2:[
+          {icon:'mdi-book-open-variant', name:'postBook', link:'/admin/postBook',  show:true},
+          {icon:'mdi-book-open-variant', name:'editBook', link:'/admin/editBook',  show:true},
+        ],
+
         drawer: true,
         bySearch: '',
         categoryList : false,

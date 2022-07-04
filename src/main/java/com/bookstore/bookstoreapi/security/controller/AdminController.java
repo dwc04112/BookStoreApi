@@ -1,5 +1,8 @@
 package com.bookstore.bookstoreapi.security.controller;
 
+import com.bookstore.bookstoreapi.bookjpa.dto.BookDataDTO;
+import com.bookstore.bookstoreapi.bookjpa.model.Book;
+import com.bookstore.bookstoreapi.bookjpa.service.BookJpaService;
 import com.bookstore.bookstoreapi.comment.model.Comment;
 import com.bookstore.bookstoreapi.comment.service.CommentService;
 import com.bookstore.bookstoreapi.common.ApiResponse;
@@ -26,6 +29,7 @@ public class AdminController {
     final MemberService memberService;
     final CommentService commentService;
     final PaymentsService paymentsService;
+    final BookJpaService bookJpaService;
 
 
     private boolean adminFilter() throws Exception{
@@ -37,6 +41,8 @@ public class AdminController {
         }
     }
 
+
+    // 주문관련
     @GetMapping("/order")
     public List<Orders> orderManagement()throws Exception{
         if(adminFilter()){
@@ -44,7 +50,6 @@ public class AdminController {
         }
         return null;
     }
-
     @PostMapping("/payCancel")
     public ApiResponse<String> orderCancelManagement(@RequestBody ImportDTO importDTO)throws Exception{
         if(adminFilter()){
@@ -54,6 +59,8 @@ public class AdminController {
         return null;
     }
 
+
+    // 회원관련
     @GetMapping("/member")
     public List<MemberByAdmin> memberManagement() throws Exception{
         if(adminFilter()){
@@ -62,6 +69,7 @@ public class AdminController {
         return null;
     }
 
+    // 댓글관련
     @GetMapping("/comment")
     public List<Comment> commentManagement()throws Exception{
         if(adminFilter()){
@@ -73,6 +81,24 @@ public class AdminController {
     public String commentManagement(@PathVariable List<Long> cidArr)throws Exception{
         if(adminFilter()){
             return commentService.updateIsDelByAdmin(cidArr);
+        }
+        return null;
+    }
+
+    // Book
+    @GetMapping("/book")
+    public List<BookDataDTO> bookManagement()throws Exception{
+        if(adminFilter()){
+            return bookJpaService.getBookByAdmin();
+        }
+        return null;
+    }
+
+    //책 상태변경
+    @DeleteMapping("/book/{bid}")
+    public ApiResponse<Book> updateIsDelBookById(@PathVariable long bid) throws Exception {
+        if(adminFilter()){
+            return bookJpaService.updateIsDelBookById(bid);
         }
         return null;
     }

@@ -15,9 +15,14 @@ import java.util.Optional;
 @Repository
 public interface BookRepository extends JpaRepository<Book, Long> {
 
-    List<Book> findBookByIsDel(String isDel);
 
+    List<BookDataDTO> findBookBy();
+
+    // book & order 에서 사용
     Optional<Book> findBookByBidAndIsDel(long bid, String isDel);
+    // admin
+    Optional<Book> findBookByBid(long bid);
+
 
     Book findTopByOrderByBidDesc();
 
@@ -35,8 +40,6 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     @Query(value = "select b.bid, b.bookThumb ,b.bookTitle ,b.bookKeyword, b.bookAuthor, b.bookPublisher From Book b where replace (b.bookTitle,' ','') REGEXP :searchData or (b.bookKeyword REGEXP :searchData) and b.isDel=:isDel order by replace (b.bookTitle,' ','') REGEXP :searchData DESC ", nativeQuery = true)
     List<BookMainInterface> searchByTitleAndKeyword(@Param("searchData") String searchData, @Param("isDel") String isDel);
 
-    @Query("select mid From Book where bid= ?1")
-    Long getMemberIdByBid(long bid);
 
     @Query("select b From Book b where b.bid= ?1 and b.isDel='N'")
     Book getWishBook(long bid);
@@ -46,7 +49,7 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     @Query("UPDATE Book SET isDel = ?1 WHERE mid=?2")
     void updateIsDel(String isDel, Long mid);
 
-    List<BookMainDTO> findBookBy();
+    List<BookMainDTO> findBookByIsDel(String isDel);
     //2-2 책 상세화면 (info 인터페이스 사용)
     BookMainDTO getBookByBidAndIsDel(Long bid, String isDel);
     //2-3 order.vue 에서 호출 > getBookByBidAndIsDel
@@ -55,12 +58,6 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     //bookThumb ,bookTitle ,bookKeyword, bookAuthor, bookPublisher,bookContent ,bookPreview
     @Query(value = "select bid, bookThumb ,bookTitle ,bookKeyword, bookAuthor, bookPublisher,bookContent ,bookPreview FROM Book where bid between 1 and 5", nativeQuery = true)
     List<BookMainDetailInterface> getMainBook();
-
-    List<BookMainDTO> findBookByBookKeywordContainingAndIsDel(String keyword, String IsDel);
-    List<BookMainDTO> findBookByBookKeywordContainingAndBookKeywordContainingAndIsDel(String keyword1, String keyword2,String IsDel);
-    List<BookMainDTO> findBookByBookKeywordContainingAndBookKeywordContainingAndBookKeywordContainingAndIsDel(String keyword1, String keyword2, String keyword3, String IsDel);
-    List<BookMainDTO> findBookByBookKeywordContainingAndBookKeywordContainingAndBookKeywordContainingAndBookKeywordContainingAndIsDel(String keyword1, String keyword2, String keyword3, String keyword4, String IsDel);
-    List<BookMainDTO> findBookByBookKeywordContainingAndBookKeywordContainingAndBookKeywordContainingAndBookKeywordContainingAndBookKeywordContainingAndIsDel(String keyword1, String keyword2, String keyword3, String keyword4, String keyword5, String IsDel);
 
     List<BookMainDTO> findBookByBookTagStartingWithAndIsDel(String Tag, String isDel);
 }

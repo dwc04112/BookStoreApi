@@ -37,7 +37,28 @@ public class MemberService {
         return member.orElseThrow(() -> new RuntimeException("no data : find member by email"));
     }
 
+    //회원가입시 프로필 등록
+    public String saveProfile(String email, MultipartFile multipartFile) {
+        Optional<Member> member = memberRepository.findByEmail(email);
+        Member data = member.orElseThrow(() -> new RuntimeException("no data : find member by email"));
 
+        String imgFileName = data.getMid() + "mid" + multipartFile.getOriginalFilename();
+        Path imgFilePath = Paths.get(uploadFolder+imgFileName);
+
+        if(multipartFile.getSize() !=0){
+            try{
+                Files.write(imgFilePath, multipartFile.getBytes());
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+            data.updatePicture(imgFileName);
+            Member result = memberRepository.save(data);
+            return result.getProfilePicture() +"사진을 저장했습니다" ;
+        }
+        return null;
+    }
+
+    //프로필 수정
     @Transactional
     public MemberDTO editProfile(String nickName, MultipartFile multipartFile) {
         Member data = memberData();

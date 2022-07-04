@@ -34,13 +34,13 @@
                   color="teal accent-6 white--text"
                   @click="signLink" rounded
               >
-                <span style="color: rgb(45,45,45);">Sign-up</span>
+                <span style="color: rgb(45,45,45); font-weight: bold">Sign-up</span>
               </v-btn>
               <v-btn
                   color="teal accent-6" rounded
                   @click="$router.push({path:'/'})"
               >
-                <span style="color: rgb(45,45,45);">Home</span>
+                <span style="color: rgb(45,45,45); font-weight: bold">Home</span>
               </v-btn>
             </v-card-actions>
           </div>
@@ -62,6 +62,7 @@
               @click="$router.push({path:'/'})"
           >Home</v-btn>
         </v-card-actions>
+
       </v-card>
     </v-dialog>
   </v-container>

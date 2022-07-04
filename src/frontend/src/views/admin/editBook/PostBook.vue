@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-col cols="12" md="10" offset-md="1" class="pa-16">
+    <v-col cols="12" md="10" class="pa-16">
 
         <v-row class="pa-0">
           <v-card-title>

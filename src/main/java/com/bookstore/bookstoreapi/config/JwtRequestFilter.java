@@ -4,6 +4,7 @@ import com.bookstore.bookstoreapi.security.service.JwtUserDetailsService;
 import com.bookstore.bookstoreapi.token.TokenService;
 import io.jsonwebtoken.ExpiredJwtException;
 
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -43,6 +44,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         this.tokenService = tokenService;
     }
 
+    @SneakyThrows
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
@@ -61,6 +63,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 log.debug("Unable to get JWT Token");
             } catch (ExpiredJwtException e) {
                 log.debug("JWT Token has expired");
+                throw new Exception("jwt expired");
             }
         } else {
             log.warn("JWT Token does not begin with Bearer String");
