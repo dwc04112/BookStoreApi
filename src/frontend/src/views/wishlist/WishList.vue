@@ -1,11 +1,11 @@
 <template>
   <v-container fluid>
     <v-card-text>
-      <div style="color: #505050" class="mb-4"> 해당 도서를 담을 카테고리를 선택해주세요.</div>
+    <div style="color: rgb(200,200,200)" class="mb-8"> 해당 도서를 담을 카테고리를 선택해주세요.</div>
     <div class="d-flex flex-column align-center">
       <v-row
           align="center" justify="center"
-          style="width: 85%; background-color: #F3E9DD; text-align: center;"
+          style="width: 85%; background-color: rgb(65,65,65); text-align: center;"
           class="pt-2"
           dense
       >
@@ -17,13 +17,14 @@
         >
           <v-card
               class="book mb-2"
+              light
               height="140"
               width="100"
               elevation="2"
               tile
               @click.stop="setWishData(index,wishCategory.wishlistTitle)"
           >
-            <v-card-text>( {{wishCategory.countTitle}} /100)</v-card-text>
+            <v-card-text style="color:rgb(80,80,80);">( {{wishCategory.countTitle}} /100)</v-card-text>
           </v-card>
           <a class="wish-a">{{wishCategory.wishlistTitle}}</a>
         </v-col>
@@ -37,7 +38,7 @@
               width="100"
               elevation="2"
               tile
-              color="rgba(100,100,100,0.1)"
+              color="rgba(200,200,200,0.1)"
               @click="pushAddWishList"
           >
             <font-awesome-icon class="plus-icon" icon="fa-solid fa-plus"/>
@@ -53,27 +54,26 @@
             v-model="commitDialog"
             max-width="300"
         >
-          <v-card color="rgb(33,33,33)">
+          <v-card color="rgb(50,50,50)" dark>
             <v-card-title><div style="color: white">등록하시겠습니까?</div></v-card-title>
-            <v-divider class="white"/>
 
-            <v-card-actions>
-              <v-spacer></v-spacer>
+
+            <v-card-actions style="background-color: rgb(40,40,40)">
               <v-btn
-                  color=white
-                  text
-                  style="font-size: 16px"
-                  @click="pushWishData()"
-              >
-                등록
-              </v-btn>
-              <v-btn
-                  color=white
-                  text
+                  rounded color="grey darken-3"
                   style="font-size: 16px"
                   @click="commitDialog = false"
               >
                 취소
+              </v-btn>
+              <v-spacer></v-spacer>
+              <v-btn
+                  color="teal accent-5"
+                  rounded
+                  style="font-size: 16px"
+                  @click="pushWishData()"
+              >
+                등록
               </v-btn>
             </v-card-actions>
           </v-card>
@@ -194,11 +194,11 @@ export default {
 <style scoped>
 .plus-icon{
   font-size: 40px;
-  color: rgba(100,100,100,0.3);
+  color: rgba(200,200,200,0.3);
 }
 .wish-a{
   font-size: 14px;
-  color : rgba(40,40,40,0.5);
+  color : rgb(200,200,200);
   font-weight: bold;
 }
 </style>

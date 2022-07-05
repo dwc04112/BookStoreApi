@@ -91,4 +91,10 @@ public class BookJpaController {
         return bookJpaService.searchByMainTag(bookTag);
     }
 
+    //랜덤추천 (book detail)
+    @GetMapping("/recommend/{bid}")
+    public List<BookMainInterface> getRecommend(@PathVariable Long bid){
+        return bookJpaService.getRecommend(bid);
+    }
+
 }

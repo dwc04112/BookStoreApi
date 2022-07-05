@@ -28,6 +28,7 @@ public class Comment implements Serializable {
     private long mid;
     private int ratings;
     private String nickName;
+    private String profile;
     private String content;
     private int popularity;
     private LocalDate commentDate;
@@ -45,6 +46,7 @@ public class Comment implements Serializable {
                    Long mid,
                    int ratings,
                    String nickName,
+                   String profile,
                    String content,
                    int popularity,
                    LocalDate commentDate,
@@ -56,6 +58,7 @@ public class Comment implements Serializable {
         this.mid = mid;
         this.ratings = ratings;
         this.nickName = nickName;
+        this.profile = profile;
         this.content = content;
         this.popularity = popularity;
         this.commentDate = commentDate;

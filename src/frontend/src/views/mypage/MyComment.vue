@@ -30,7 +30,8 @@
 
           <v-row class="pb-6 pt-4 pr-3">
             <span class="nav-text pt-5 pr-2">평균 별점</span>
-            <span class="pt-1 yellow--text text--darken-2" style="font-weight: bold;font-size: 30px">{{totalComment.ratings}}</span>
+            <span v-show="totalComment.totalCount>0" class="pt-1 yellow--text text--darken-2" style="font-weight: bold;font-size: 30px">{{totalComment.ratings}}</span>
+            <span v-show="totalComment.totalCount===0" class="pt-1 yellow--text text--darken-2" style="font-weight: bold;font-size: 30px">0</span>
             <span class="pt-6" style="color:rgb(160,160,160); font-size: 16px"> /4</span>
           </v-row>
           <div

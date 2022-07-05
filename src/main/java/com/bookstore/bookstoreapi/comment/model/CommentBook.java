@@ -26,6 +26,7 @@ public class CommentBook {
     private long mid;
     private int ratings;
     private String nickName;
+    private String profile;
     private String content;
     private int popularity;
     private LocalDate commentDate;

@@ -4,19 +4,13 @@
 
     <!-- 우측 Nav -->
     <v-row>
-      <v-col cols="2" md="2" class="pt-8 mt-8" style="position: absolute; right: 8%; top:70px;">
-        <v-card elevation="0"
-                color="transparent"
-                class="ma-8  nav-menu"
-                width="300px"
-                style="position: fixed;"
-                tile>
+      <v-col cols="2" md="2" class="ml-8 pt-8 mt-8 nav-menu">
           <v-row class="pa-0 ma-1 ml-3">
             <v-col @click="$vuetify.goTo(0)" cols="12" class="nav-menu-main-text">1. {{bookData.bookTitle}}</v-col>
           </v-row>
           <v-row class="ma-0 ma-0 ml-3">
             <v-col cols="1" class="ma-0 pa-0 ml-5" >
-              <v-divider style="background-color: rgb(170,70,70);border-width: 1.5px;" vertical></v-divider>
+              <v-divider style="background-color: rgb(100,100,100);border-width: 1.5px;" vertical></v-divider>
             </v-col>
             <v-col cols="8" class="pa-0 ma-0 nav-menu-sub-text">
               <v-col class="pa-1" @click="moveScroll('content_id')">
@@ -37,7 +31,7 @@
           </v-row>
           <v-row class="ma-0 pa-0 ml-3">
             <v-col cols="1" class="ma-0 pa-0 ml-5" >
-              <v-divider style="background-color: rgb(170,70,70); border-width: 1.5px;" vertical></v-divider>
+              <v-divider style="background-color: rgb(100,100,100); border-width: 1.5px;" vertical></v-divider>
             </v-col>
             <v-col cols="8" class="pa-0 ma-0 nav-menu-sub-text">
               <v-col class="pa-1"  @click="moveScroll('comment_id')">
@@ -50,10 +44,10 @@
             </v-col>
           </v-row>
           <v-row class="pa-0 ma-1 ml-3 pb-8">
-            <v-col cols="12" class="nav-menu-main-text">3. 비슷한 책 추천</v-col>
+            <v-col cols="12" class="nav-menu-main-text" @click="moveScroll('recommend_id')">3. 비슷한 책 추천</v-col>
           </v-row>
           <v-row
-              class="pa-0 ma-1 mb-5"
+              class="pa-0 ma-1 ml-4 mb-5"
               v-for="(item,index) in payItems"
               :key="index"
           >
@@ -65,7 +59,6 @@
               <v-icon right :size="item.size" :color="item.color">{{item.icon}}</v-icon>
             </v-btn>
           </v-row>
-        </v-card>
       </v-col>
     </v-row>
     <!-- 우측 Nav 끝-->
@@ -254,14 +247,47 @@
 
       </v-col>
     </v-row>
+
+    <div style="height: 130px"></div>
+    <v-row>
+      <v-col cols="12">
+        <Recommend
+            id="recommend_id"
+            v-bind:selectBid="bid"
+        >
+        </Recommend>
+      </v-col>
+    </v-row>
+
+
+
+    <v-row class="nav-mini-btn" style="position:absolute; right: 8%">
+      <v-col cols="12" class="ma-8">
+        <v-btn fab elevation="0" width="50px" height="50px" color="yellow darken-2" style="position: fixed; bottom: 5%" @click="$vuetify.goTo(0)">
+          <v-icon color="rgb(60,60,60)" size="40">mdi-chevron-up</v-icon>
+        </v-btn>
+        <v-btn fab elevation="0" width="50px" height="50px" color="yellow darken-2" style="position: fixed; bottom: 11%"
+               @click="pushLink()"
+        >
+          <v-icon color="rgb(60,60,60)" size="24">mdi-checkbox-multiple-marked-circle</v-icon>
+        </v-btn>
+        <v-btn fab elevation="0" width="50px" height="50px" color="yellow darken-2" style="position: fixed; bottom: 17%">
+          <v-icon color="rgb(60,60,60)" size="24">mdi-heart</v-icon>
+        </v-btn>
+        <v-btn fab elevation="0" width="50px" height="50px" color="yellow darken-2" style="position: fixed; bottom: 23%">
+          <v-icon color="rgb(60,60,60)" size="22">mdi-cart</v-icon>
+        </v-btn>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
 <script>
 import CommentComponent from "@/views/book/bookComponents/CommentComponent";
+import Recommend from "@/views/book/bookComponents/Recommend"
 export default {
   name: "BookDetailComponent",
-  components: {CommentComponent},
+  components: {Recommend, CommentComponent},
   data: function (){
     return{
       //책 정보
@@ -338,7 +364,7 @@ export default {
       let div = document.getElementById(data)
       let abTop = window.pageYOffset + div.getBoundingClientRect().top;
       this.$vuetify.goTo(abTop)
-    }
+    },
   },
   mounted() {
     this.getBookDetail()
@@ -376,12 +402,20 @@ export default {
   font-size: 13px;
 }
 .nav-menu{
-  display: block;
+  position: fixed;
+  right: 6%;
+  top:70px;
+}
+.nav-mini-btn{
+  display: none;
 }
 
 
 @media screen and (max-width: 960px){
   .title-br{
+    display: block;
+  }
+  .nav-mini-btn{
     display: block;
   }
   .nav-menu{

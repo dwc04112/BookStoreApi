@@ -60,4 +60,9 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     List<BookMainDetailInterface> getMainBook();
 
     List<BookMainDTO> findBookByBookTagStartingWithAndIsDel(String Tag, String isDel);
+
+
+    @Query(value = "select b.bid, b.bookThumb ,b.bookTitle ,b.bookKeyword, b.bookAuthor, b.bookPublisher FROM Book b where (b.bookKeyword regexp :keyword) and not b.bid=:bid and b.isDel=:isDel order by rand() limit 4", nativeQuery = true)
+    List<BookMainInterface> getRecommendRand(@Param("keyword") String keyword, @Param("bid") Long bid, @Param("isDel") String isDel);
+
 }

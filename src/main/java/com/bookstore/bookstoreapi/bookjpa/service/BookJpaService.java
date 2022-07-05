@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +24,7 @@ public class BookJpaService {
 
     final BookRepository bookRepository;
     final MemberRepository memberRepository;
+    final EntityManager em;
 
     // 리스트 가져오기 by admin
     public List<BookDataDTO> getBookByAdmin() {
@@ -160,4 +162,15 @@ public class BookJpaService {
         return bookRepository.findBookByBookTagStartingWithAndIsDel(bookTag, "N");
     }
 
+    //
+    // 수정해야함
+    //
+    public List<BookMainInterface> getRecommend(Long bid) {
+        Optional<Book> bookData = bookRepository.findBookByBid(bid);
+        Book data = bookData.orElseThrow(() -> new RuntimeException("no data"));
+
+
+        String keyword = data.getBookKeyword().replace(',','|');
+        return bookRepository.getRecommendRand(keyword, bid, "N");
+    }
 }

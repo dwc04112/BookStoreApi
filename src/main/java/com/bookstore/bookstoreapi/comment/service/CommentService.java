@@ -96,6 +96,7 @@ public class CommentService {
                 .bid(commentDTO.getBid())
                 .ratings(commentDTO.getRatings())
                 .nickName(commentDTO.getNickName())
+                .profile(commentDTO.getProfile())
                 .content(commentDTO.getContent())
                 .popularity(0)
                 .commentDate(LocalDate.now())

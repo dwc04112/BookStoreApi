@@ -149,7 +149,14 @@
                   <v-avatar
                     size="40"
                     color="grey"
-                  ></v-avatar>
+                  >
+                    <img
+                        style="object-fit: cover"
+                        v-show="data.profile !== void 0"
+                        :src=data.profile
+                        alt=""
+                    >
+                  </v-avatar>
                   <span class="pl-3 name-text">{{data.nickName}}</span>
                 </v-row>
 
@@ -283,6 +290,7 @@ export default {
         data.bid = this.selectBid;
         data.mid = this.$store.state.member.userData.mid;
         data.nickName = this.$store.state.member.userData.nickName;
+        data.profile = this.$store.state.member.userData.profilePicture;
         data.ratings = this.writeRating;
         data.content = this.writeComment;
         this.$axios.post("comment/write", JSON.stringify(data), {

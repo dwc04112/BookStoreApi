@@ -86,10 +86,11 @@
 
 
 
-    <v-row>
+    <v-row class="pa-0">
       <v-footer
           dark
           padless
+          class="page"
       >
         <v-card
             flat

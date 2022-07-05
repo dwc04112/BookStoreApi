@@ -26,6 +26,7 @@
       </v-col>
     </v-row>
 
+
     <v-row style="background-color: rgb(25,25,25)">
       <!--List Card-->
       <v-col class="no-gutters">
@@ -54,6 +55,7 @@
           </div>
         </div>
       </v-col>
+
       <div style="height: 1000px"></div>
 
 
@@ -61,7 +63,7 @@
       <transition name="sub-slide" mode="in-out" >
         <v-col
             class="pa-0"
-            cols="5" sm="4" md="4"
+            cols="5" sm="4" md="3"
             color="grey lighten-3"
             v-show="show.data"
         >
@@ -111,60 +113,91 @@
                 </div>
 
                 <v-divider></v-divider>
-                <v-card-actions>
-                  <v-tooltip top color="green darken-2">
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-btn
-                          v-bind="attrs"
-                          v-on="on"
-                          icon
-                          @click.stop="addCart(selectBook.bid)"
-                      >
-                        <v-icon color="green darken-2">
-                          mdi-cart
-                        </v-icon>
-                      </v-btn>
-                    </template>
-                    <span>장바구니 추가</span>
-                  </v-tooltip>
+                <v-card-actions class="mt-2">
+                  <v-col>
+                    <v-tooltip top color="green darken-2">
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-btn
+                            class="ma-2"
+                            v-bind="attrs"
+                            v-on="on"
+                            elevation="2"
+                            fab color="rgb(50,50,50)"
+                            @click.stop="addCart(selectBook.bid)"
+                        >
+                          <v-icon color="green darken-2" large>
+                            mdi-cart
+                          </v-icon>
+                        </v-btn>
+                      </template>
+                      <span>장바구니 추가</span>
+                    </v-tooltip>
 
-                  <v-tooltip top color="pink">
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-btn
-                          v-bind="attrs"
-                          v-on="on"
-                          icon
-                          @click.stop="setComponentData(selectBook.bid)"
-                      >
-                        <v-icon color="pink">
-                          mdi-heart
-                        </v-icon>
-                      </v-btn>
-                    </template>
-                    <span>위시리스트에 추가</span>
-                  </v-tooltip>
+                    <v-tooltip top color="pink">
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-btn
+                            class="ma-2"
+                            v-bind="attrs"
+                            v-on="on"
+                            elevation="2"
+                            fab color="rgb(50,50,50)"
+                            @click.stop="setComponentData(selectBook.bid)"
+                        >
+                          <v-icon color="pink" large>
+                            mdi-heart
+                          </v-icon>
+                        </v-btn>
+                      </template>
+                      <span>위시리스트에 추가</span>
+                    </v-tooltip>
 
-                  <v-tooltip top color="yellow darken-2">
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-btn
-                          v-bind="attrs"
-                          v-on="on"
-                          icon
-                          @click.stop="detailView(selectBook.bid)"
-                      >
-                        <v-icon color="yellow darken-2">
-                          mdi-book-open-variant
-                        </v-icon>
-                      </v-btn>
-                    </template>
-                    <span>책 보러가기</span>
-                  </v-tooltip>
+                    <v-tooltip top color="yellow darken-2 black--text">
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-btn
+                            class="ma-2"
+                            v-bind="attrs"
+                            v-on="on"
+                            elevation="2"
+                            fab color="rgb(50,50,50)"
+                            @click.stop="detailView(selectBook.bid)"
+                        >
+                          <v-icon color="yellow darken-2" large>
+                            mdi-book-open-variant
+                          </v-icon>
+                        </v-btn>
+                      </template>
+                      <span>책 보러가기</span>
+                    </v-tooltip>
+                  </v-col>
                 </v-card-actions>
               </div>
             </div>
           </div>
         </v-col>
       </transition>
+
+      <!--장바구니 msg-->
+      <v-dialog
+          max-width="400"
+          v-model="cartDialog"
+          content-class="my-custom-dialog"
+      >
+        <v-card rounded color="rgb(55,55,55)" tile dark>
+          <div class="pa-4 pb-6 pt-6" style="font-weight: lighter; font-size: 15px">{{cartDialogMsg}}</div>
+          <v-card-actions class="justify-end" style="background-color: rgb(50,50,50)">
+            <v-btn
+                rounded class="white--text"
+                @click="cartDialog = false"
+            >확인</v-btn>
+            <v-spacer/>
+            <v-btn
+                rounded class="white--text"
+                color="teal accent-6"
+                @click="$router.push({path:'/my/cart'})"
+            >장바구니로 이동</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
 
 
       <!--      컴포넌트 호출      -->
@@ -174,11 +207,11 @@
             v-model="dialog"
             max-width="600"
         >
-          <v-card color="#FDF6EC">
+          <v-card color="rgb(50,50,50)" dark>
             <v-toolbar
                 elevation="0"
                 class="white--text"
-                color="rgb(33,33,33)"
+                color="rgb(40,40,40)"
             >
               <v-card-title>나의 위시리스트</v-card-title>
             </v-toolbar>
@@ -200,22 +233,21 @@
                 </ul>
               </div>
             </v-card-text>
-            <v-divider></v-divider>
-            <v-card-actions>
-              <v-spacer></v-spacer>
+            <v-card-actions style="background-color: rgb(40,40,40)">
               <v-btn
-                  color=rgb(33,33,33)
-                  text
-                  @click="pushInfoWishList(3)"
-              >
-                <h4>내 보관함으로 이동</h4>
-              </v-btn>
-              <v-btn
-                  color=rgb(33,33,33)
-                  text
+                  class="white--text"
+                  rounded
                   @click="dialog = false"
               >
                 Close
+              </v-btn>
+              <v-spacer></v-spacer>
+              <v-btn
+                  color="teal accent-5" class="white--text"
+                  rounded
+                  @click="$router.push({path:'/my/wish'})"
+              >
+                <h4>내 보관함으로 이동</h4>
               </v-btn>
             </v-card-actions>
           </v-card>
@@ -233,12 +265,17 @@ export default {
   name: "About",
   components: {SearchMenu},
   data: () => ({
+
+    drawer : false,
+    mini: true,
     //메인 데이터
     bookDatas : [],         //메인 데이터 (타이틀로 검색)
     bookDataByKeyword : [], //키워드로 검색된 데이터
     searchByChip : [],      //chip
     selectTag : '',         //tag
 
+    cartDialog:false,
+    cartDialogMsg : '',
 
     //선택된 책 보기
     show : {data:false , bid: null},
@@ -311,8 +348,8 @@ export default {
     //Select Book Info
     openInfo(book){
       if(this.show.data === true){  //책 정보가 열려있을때
-        if(this.show.bid === book.bid){ //같은 책이라면 정보 닫기
-          this.show.data= !this.show.data
+         if(this.show.bid === book.bid){ //같은 책이라면 정보 닫기
+         this.show.data= !this.show.data
         }
       }else{  //닫혀있으면 열기
         this.show.data= !this.show.data
@@ -400,21 +437,18 @@ export default {
       this.wishTab = data
     },
 
-    //마이페이지 위시리스트 수정으로 넘어가기
-    pushInfoWishList(pushNum){
-      // num 0 ~ 3
-      console.log("push num : "+ pushNum)
-      this.$router.push({name: 'InfoNavi', params: {AboutTab: pushNum}})
-    },
 
     //cart에 담기
     addCart(bid){
       this.$axios.get("cart/add/"+bid
        ).then(response=>{
         console.log(response.data.message);
-        alert("성공적으로 장바구니에 추가했습니다")
+        this.cartDialogMsg = "성공적으로 장바구니에 추가했습니다"
+        this.cartDialog = true
       }).catch(error =>{
         console.log(error.response);
+        this.cartDialogMsg = "장바구니 추가에 실패했습니다"
+        this.cartDialog = true
       })
     },
 

@@ -19,7 +19,7 @@
         <v-card
             elevation="0"
             v-click-outside="onClickOutside"
-            min-width="30vw"
+            min-width="55vw"
             max-width="70vw"
         >
           <v-text-field
@@ -102,7 +102,11 @@
                 color="brown"
                 size="32"
             >
-              <img :src="$store.state.member.userData.profilePicture" v-show="$store.state.member.userData.profilePicture !== void 0" alt="">
+              <img
+                  style="object-fit: cover"
+                  :src="$store.state.member.userData.profilePicture"
+                  v-show="$store.state.member.userData.profilePicture !== void 0"
+                  alt="">
             </v-avatar>
           </v-btn>
         </template>
@@ -113,6 +117,7 @@
                   size="60"
               >
                 <img
+                  style="object-fit: cover"
                   v-show="$store.state.member.userData.profilePicture !== void 0"
                   :src="$store.state.member.userData.profilePicture"
                   alt=""
