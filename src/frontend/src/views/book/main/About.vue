@@ -1,7 +1,7 @@
 <template>
-  <v-container fluid class="pa-0 ma-0" style="background-color: rgb(25,25,25)">
+  <v-container fluid class="pa-0" style="background-color: rgb(25,25,25)" id="screen">
 
-    <v-row class="justify-center  align-center" style="background-color: rgb(40,40,40);">
+    <v-row class="justify-center pa-0 align-center" style="background-color: rgb(40,40,40);">
       <v-col cols="10" md="8" class="pa-0 pt-2 pb-1">
           <v-chip-group
               class="top-chip-group"
@@ -19,7 +19,6 @@
                 text-color="rgb(240,240,240)"
                 class="top-chip"
                 active-class="white"
-                @click="byCategory(data.num)"
             ><span>{{data.main}}</span>
             </v-chip>
           </v-chip-group>
@@ -29,8 +28,8 @@
 
     <v-row style="background-color: rgb(25,25,25)">
       <!--List Card-->
-      <v-col class="no-gutters">
-        <div style="text-align: center;" >
+      <v-col class="no-gutters ml-md-4  ml-sm-4 ml-16">
+        <div style="text-align: start;">
           <div
               style="display: inline-block;"
               class="pa-3"
@@ -38,7 +37,7 @@
               :key="index"
           >
             <v-card
-                style="height: 250px; overflow: hidden;"
+                style="height: 225px; overflow: hidden;"
                 elevation="4"
                 min-width="120px"
                 tile
@@ -49,7 +48,7 @@
                   class="book-thumb"
                   height="100%"
                   loading="lazy"
-                  @click.stop="openInfo(book)"
+                  @click="widthSize(book)"
               />
             </v-card>
           </div>
@@ -60,19 +59,18 @@
 
 
       <!--Transition Select-->
-      <transition name="sub-slide" mode="in-out" >
+      <transition name="sub-slide" mode="in-out" class="detail-hide">
         <v-col
-            class="pa-0"
-            cols="5" sm="4" md="3"
+            class="pa-0 detail-hide"
+            cols="7" sm="5" md="4"
             color="grey lighten-3"
             v-show="show.data"
         >
           <div
-              class="select-book"
+              class="select-book pr-12 pr-md-0"
           >
             <div class="inner-select-book">
-              <v-card-actions class="pr-5 pt-5">
-                <v-spacer></v-spacer>
+              <v-card-actions class="pt-5 pl-5">
                 <v-btn
                     icon
                     color="rgb(220,220,220)"
@@ -345,6 +343,20 @@ export default {
           })
     },
 
+    //화면 크기에 따라 다른 method
+    widthSize(book){
+      let x = window.innerWidth
+
+      if(x>=600){
+        this.openInfo(book)
+      }else{
+        this.detailView(book.bid)
+      }
+    },
+    //책 보러가기
+    detailView(bid){
+      this.$router.push({name: 'DetailView' ,query: {bid}});
+    },
     //Select Book Info
     openInfo(book){
       if(this.show.data === true){  //책 정보가 열려있을때
@@ -358,6 +370,7 @@ export default {
       this.selectBook=book
       this.selectKeywords = book.bookKeyword.split(',')
     },
+
 
 
     //키워드로 검색
@@ -403,21 +416,6 @@ export default {
       }
     },
 
-    //상단 Chip 추가 & 삭제
-    insertChip(data){
-      if (this.searchByChip.indexOf(data) !== -1){
-        this.searchByChip.splice(this.searchByChip.indexOf(data),1)
-      }else {
-        this.searchByChip.push(data)
-      }
-    },
-    removeChip(index){
-      console.log(index)
-      this.searchByChip.splice(index,1)
-    },
-
-
-
 
     /*
     * 컴포넌트 관련 메소드
@@ -452,11 +450,6 @@ export default {
       })
     },
 
-
-    //책 보러가기
-    detailView(bid){
-      this.$router.push({name: 'DetailView' ,query: {bid}});
-    },
     // == 컴포넌트관련 끝 ==
 
 
@@ -507,7 +500,7 @@ export default {
 }
 .inner-select-book{
   position: sticky;
-  top: 55px;
+  top: 10px;
 }
 .select-book-img{
   width: 200px;
@@ -519,21 +512,25 @@ export default {
 }
 .sub-slide-enter-active,
 .sub-slide-leave-active {
-  transition: all 0.3s ease-out;
+  transition: all 0.4s ease-out;
 }
 .sub-slide-leave-to {
   transform: translateX(400px);
   opacity: 1;
 }
-
-@media screen and (max-width: 768px){
+.detail-hide{
+  display: block;
+}
+@media screen and (max-width: 600px){
   /* 최상단 검색 */
 
   .select-book-img{
     width: 130px;
     margin-right: 13px;
   }
-
+  .detail-hide{
+    display: none;
+  }
 }
 
 /* 컴포넌트  */

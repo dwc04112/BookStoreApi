@@ -29,8 +29,8 @@
 
     <v-row style="background-color: rgb(20,20,20)">
       <!--List Card-->
-      <v-col class="no-gutters">
-        <div style="text-align: center;" >
+      <v-col class="no-gutters ml-md-4">
+        <div style="text-align: start;">
           <div
               style="display: inline-block;"
               class="pa-3"
@@ -38,7 +38,7 @@
               :key="index"
           >
             <v-card
-                style="height: 250px; overflow: hidden;"
+                style="height: 225px; overflow: hidden;"
                 elevation="4"
                 min-width="120px"
                 tile
@@ -49,7 +49,7 @@
                   class="book-thumb"
                   height="100%"
                   loading="lazy"
-                  @click.stop="openInfo(book)"
+                  @click="widthSize(book)"
               />
             </v-card>
           </div>
@@ -62,7 +62,7 @@
       <transition name="sub-slide" mode="in-out" >
         <v-col
             class="pa-0 ma-0"
-            cols="5" sm="4" md="4"
+            cols="7" sm="5" md="4"
             color="grey lighten-3"
             v-show="show.data"
         >
@@ -70,8 +70,7 @@
               class="select-book"
           >
             <div class="inner-select-book">
-              <v-card-actions class="pr-5 pt-5">
-                <v-spacer></v-spacer>
+              <v-card-actions class="pt-5 pl-5">
                 <v-btn
                     icon
                     color="rgb(220,220,220)"
@@ -471,7 +470,21 @@ export default {
     },
 
 
-    //책 열고닫기 / Select Book Info
+    //화면 크기에 따라 다른 method
+    widthSize(book){
+      let x = window.innerWidth
+
+      if(x>=600){
+        this.openInfo(book)
+      }else{
+        this.detailView(book.bid)
+      }
+    },
+    //책 보러가기
+    detailView(bid){
+      this.$router.push({name: 'DetailView' ,query: {bid}});
+    },
+    //Select Book Info
     openInfo(book){
       if(this.show.data === true){  //책 정보가 열려있을때
         if(this.show.bid === book.bid){ //같은 책이라면 정보 닫기
@@ -520,10 +533,6 @@ export default {
       })
     },
 
-    //책 보러가기
-    detailView(bid){
-      this.$router.push({name: 'DetailView' ,query: {bid}});
-    },
     // == 컴포넌트관련 끝 ==
 
 
@@ -580,7 +589,21 @@ export default {
   width: 200px;
 }
 
-@media screen and (max-width: 768px){
+.sub-slide-enter{
+  transform: translateX(400px);
+  opacity: 1;
+}
+.sub-slide-enter-active,
+.sub-slide-leave-active {
+  transition: all 0.4s ease-out;
+}
+.sub-slide-leave-to {
+  transform: translateX(400px);
+  opacity: 1;
+}
+
+
+@media screen and (max-width: 600px){
 
 
   .select-book-img{

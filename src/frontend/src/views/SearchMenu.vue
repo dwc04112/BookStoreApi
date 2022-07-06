@@ -4,23 +4,18 @@
         dark
         elevation="0"
         color="rgb(40,40,40)"
-        dense
-        class="justify-center d-flex"
+        dense app
+        class="justify-center"
     >
-
-        <v-btn @click="homeLink" icon>
+        <v-spacer/>
+        <v-btn @click="homeLink" class="top-icon" icon>
           <v-icon>mdi-home</v-icon>
-        </v-btn>
-
-        <v-btn class="top-menu-btn" @click="drawMenu" icon>
-          <font-awesome-icon style="font-size: 24px" icon="fa-solid fa-2x fa-bars"/>
         </v-btn>
 
         <v-card
             elevation="0"
             v-click-outside="onClickOutside"
-            min-width="55vw"
-            max-width="70vw"
+            class="main-search"
         >
           <v-text-field
               class="main-input"
@@ -76,10 +71,7 @@
         </v-btn>
 
 
-      <v-spacer></v-spacer>
-      <v-btn class="top-icon red--text text--darken-2" icon @click="myLink('/wish')">
-        <v-icon>mdi-heart</v-icon>
-      </v-btn>
+      <v-spacer class="top-icon"></v-spacer>
 
       <v-btn class="search-icon teal--text accent-6"  large icon v-show="!loginCheck" @click="toLogin()">
         <v-icon>mdi-account-circle</v-icon>
@@ -177,7 +169,7 @@
             <v-btn
                 rounded class="white--text"
                 color="teal accent-6"
-                @click="$router.push({path:'/login'})"
+                @click="$router.push({path:'/login'}).then(()=> {dialog=false})"
             >Login</v-btn>
           </v-card-actions>
         </v-card>
@@ -290,10 +282,6 @@ export default {
         this.$router.push({path: "/"})
       }
     },
-    myLink(data){
-      this.$router.push({path: "../my"+data})
-    },
-
 
     logout(){
       this.$store.dispatch('logout').then(()=>{
@@ -344,17 +332,19 @@ export default {
   height: 90px;
   overflow: hidden;
 }
-.top-menu-btn{
-  display: none;
-  color: rgb(240,240,240);
+
+
+.main-search{
+  width: 30vw;
 }
 @media screen and (max-width: 768px){
   /* 최상단 검색 */
+  .main-search{
+    width: 57vw;
+  }
+
   .top-icon{
     display: none;
-  }
-  .top-menu-btn{
-    display: block;
   }
 
   .search-list-title{

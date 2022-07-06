@@ -1,8 +1,6 @@
 <template>
-  <v-app>
-    <SearchMenu @moveTabNum="pushLink"></SearchMenu>
-    <div style="height: 40px"></div>
     <v-container fluid style="height: 100%; background-color: rgb(24,24,24)">
+      <div style="height: 40px"></div>
       <v-row class="ma-0 pa-0 justify-center ">
         <v-col cols="12" style="height: 40px"/>
         <v-col cols="12" md="3"></v-col>
@@ -45,7 +43,7 @@
                   </v-img>
                 </v-col>
                 <!--책 이미지 영역 끝-->
-                <v-col cols="9" md="8" class="mt-5 mb-5">
+                <v-col cols="8" class="mt-5 mb-5">
                   <!--책 제목과 저자-->
                   <v-row class="book-text ml-1 ma-0">
                     <span>{{data.bookTitle}}</span>
@@ -55,9 +53,9 @@
                   </v-row>
                 </v-col>
 
-                <v-col cols="3" md="2" class="mt-5 mb-5 pr-4 align-end d-flex flex-column">
+                <v-col cols="4" md="2" class="mt-5 mb-5 pr-4 align-end d-flex flex-column">
                   <span class="book-text">{{data.bookSalePrice}} 원</span>
-                  <span class="book-subtext" style="font-size: 16px">수량 : {{data.bookCount}} 권</span>
+                  <span class="book-subtext" style="font-size: 14px">수량 : {{data.bookCount}} 권</span>
                 </v-col>
 
                 <v-col cols="12" class="pt-6 pb-6">
@@ -78,83 +76,104 @@
             <span class="top-text">배송정보</span>
           </v-row>
 
-          <v-row class="mb-12 pa-md-10 pa-3 justify-center"  style="background-color: rgb(40,40,40)">
-            <v-col cols="12" md="11">
+          <v-row class="mb-12 justify-center" style="background-color: rgb(40,40,40)">
+            <v-col cols="2" class="align-center d-flex"><span class="user-text" style="font-weight: bold">나의 주소록</span></v-col>
+            <v-col cols="10" class="pa-0">
+              <v-chip-group mandatory
+                            class="pa-2"
+                            active-class="primary darken-4"
+                            dark>
+                <v-chip @click="clearAddrData">
+                  직접입력
+                </v-chip>
 
-              <v-row  no-gutters>
-                <v-col cols="12" md="2" class="pt-2 pb-2">
-                  <span class="user-text">이름</span>
-                </v-col>
-                <v-col cols="8" md="3">
-                  <v-text-field
-                      outlined dense dark
-                      class="pt-1 user-text"
-                      v-model="order.buyer_name"
-                  ></v-text-field>
-                </v-col>
-              </v-row>
+                <v-chip
+                    v-for="(data, index) in myAddrBook"
+                    :key="index" @click="setAddrData(data)"
+                >
+                  {{data.addrName}}
+                </v-chip>
+              </v-chip-group>
+            </v-col>
 
-              <v-row no-gutters>
-                <v-col cols="12" md="2" class="pt-2 pb-2">
-                  <span class="user-text">핸드폰</span>
-                </v-col>
 
-                <v-select
-                    v-model="phoneNum1"
-                    :items="phoneItems"
-                    dense
-                    dark
-                    style="max-width: 85px"
-                    outlined
-                ></v-select>
-                <v-text-field
-                    outlined dense dark
-                    class="user-text ml-2"
-                    style="max-width: 85px"
-                    v-model="phoneNum2"
-                ></v-text-field>
-                <v-text-field
-                    outlined dense dark
-                    class="user-text ml-2"
-                    style="max-width: 85px"
-                    v-model="phoneNum3"
-                ></v-text-field>
-              </v-row>
+            <v-col cols="12" class="pa-0">
+              <v-simple-table dark>
+                <tbody>
+                  <tr style="height: 80px">
+                    <td class="name-td"><span style="font-size: 16px">이름</span></td>
+                    <td class="content-td">
+                      <v-col>
+                        <v-row>
+                          <v-text-field
+                              outlined dense dark
+                              hide-details
+                              class="pt-1 user-text"
+                              v-model="order.buyer_name"
+                          ></v-text-field>
+                        </v-row>
+                      </v-col>
+                    </td>
+                  </tr>
 
-              <v-row no-gutters>
-                <v-col cols="12" md="2" class="pt-2 pb-2">
-                  <span class="user-text">주소</span>
-                </v-col>
-                <v-col cols="6" md="3">
-                  <v-text-field
-                      outlined dense dark
-                      class=" user-text"
-                      v-model="order.buyer_postcode"
-                  ></v-text-field>
-                </v-col>
-                <v-col cols="2" md="2">
-                  <v-btn color="yellow darken-2" height="40px" class="ml-2" @click="getPostcode()">
-                    <span style="color: rgb(40,40,40); font-weight: bold">우편번호</span>
-                  </v-btn>
-                </v-col>
-              </v-row>
+                  <tr style="height: 80px">
+                    <td class="name-td"><span style="font-size: 16px">핸드폰</span></td>
+                    <td class="content-td">
+                      <v-row>
+                        <v-col>
+                          <v-text-field
+                              outlined dense dark text
+                              hide-details
+                              @input="replaceNum(num)"
+                              class="text-fields white--text justify-start"
+                              :placeholder="num"
+                              v-model="num"
+                          >
+                          </v-text-field>
+                        </v-col>
+                      </v-row>
+                    </td>
+                  </tr>
 
-              <v-row no-gutters>
-                <v-col cols="12" md="8" offset-md="2">
-                  <v-text-field
-                      outlined dense dark
-                      class=" user-text"
-                      v-model="order.buyer_addr"
-                  ></v-text-field>
-                  <v-text-field
-                      outlined dense dark
-                      class=" user-text"
-                      v-model="order.buyer_detail_addr"
-                      :hint="order.buyer_extra_addr"
-                  ></v-text-field>
-                </v-col>
-              </v-row>
+                  <tr style="height: 80px">
+                    <td class="name-td"><span style="font-size: 16px">주소</span></td>
+                    <td class="content-td">
+                      <v-row no-gutters class="pa-0 mt-6">
 
+                        <v-col cols="6" md="3">
+                          <v-text-field
+                              outlined dense dark
+                              hide-details
+                              class=" user-text"
+                              v-model="order.buyer_postcode"
+                          ></v-text-field>
+                        </v-col>
+                        <v-col cols="2" md="2">
+                          <v-btn color="yellow darken-2" height="40px" class="ml-2" @click="getPostcode()">
+                            <span style="color: rgb(40,40,40); font-weight: bold">우편번호</span>
+                          </v-btn>
+                        </v-col>
+
+                        <v-col cols="12">
+                          <v-text-field
+                              outlined dense dark
+                              class=" user-text mt-4"
+                              hide-details
+                              v-model="order.buyer_addr"
+                          ></v-text-field>
+                          <v-text-field
+                              outlined dense dark
+                              class="user-text mt-4"
+                              v-model="order.buyer_detail_addr"
+                              :hint="order.buyer_extra_addr"
+                          ></v-text-field>
+                        </v-col>
+
+                      </v-row>
+                    </td>
+                  </tr>
+                </tbody>
+              </v-simple-table>
             </v-col>
           </v-row>
         </v-col>
@@ -246,14 +265,11 @@
       <v-row style="height: 80px"></v-row>
 
     </v-container>
-  </v-app>
 </template>
 
 <script>
-import SearchMenu from "@/views/SearchMenu";
 const { IMP } = window;
 export default {
-  components: {SearchMenu},
   name: "Order",
   data: function (){
     return{
@@ -261,6 +277,7 @@ export default {
   //    cartArr : this.$route.query.cartArr,
    //   orderData : this.$store.state.toOrderStore.bookList,
       bookData : [],
+      myAddrBook : [],
       orderItems:[
         {text: '상품금액', data: 0, },
         {text: '배송금액', data: 0, },
@@ -271,18 +288,14 @@ export default {
         {text:'카카오페이',icon:'mdi-checkbox-multiple-marked-circle',color:'yellow--text text--darken-2',size:'26px', value:'kakaopay'},
         {text:'그 외 결제수단',icon:'mdi-cart',color:'blue--text text--darken-2',size:'24px', value:'html5_inicis'},
       ],
-      phoneItems : ['010','011','016','017','018','019'],
-      phoneNum1 : '010',
-      phoneNum2 : '',
-      phoneNum3 : '',
-
+      num : '',
       //주문관련
       impCode : 'imp85667087',
       orderCheck : false,
       order: {
         name : '',
         amount : 0,
-        buyer_email : 'dwc04112@gmail.com',
+        buyer_email : this.$store.state.member.loginData.email,
         buyer_name : this.$store.state.member.userData.fullName,
         buyer_postcode: '',
         buyer_addr: '',
@@ -330,7 +343,34 @@ export default {
             console.log(error.response);
           })
     },
+    getAddrBook(){
+      this.$axios.get('addr/')
+          .then(response=>{
+            console.log(response.data)
+            this.myAddrBook = response.data
+          })
+          .catch(error =>{
+            console.log(error.response);
+          })
+    },
 
+    replaceNum(num){
+      this.num= num.replace(/[^0-9]/g, '')
+          .replace(/^(\d{2,3})(\d{3,4})(\d{4})$/, `$1-$2-$3`);
+    },
+
+    setAddrData(data){
+        this.num = data.phoneNum;
+        this.order.buyer_postcode = data.postcode;
+        this.order.buyer_addr = data.addr;
+        this.order.buyer_detail_addr = data.detailAddr;
+    },
+    clearAddrData(){
+      this.num = '';
+      this.order.buyer_postcode = '';
+      this.order.buyer_addr ='';
+      this.order.buyer_detail_addr ='';
+    },
 
     //
     //카카오 우편번호 api
@@ -382,7 +422,7 @@ export default {
       let nameTest = /^[가-힣a-zA-Z]+$/.test(this.order.buyer_name)
       let nameCheck = false
       let addrCheck = false
-      let phoneCheck = false
+      let phoneCheck =  /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/.test(this.num)
 
       if(!nameTest){
         alert("이름을 확인해주세요")
@@ -392,12 +432,9 @@ export default {
         nameCheck = true;
       }
 
-      if(this.phoneNum2.length<3 || this.phoneNum3.length<4){
-        alert("연락처를 확인해주세요")
+      if(!phoneCheck){
+        alert("이름을 확인해주세요")
         phoneCheck = false;
-        return false;
-      }else{
-        phoneCheck = true;
       }
 
       if(this.order.buyer_postcode.length!==5){
@@ -433,7 +470,7 @@ export default {
       data.postcode = this.order.buyer_postcode;                 //우편번호
       data.addr = this.order.buyer_addr;                          //주소
       data.detailAddr = this.order.buyer_detail_addr;          //상세주소
-      data.phoneNum = this.phoneNum1 + this.phoneNum2 + this.phoneNum3        //구매자 번호
+      data.phoneNum = this.num        //구매자 번호
 
       this.$axios.post("order/",JSON.stringify(data),{
         headers: {
@@ -459,7 +496,7 @@ export default {
         amount: this.order.amount,
         buyer_email: this.order.buyer_email,
         buyer_name: this.order.buyer_name,
-        buyer_tel: this.phoneNum1 +'-'+ this.phoneNum2 +'-'+ this.phoneNum3,
+        buyer_tel: this.num,
         buyer_addr: this.order.buyer_addr,
         custom_data : this.order.buyer_detail_addr,
         buyer_postcode: this.order.buyer_postcode
@@ -505,13 +542,14 @@ export default {
   },
   mounted() {
     this.getBookInfo();
+    this.getAddrBook();
     window.scrollTo(0, 0);
   }
 }
 
 </script>
 
-<style scoped>
+<style lang="scss">
 .nav-btn{
   display: none;
 }
@@ -547,7 +585,17 @@ export default {
   font-size: 13px;
 }
 
-
+.name-td{
+  width: 35%;
+}
+.content-td{
+  background-color: rgb(35,35,35);
+}
+tbody {
+  tr:hover {
+    background-color: transparent !important;
+  }
+}
 
 @media screen and (max-width: 960px){
   .nav-btn{

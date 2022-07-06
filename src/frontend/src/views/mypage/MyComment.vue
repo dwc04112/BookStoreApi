@@ -1,6 +1,5 @@
 <template>
   <v-container fluid class="align-center" >
-
     <v-row>
       <v-col cols=12 md="3">
         <v-card color="transparent" class="justify-center d-flex align-center flex-column" tile elevation="0">
@@ -117,7 +116,7 @@
               <!--책 정보 & 댓글 영역-->
               <v-col cols="12" md="9" class="pa-5 mt-5 mb-5">
                 <!--삭제 버튼 영역-->
-                <v-row class="mr-3">
+                <v-row class="mr-md-3 mb-6 mb-md-1">
                   <v-spacer></v-spacer>
                   <v-btn class="mr-3" small outlined color="#BDBDBD" disabled rounded dark>
                     <v-icon size="20">mdi-heart</v-icon>

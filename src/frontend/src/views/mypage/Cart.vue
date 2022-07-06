@@ -351,8 +351,7 @@ export default {
           bookCount: e.bookCount
         }
       })
-      this.$store.dispatch('getOrderByCart',cartArr);
-      this.$router.push({name: 'Order'});
+      this.$store.dispatch('getOrderByCart',cartArr).then(()=> this.$router.push({name: 'Order'}) )
     },
 
   },

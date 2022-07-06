@@ -8,6 +8,7 @@ import com.bookstore.bookstoreapi.comment.model.CommentBook;
 import com.bookstore.bookstoreapi.comment.model.CommentBookRepository;
 import com.bookstore.bookstoreapi.comment.model.CommentRepository;
 import com.bookstore.bookstoreapi.common.ApiResponse;
+import com.bookstore.bookstoreapi.member.Member;
 import com.bookstore.bookstoreapi.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -88,6 +89,9 @@ public class CommentService {
 
     //3. 댓글쓰기
     public ApiResponse<Comment> postComment(CommentDTO commentDTO) {
+        Optional<Member> member= memberRepository.findByMid(commentDTO.getMid());
+        Member data = member.orElseThrow(() -> new RuntimeException("postComment : no member data"));
+
         long newCidValue = this.getNewCidValue(commentRepository);
 
         Comment postData = Comment.builder()
@@ -95,8 +99,8 @@ public class CommentService {
                 .mid(commentDTO.getMid())
                 .bid(commentDTO.getBid())
                 .ratings(commentDTO.getRatings())
-                .nickName(commentDTO.getNickName())
-                .profile(commentDTO.getProfile())
+                .nickName(data.getNickName())
+                .profile(data.getProfilePicture())
                 .content(commentDTO.getContent())
                 .popularity(0)
                 .commentDate(LocalDate.now())

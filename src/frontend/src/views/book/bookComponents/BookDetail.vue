@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid class="ma-0 pa-0">
+  <v-container class="ma-0 pa-0">
     <div style="height: 140px"></div>
 
     <!-- 우측 Nav -->
@@ -46,17 +46,29 @@
           <v-row class="pa-0 ma-1 ml-3 pb-8">
             <v-col cols="12" class="nav-menu-main-text" @click="moveScroll('recommend_id')">3. 비슷한 책 추천</v-col>
           </v-row>
-          <v-row
-              class="pa-0 ma-1 ml-4 mb-5"
-              v-for="(item,index) in payItems"
-              :key="index"
-          >
+          <v-row class="pa-0 ma-1 ml-4 mb-5">
             <v-btn icon color="rgb(40,40,40)" height="45px" width="200px"
-                   class="pay-card align-center d-flex flex-column"
-                   @click="pushLink(item.link)"
+                   class="pay-card align-center d-flex flex-column ma-3"
+                   @click="pushLink()"
             >
-              <span class="white--text pl-2" style="font-size: 16px">{{ item.text }}</span>
-              <v-icon right :size="item.size" :color="item.color">{{item.icon}}</v-icon>
+              <span class="white--text pl-2" style="font-size: 16px">바로구매</span>
+              <v-icon right size="26px" color="yellow darken-2">mdi-checkbox-multiple-marked-circle</v-icon>
+            </v-btn>
+
+            <v-btn icon color="rgb(40,40,40)" height="45px" width="200px"
+                   class="pay-card align-center d-flex flex-column ma-3"
+                   @click="addCart()"
+            >
+              <span class="white--text pl-2" style="font-size: 16px">장바구니</span>
+              <v-icon right size="24px" color="green darken-2">mdi-cart</v-icon>
+            </v-btn>
+
+            <v-btn icon color="rgb(40,40,40)" height="45px" width="200px"
+                   class="pay-card align-center d-flex flex-column ma-3"
+                   @click="dialog=true"
+            >
+              <span class="white--text pl-2" style="font-size: 16px">위시리스트</span>
+              <v-icon right size="22px" color="red darken-2">mdi-heart</v-icon>
             </v-btn>
           </v-row>
       </v-col>
@@ -263,22 +275,107 @@
 
     <v-row class="nav-mini-btn" style="position:absolute; right: 8%">
       <v-col cols="12" class="ma-8">
-        <v-btn fab elevation="0" width="50px" height="50px" color="yellow darken-2" style="position: fixed; bottom: 5%" @click="$vuetify.goTo(0)">
+        <v-btn fab elevation="0" width="50px" height="50px" color="yellow darken-2" style="position: fixed; bottom: 8%" @click="$vuetify.goTo(0)">
           <v-icon color="rgb(60,60,60)" size="40">mdi-chevron-up</v-icon>
         </v-btn>
-        <v-btn fab elevation="0" width="50px" height="50px" color="yellow darken-2" style="position: fixed; bottom: 11%"
+
+        <v-btn fab elevation="0" width="50px" height="50px" color="yellow darken-2" style="position: fixed; bottom: 15%"
                @click="pushLink()"
         >
           <v-icon color="rgb(60,60,60)" size="24">mdi-checkbox-multiple-marked-circle</v-icon>
         </v-btn>
-        <v-btn fab elevation="0" width="50px" height="50px" color="yellow darken-2" style="position: fixed; bottom: 17%">
+
+        <v-btn fab elevation="0" width="50px" height="50px" color="yellow darken-2" style="position: fixed; bottom: 22%"
+          @click="dialog=true"
+        >
           <v-icon color="rgb(60,60,60)" size="24">mdi-heart</v-icon>
         </v-btn>
-        <v-btn fab elevation="0" width="50px" height="50px" color="yellow darken-2" style="position: fixed; bottom: 23%">
+
+        <v-btn fab elevation="0" width="50px" height="50px" color="yellow darken-2" style="position: fixed; bottom: 29%"
+               @click="addCart()"
+        >
           <v-icon color="rgb(60,60,60)" size="22">mdi-cart</v-icon>
         </v-btn>
       </v-col>
     </v-row>
+
+
+    <!--장바구니 msg-->
+    <v-dialog
+        max-width="400"
+        v-model="cartDialog"
+        content-class="my-custom-dialog"
+    >
+      <v-card rounded color="rgb(55,55,55)" tile dark>
+        <div class="pa-4 pb-6 pt-6" style="font-weight: lighter; font-size: 15px">{{cartDialogMsg}}</div>
+        <v-card-actions class="justify-end" style="background-color: rgb(50,50,50)">
+          <v-btn
+              rounded class="white--text"
+              @click="cartDialog = false"
+          >확인</v-btn>
+          <v-spacer/>
+          <v-btn
+              rounded class="white--text"
+              color="teal accent-6"
+              @click="$router.push({path:'/my/cart'})"
+          >장바구니로 이동</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <!--      컴포넌트 호출      -->
+    <v-container fluid class="pa-0 ma-0">
+      <v-dialog
+          class="align-center justify-center align-content-center"
+          v-model="dialog"
+          max-width="600"
+      >
+        <v-card color="rgb(50,50,50)" dark>
+          <v-toolbar
+              elevation="0"
+              class="white--text"
+              color="rgb(40,40,40)"
+          >
+            <v-card-title>나의 위시리스트</v-card-title>
+          </v-toolbar>
+          <component
+              v-bind:selectBid="bid"
+              :key="componentKey"
+              :is="component"
+              @childKey="updateComponentKey"
+              @pushTab="setWishTab"
+          ></component>
+
+          <v-card-text>
+            <div>
+              <ul>
+                <li>카테고리 추가는 메인페이지 > 책 등록시 가능합니다</li>
+                <li>새로 만들어진 카테고리는 자동으로 공개처리됩니다.</li>
+                <li>카테고리 관리는 마이페이지 > 위시리스트 > 나의 찜목록 으로 이동하시면 가능합니다.</li>
+              </ul>
+            </div>
+          </v-card-text>
+          <v-card-actions style="background-color: rgb(40,40,40)">
+            <v-btn
+                class="white--text"
+                rounded
+                @click="dialog = false"
+            >
+              Close
+            </v-btn>
+            <v-spacer></v-spacer>
+            <v-btn
+                color="teal accent-5" class="white--text"
+                rounded
+                @click="$router.push({path:'/my/wish'})"
+            >
+              <h4>내 보관함으로 이동</h4>
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </v-container>
+
   </v-container>
 </template>
 
@@ -295,7 +392,13 @@ export default {
       bookData : [],
       keyword : '',
 
-      componentKey: 0, // reload component
+      //컴포넌트 관련 데이터 (Dialog)
+      dialog: false,              //wishlist Dialog
+      componentKey: 0,             // reload component
+      wishTab :'WishList',         // 보여줄 컴포넌트 값
+      cartDialog : false,
+      cartDialogMsg : '',
+
 
       //좌측 리스트
       items: [
@@ -316,15 +419,24 @@ export default {
         {icon: "mdi-calendar", text: 'Publication date'},
       ],
 
-      payItems: [
-        {text:'바로구매',icon:'mdi-checkbox-multiple-marked-circle',color:'yellow darken-2',size:'26px'},
-        {text:'장바구니',icon:'mdi-cart',color:'green darken-2',size:'24px'},
-        {text:'위시리스트',icon:'mdi-heart',color:'red darken-2',size:'22px'}
-      ]
     }
   },
-  methods: {
+  watch:{
+    $route(){
+      this.bid = this.$route.query.bid;
+      this.getBookDetail()
+      this.$vuetify.goTo(0)
+    }
+  },
+  computed:{
+    // 컴포넌트에서 페이지 변경
+    component() {
+      const wishTab = this.wishTab;
+      return () => import(`@/views/wishlist/${wishTab}`);
+    }
+  },
 
+  methods: {
     getBookDetail(){
       this.$axios.get('book/'+this.bid)
           .then(response=>{
@@ -350,6 +462,38 @@ export default {
             console.log(error.response);
           })
     },
+
+    //cart에 담기
+    addCart(){
+      this.$axios.get("cart/add/"+this.bid
+      ).then(response=>{
+        console.log(response.data.message);
+        this.cartDialogMsg = "성공적으로 장바구니에 추가했습니다"
+        this.cartDialog = true
+      }).catch(error =>{
+        console.log(error.response);
+        this.cartDialogMsg = "장바구니 추가에 실패했습니다"
+        this.cartDialog = true
+      })
+    },
+
+    /*
+  * 컴포넌트 관련 메소드
+  *
+  * */
+    setComponentData(){
+      this.dialog =true;
+      this.setWishTab("WishList")   // 디폴트 페이지는 항상 WishList
+      this.updateComponentKey()     // 컴포넌트를 리로드 하기위해
+    },
+
+    updateComponentKey(){
+      this.componentKey +=1        //컴포넌트 리로드
+    },
+    setWishTab(data){
+      this.wishTab = data
+    },
+    //긑
 
     pushLink(){
       let cartArr = []

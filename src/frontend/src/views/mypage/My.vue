@@ -1,8 +1,9 @@
 <template>
-  <v-container fluid class="align-center pa-0">
+  <v-container fluid style="height: 100%; background-color: rgb(20,20,20)">
     <v-row>
-      <v-col cols=12 md="12" class="pa-md-8 mt-12 pt-16">
-        <router-view style="min-height: 100vh"></router-view>
+
+      <v-col cols=11 md="12" offset="1" offset-md="0" offset-sm="0" class="pa-md-8 mt-12 mb-16 pt-16">
+        <router-view class="pa-5" style="min-height: 100vh"></router-view>
       </v-col>
     </v-row>
 

@@ -54,8 +54,8 @@
               rounded
               text
               color="blue"
-              @click="$router.push({path:'/'})"
-          >Home</v-btn>
+              @click="$router.go(0)"
+          >Commit</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>

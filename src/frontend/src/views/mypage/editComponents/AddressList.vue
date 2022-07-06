@@ -43,9 +43,9 @@
               <v-col cols="3" class="align-center justify-center d-flex addr-text">
                 {{data.phoneNum}}
               </v-col>
-              <v-col cols="3" class="align-center justify-center d-flex">
-                <v-btn elevation="0" class="ma-1" color="rgb(170,170,170)" small outlined @click="setEditAddr(data)">수정</v-btn>
-                <v-btn elevation="0" class="ma-1" color="rgb(170,170,170)"  small outlined @click="setDelete(data.addrId)">삭제</v-btn>
+              <v-col cols="3" class="align-center justify-center d-flex flex-column">
+                  <v-btn elevation="0" class="ma-1" color="rgb(170,170,170)" small outlined @click="setEditAddr(data)">수정</v-btn>
+                  <v-btn elevation="0" class="ma-1" color="rgb(170,170,170)"  small outlined @click="setDelete(data.addrId)">삭제</v-btn>
               </v-col>
             </v-row>
           </td>

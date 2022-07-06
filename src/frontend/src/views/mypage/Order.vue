@@ -1,6 +1,5 @@
 <template>
   <v-container fluid>
-
     <v-row>
       <v-col cols=12 md="3">
         <v-card height="100%" class="align-center flex-column d-flex" color="transparent" tile elevation="0">
