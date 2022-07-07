@@ -106,54 +106,62 @@
                 </div>
 
                 <v-divider></v-divider>
-                <v-card-actions>
-                  <v-tooltip top color="green darken-2">
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-btn
-                          v-bind="attrs"
-                          v-on="on"
-                          icon
-                          @click.stop="addCart(selectBook.bid)"
-                      >
-                        <v-icon color="green darken-2">
-                          mdi-cart
-                        </v-icon>
-                      </v-btn>
-                    </template>
-                    <span>장바구니 추가</span>
-                  </v-tooltip>
+                <v-card-actions class="mt-2">
+                  <v-col>
+                    <v-tooltip top color="green darken-2">
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-btn
+                            class="ma-2"
+                            v-bind="attrs"
+                            v-on="on"
+                            elevation="2"
+                            fab color="rgb(50,50,50)"
+                            @click.stop="addCart(selectBook.bid)"
+                        >
+                          <v-icon color="green darken-2" large>
+                            mdi-cart
+                          </v-icon>
+                        </v-btn>
+                      </template>
+                      <span>장바구니 추가</span>
+                    </v-tooltip>
 
-                  <v-tooltip top color="pink">
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-btn
-                          v-bind="attrs"
-                          v-on="on"
-                          icon
-                          @click.stop="setComponentData(selectBook.bid)"
-                      >
-                        <v-icon color="pink">
-                          mdi-heart
-                        </v-icon>
-                      </v-btn>
-                    </template>
-                    <span>위시리스트에 추가</span>
-                  </v-tooltip>
+                    <v-tooltip top color="pink">
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-btn
+                            class="ma-2"
+                            v-bind="attrs"
+                            v-on="on"
+                            elevation="2"
+                            fab color="rgb(50,50,50)"
+                            @click.stop="setComponentData(selectBook.bid)"
+                        >
+                          <v-icon color="pink" large>
+                            mdi-heart
+                          </v-icon>
+                        </v-btn>
+                      </template>
+                      <span>위시리스트에 추가</span>
+                    </v-tooltip>
 
-                  <v-tooltip top color="yellow darken-2">
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-btn
-                          v-bind="attrs"
-                          v-on="on"
-                          icon
-                          @click.stop="detailView(selectBook.bid)"
-                      >
-                        <v-icon color="yellow darken-2">
-                          mdi-book-open-variant
-                        </v-icon>
-                      </v-btn>
-                    </template>
-                    <span>책 보러가기</span>
-                  </v-tooltip>
+                    <v-tooltip top color="yellow darken-2 black--text">
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-btn
+                            class="ma-2"
+                            v-bind="attrs"
+                            v-on="on"
+                            elevation="2"
+                            fab color="rgb(50,50,50)"
+                            @click.stop="detailView(selectBook.bid)"
+                        >
+                          <v-icon color="yellow darken-2" large>
+                            mdi-book-open-variant
+                          </v-icon>
+                        </v-btn>
+                      </template>
+                      <span>책 보러가기</span>
+                    </v-tooltip>
+                  </v-col>
                 </v-card-actions>
               </div>
             </div>
