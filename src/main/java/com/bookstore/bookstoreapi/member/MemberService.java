@@ -62,27 +62,31 @@ public class MemberService {
     @Transactional
     public MemberDTO editProfile(String nickName, MultipartFile multipartFile) {
         Member data = memberData();
-
-        String imgFileName = data.getMid() + "mid" + multipartFile.getOriginalFilename();
-        Path imgFilePath = Paths.get(uploadFolder+imgFileName);
-
         MemberDTO memberDTO = new MemberDTO();
 
-        if(multipartFile.getSize() !=0){
-            try{
-                if(data.getProfilePicture() != null){
-                    File file = new File(uploadFolder+data.getProfilePicture());
-                    file.delete();
+
+        if(multipartFile!=null){
+            String imgFileName = data.getMid() + "mid" + multipartFile.getOriginalFilename();
+            Path imgFilePath = Paths.get(uploadFolder+imgFileName);
+
+
+            if(multipartFile.getSize() !=0){
+                try{
+                    if(data.getProfilePicture() != null){
+                        File file = new File(uploadFolder+data.getProfilePicture());
+                        file.delete();
+                    }
+                    Files.write(imgFilePath, multipartFile.getBytes());
+                } catch (Exception e){
+                    e.printStackTrace();
                 }
-                Files.write(imgFilePath, multipartFile.getBytes());
-            } catch (Exception e){
-                e.printStackTrace();
+                data.updatePicture(imgFileName);
+                Member result = memberRepository.save(data);
+                memberDTO.setProfilePicture(result.getProfilePicture());
+                memberDTO.setNickName(result.getNickName());
             }
-            data.updatePicture(imgFileName);
-            Member result = memberRepository.save(data);
-            memberDTO.setProfilePicture(result.getProfilePicture());
-            memberDTO.setNickName(result.getNickName());
         }
+
 
         if(nickName!=null && nickName.length()>0){
             data.updateNickName(nickName);

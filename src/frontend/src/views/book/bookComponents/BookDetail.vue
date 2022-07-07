@@ -4,7 +4,7 @@
 
     <!-- 우측 Nav -->
     <v-row>
-      <v-col cols="2" md="2" class="ml-8 pt-8 mt-8 nav-menu">
+      <v-col cols="2" md="2" class="ml-8 pt-8 mt-8 detail-menu">
           <v-row class="pa-0 ma-1 ml-3">
             <v-col @click="$vuetify.goTo(0)" cols="12" class="nav-menu-main-text">1. {{bookData.bookTitle}}</v-col>
           </v-row>
@@ -75,7 +75,7 @@
     </v-row>
     <!-- 우측 Nav 끝-->
 
-    <v-row>
+    <v-row class="ma-0">
       <v-col cols="12" style="background-color: rgb(40,40,40)">
         <!-- 이미지와 메인정보 -->
         <v-row>
@@ -260,8 +260,10 @@
       </v-col>
     </v-row>
 
-    <div style="height: 130px"></div>
-    <v-row>
+    <v-row class="ma-0" style="border-right: rgb(40,40,40) solid 1.5px">
+      <v-col cols="12">
+        <div style="height: 130px"></div>
+      </v-col>
       <v-col cols="12">
         <Recommend
             id="recommend_id"
@@ -545,7 +547,7 @@ export default {
   color: rgb(200,200,200);
   font-size: 13px;
 }
-.nav-menu{
+.detail-menu{
   position: fixed;
   right: 6%;
   top:70px;
@@ -562,7 +564,7 @@ export default {
   .nav-mini-btn{
     display: block;
   }
-  .nav-menu{
+  .detail-menu{
     display: none;
   }
 }

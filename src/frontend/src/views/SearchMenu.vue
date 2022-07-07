@@ -73,7 +73,7 @@
 
       <v-spacer class="top-icon"></v-spacer>
 
-      <v-btn class="search-icon teal--text accent-6"  large icon v-show="!loginCheck" @click="toLogin()">
+      <v-btn class="search-icon teal--text accent-6"  large icon v-show="!loginCheck" @click="LoginDialog">
         <v-icon>mdi-account-circle</v-icon>
       </v-btn>
 
@@ -148,7 +148,7 @@
               <v-divider dark class="my-3"></v-divider>
               <v-btn
                   dark rounded text depressed
-                  @click="logout"
+                  @click="logoutAndDialog"
                   class="grey--text text--lighten-2"
               >
                 <v-avatar color="red darken-2" class="mr-2" size="12"></v-avatar>Logout
@@ -169,7 +169,7 @@
             <v-btn
                 rounded class="white--text"
                 color="teal accent-6"
-                @click="$router.push({path:'/login'}).then(()=> {dialog=false})"
+                @click="$router.push({path:'/login'}).then(()=> {dialog=false}).then(()=>$router.go(0))"
             >Login</v-btn>
           </v-card-actions>
         </v-card>
@@ -257,25 +257,9 @@ export default {
       this.$emit('drawMenu', this.hideMenu )
     },
 
-    //마이페이지 위시리스트 수정으로 넘어가기
-    pushInfoWishList(pushNum){
-      // num 0 ~ 3
-      console.log("push num : "+ pushNum)
-      //현재 페이지
-      let nowPage = this.$router.history.current.name
-      //만약 현재 위시리스트 페이지라면?
-      if(nowPage === 'InfoNavi') {
-        this.$emit('moveTabNum',pushNum)
-      }else{
-        this.$router.push({name: 'InfoNavi', params: {AboutTab: pushNum}})
-      }
-    },
 
 
-    toLogin(){
-      this.dialogMsg="로그인 페이지로 이동합니다"
-      this.dialog=true
-    },
+
     homeLink() {
       this.inputMsg = ''
       if(this.$router.history.current.name !== 'About') {
@@ -283,7 +267,17 @@ export default {
       }
     },
 
-    logout(){
+
+
+    LoginDialog(){
+      if(this.$route.path==="/login"){
+        return null
+      }else{
+        this.dialogMsg="로그인 페이지로 이동합니다"
+        this.dialog=true
+      }
+    },
+    logoutAndDialog(){
       this.$store.dispatch('logout').then(()=>{
           this.dialogMsg="로그아웃 성공. 로그인 페이지로 이동합니다"
           this.dialog=true

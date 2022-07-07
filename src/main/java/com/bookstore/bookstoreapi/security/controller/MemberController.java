@@ -15,12 +15,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.time.LocalDate;
 
 
@@ -45,22 +43,18 @@ public class MemberController {
 
     @PostMapping("/api/profile")
     public String saveProfile(@RequestParam("email")String email, @RequestParam("file")MultipartFile multipartFile) {
-        log.debug("회원가입 프로필 : " + email + " file : " + multipartFile.getOriginalFilename());
+        log.debug("member : 회원가입 프로필 : " + email + " file : " + multipartFile.getOriginalFilename());
         return memberService.saveProfile( email.replace("\"", ""), multipartFile);
     }
 
 
 
-    @PostMapping("/signup/doublecheck")
-    public Integer doubleCheck(@RequestBody MemberDTO memberDto){
-        log.debug("닉네임? : "+ memberDto.getNickName());
-        String nick = memberDto.getNickName();
-        return check(nick);
-        //중복확인
-    }
-    public Integer check(String nick){
+    @GetMapping("/signup/doublecheck/{nick}")
+    public Integer doubleCheck(@PathVariable String nick){
+        log.debug("member : 닉네임 중복확인 : "+ nick);
         return memberRepository.getMemberByNickname(nick);
     }
+
 
     //로그인 정보로 정보 받아오기
     @PostMapping("/user/info")
@@ -70,16 +64,24 @@ public class MemberController {
 
     @PostMapping("/edit/info")
     public Member editEmail(@RequestBody MemberDTO memberDto) {
-        log.debug("data : "+memberDto);
+        log.debug("member : edit/info : "+memberDto);
         return memberService.editInfo(memberDto);
     }
 
     @SneakyThrows
     @PostMapping("/user/profile")
     public MemberDTO editProfile(@RequestParam("nick")String nickName, @RequestParam("file")MultipartFile multipartFile) {
-        log.debug("프로필 수정 : " + nickName + " file : " + multipartFile.getOriginalFilename());
+        log.debug("profile ");
+        log.debug("member : 프로필 수정 : " + nickName + " file : " + multipartFile.getOriginalFilename());
         return memberService.editProfile( nickName.replace("\"", ""), multipartFile);
     }
+
+    @PostMapping("/user/nick")
+    public MemberDTO editProfile(@RequestParam("nick")String nickName) {
+        log.debug("member : 닉네임 수정 : " + nickName);
+        return memberService.editProfile( nickName.replace("\"", ""),null);
+    }
+
 
     @PostMapping("/edit/password")
     public ApiResponse<String> editPassword(@RequestBody UpdatePassDto updatePassDto){

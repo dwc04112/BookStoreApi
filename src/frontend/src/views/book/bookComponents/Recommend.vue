@@ -15,24 +15,24 @@
         </v-btn>
       </v-row>
 
-      <v-divider class="mt-3 ml-1 grey darken-2" dark></v-divider>
+      <v-divider class="mt-3 grey darken-2" dark></v-divider>
     </v-col>
 
-    <v-col cols="12" class="pa-0 justify-center d-flex flex-column" >
+    <v-col cols="12" class="pa-0   justify-center d-flex flex-column" >
       <h2 v-show="noBookData" class="mt-8 grey--text text--darken-2 pl-1">비슷한 책을 준비중이에요...</h2>
     </v-col>
 
-    <v-col cols="12" class="pa-0 justify-center align-start d-flex flex-column">
+    <v-col cols="12" class="pa-0 justify-center align-start d-flex">
       <div>
         <div
             style="display: inline-block;"
             v-for="(book, index) in bookData"
             :key="index"
         >
-          <v-card height="220px" class="ma-6" tile @click="detailView(book.bid)">
+          <v-card height="205px" class="ma-7" tile @click="detailView(book.bid)">
             <img :src="book.bookThumb" alt="" class="img-class">
           </v-card>
-          <v-card color="transparent" elevation="0" class="ma-6">
+          <v-card color="transparent" elevation="0" class="ma-7">
             <div class="re-bookTitle">{{ book.bookTitle }}</div>
             <div class="grey--text text--darken-2" style="font-size: 14px">{{ book.bookPublisher }}</div>
           </v-card>

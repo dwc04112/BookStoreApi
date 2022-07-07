@@ -59,7 +59,7 @@
           <v-btn
               rounded class="white--text"
               color="teal accent-6"
-              @click="$router.push({path:'/'})"
+              @click="$router.push({path:'/'}).then(()=>$router.go(0))"
           >Home</v-btn>
         </v-card-actions>
 

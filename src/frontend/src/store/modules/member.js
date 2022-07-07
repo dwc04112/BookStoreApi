@@ -102,16 +102,16 @@ const member = {
                     data.phoneNum = res.data.phoneNum
                     data.profilePicture = res.data.profilePicture
                     data.userRule = res.data.userRule
-                    return new Promise((resolve) => {
-                        setTimeout(() => {
-                            commit('putUserInfo', data);
-                            resolve()
-                        }, 1000)
-                    })
-                })
-                .catch((error) => {
+                }).catch((error) => {
                     console.log(error.res)
+                }).then(()=>{
+                return new Promise((resolve) => {
+                    setTimeout(() => {
+                        commit('putUserInfo', data);
+                        resolve()
+                    }, 1000)
                 })
+            })
         },
 
         updateProfile: function ({commit}, payload) {

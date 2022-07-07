@@ -53,19 +53,32 @@
                     ></v-text-field>
 
                     <v-row class="ma-0">
-                      <v-text-field
-                          v-model="fullName"
-                          :rules="[rules.name, rules.length]"
-                          filled outlined class="pa-2"
-                          label="이름"
-                      ></v-text-field>
-                      <v-text-field
-                          filled outlined
-                          :rules="[rules.length]"
-                          label="닉네임" class="pa-2"
-                          v-model="nickName"
-                      >
-                      </v-text-field>
+                      <v-col cols="6" class="pa-0">
+                        <v-text-field
+                            v-model="fullName"
+                            :rules="[rules.name, rules.length]"
+                            filled outlined class="pa-2"
+                            label="이름"
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="6"  class="pa-0">
+                        <v-text-field
+                            filled outlined
+                            :rules="[rules.length]"
+                            label="닉네임" class="pa-2"
+                            v-model="nickName"
+                        >
+                          <template v-slot:prepend-inner>
+                            <v-icon size="25" class="pr-2" :color=" nickNameCheck ? 'blue lighten-2' : 'red lighten-2'">mdi-check</v-icon>
+                          </template>
+                          <template v-slot:append>
+                            <v-btn color="teal accent-6" style="font-weight: bold; bottom: 6px" class="ml-1" @click="nickCheck(nickName)">
+                              중복확인
+                            </v-btn>
+                          </template>
+                        </v-text-field>
+                      </v-col>
+
                     </v-row>
 
                     <v-text-field
@@ -229,6 +242,22 @@
     </v-row>
 
 
+
+    <!--메시지 창s-->
+    <v-snackbar
+        transition="dialog-bottom-transition"
+        elevation="0"
+        color="white"
+        rounded
+        v-model="snackbar"
+    >
+      <div class="align-center d-flex">
+        <v-icon size="30" class="pr-2" :color=" nickNameCheck ? 'blue' : 'red'"
+        >{{ nickNameCheck ? 'mdi-checkbox-marked-circle' : 'mdi-alert-circle' }}</v-icon>
+        <span class="black--text">{{snackbarMsg}}</span>
+      </div>
+    </v-snackbar>
+
     <v-dialog
         v-model="agreementDialog"
         absolute
@@ -278,7 +307,7 @@
           <v-spacer></v-spacer>
           <v-btn
               rounded class="white--text"
-              @click="$router.push({path:'/login'})"
+              @click="linkToLogin"
           >확인</v-btn>
         </v-card-actions>
       </v-card>
@@ -295,7 +324,7 @@
           <v-btn
               rounded class="white--text"
               color="teal accent-6"
-              @click="$router.push({path:'/login'})"
+              @click="$router.push({path:'/login'}).then(()=>$router.go(0))"
           >Login</v-btn>
         </v-card-actions>
       </v-card>
@@ -325,11 +354,16 @@ export default {
       confirmNewPassword:'',
       //비밀번호 매치
       matchPass: false,
-      //정규식 검사
+      //정규식 검사 비밀번호
       minPass: false,
       numPass: false,
       smallPass: false,
       spacePass: false,
+
+      //중복확인
+      nickNameCheck : false,
+      snackbar : false,
+      snackbarMsg : '',
 
       fullName : undefined,
       nickName : undefined,
@@ -365,9 +399,43 @@ export default {
     confirmNewPassword(val) {
       this.matchPass = val === this.newPassword;
     },
+    // 확인 msg
+    snackbar(val) {
+      val && setTimeout(() => {
+        this.snackbar = false
+      }, 4000)
+    },
+    nickName(){
+      this.nickNameCheck = false;
+    }
   },
   methods: {
     // step 1
+    // 중복체크
+    nickCheck(nick){
+      this.$axios.get(' /signup/doublecheck/'+nick)
+          .then(response=>{
+            if(response.data > 0){
+              this.nickNameCheck = false
+              this.snackbarDelay("중복된 닉네임이 존재합니다")
+            }else{
+              this.nickNameCheck = true
+              this.snackbarDelay("사용 가능한 닉네임입니다")
+            }
+          })
+          .catch(error =>{
+            console.log(error.response);
+          })
+    },
+    snackbarDelay(str){
+      this.snackbarMsg = str;
+      clearTimeout(this._timerId)
+      // delay new call 500ms
+      this._timerId = setTimeout(() => {
+        // maybe : this.fetch_data()
+        this.snackbar = true;
+      }, 600)
+    },
 
     passwordRules(data){
       //길이 10자이상
@@ -386,6 +454,10 @@ export default {
     },
 
     signCommit(){
+      if(!this.nickNameCheck){
+        this.snackbarDelay("중복확인을 먼저 진행해주세요");
+        return null;
+      }
       let saveData = {};
       saveData.email = this.email;
       saveData.password = this.newPassword;
@@ -449,17 +521,9 @@ export default {
     },
 
 
-    unLoadEvent(event) {
-      event.preventDefault();
-      event.returnValue = '';
+    linkToLogin(){
+      this.$router.push({path:'/login'})
     },
-  },
-
-  mounted() {
-    window.addEventListener('beforeunload', this.unLoadEvent);
-  },
-  beforeUnmount() {
-    window.removeEventListener('beforeunload', this.unLoadEvent);
   },
 }
 </script>
