@@ -252,7 +252,7 @@ export default {
       handler(val){
         this.orderState[0].count = val.filter(e=> e.orderState==="결제완료").length
         this.orderState[1].count = val.filter(e=> e.orderState==="결제대기중").length
-        this.orderState[2].count = val.filter(e=> e.orderState==="결제실패").length
+        this.orderState[2].count = val.filter(e=> e.orderState==="결제취소").length
       }
     },
   },

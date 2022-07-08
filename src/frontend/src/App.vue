@@ -2,6 +2,7 @@
 <v-app>
   <SearchMenu
       @searchData="searchByMenu"
+      :key="searchComponentKey"
   ></SearchMenu>
 
  <main>
@@ -26,6 +27,7 @@
             {{ icon.icon }}
           </v-icon>
         </v-btn>
+        <v-btn @click="updateComponentKey">hello</v-btn>
       </v-card-actions>
 
   </v-footer>
@@ -45,14 +47,28 @@ export default {
       {icon:'mdi-linkedin'},
       {icon:'mdi-instagram'},
     ],
+
+    searchComponentKey:0,
   }),
+  watch:{
+    $route(){
+      this.searchComponentKey+=1
+    }
+  },
   methods:{
     searchByMenu(data){
       this.$router.push({name:'search', query:{search:data}}).catch(()=>{})
     },
     linkTo(link){
       this.$router.push({path:'/'+link}).catch(()=>console.log("같은 페이지"))
-    }
+    },
+
+    updateComponentKey(){
+      this.searchComponentKey +=1        //컴포넌트 리로드
+    },
+  },
+  mounted() {
+    this.updateComponentKey();
   }
 };
 </script>

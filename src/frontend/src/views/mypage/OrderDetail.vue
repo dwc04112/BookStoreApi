@@ -210,7 +210,7 @@ export default {
             }).then(response => {
               console.log(response.data);
               this.getOrderDetail();
-              this.dialog=false
+              this.cancelDialog=false
             }).catch(error => {
               console.log(error.response);
             })

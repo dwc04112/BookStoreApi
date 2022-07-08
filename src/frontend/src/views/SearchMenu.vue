@@ -169,7 +169,7 @@
             <v-btn
                 rounded class="white--text"
                 color="teal accent-6"
-                @click="$router.push({path:'/login'}).then(()=> {dialog=false}).then(()=>$router.go(0))"
+                @click="$router.push({path:'/login'}).then(()=>dialog=false)"
             >Login</v-btn>
           </v-card-actions>
         </v-card>
@@ -191,7 +191,7 @@ export default {
       loginCheck: this.$store.state.member.loginData.loginState,
       hideMenu : false,
 
-      dialog:false,
+      dialog: false,
       dialogMsg : '',
    }
   },

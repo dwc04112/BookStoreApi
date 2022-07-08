@@ -59,7 +59,7 @@
           <v-btn
               rounded class="white--text"
               color="teal accent-6"
-              @click="$router.push({path:'/'}).then(()=>$router.go(0))"
+              @click="$router.push({path:'/'})"
           >Home</v-btn>
         </v-card-actions>
 
@@ -95,10 +95,11 @@ export default {
               .then((response) => {
                 console.log(response.data)
                 if (response.status === 200) {
-                  this.$store.dispatch('login',response.data).then(()=>{
-                    this.dialogMsg="로그인 성공."
-                    this.dialog=true
-                  })
+                  this.$store.dispatch('login',response.data)
+                      .then(()=>{
+                        this.dialogMsg="로그인 성공."
+                        this.dialog=true
+                      })
                 }
               })
               .catch(error =>{

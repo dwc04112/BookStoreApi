@@ -47,7 +47,7 @@ axios.interceptors.response.use(function (response) {
     }
     else if(error.response.status===401) {
         store.dispatch('loginCheck_401').then(()=>{
-            router.push({path: '/login'}).then(() => (alert("로그인만료")))
+            router.push({path: '/login'}).then(() => (alert("로그인이 필요한 페이지입니다.")))
         })
     }
     return Promise.reject(error);

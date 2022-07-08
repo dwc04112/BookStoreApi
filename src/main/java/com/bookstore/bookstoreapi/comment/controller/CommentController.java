@@ -41,13 +41,13 @@ public class CommentController {
     }
 
     //2-2. 추천수 update
-    @PostMapping(value = "/pop")
+    @PostMapping(value = "/user/pop")
     public ApiResponse<Comment> updatePopularity(@RequestBody PopularityDTO popularityDTO)throws Exception{
         return commentService.updatePopularity(popularityDTO);
     }
 
     //3. 댓글 쓰기
-    @PostMapping(value = "/write")
+    @PostMapping(value = "/user/write")
     public ApiResponse<Comment> postComment(@RequestBody CommentDTO commentDTO)throws Exception{
         return commentService.postComment(commentDTO);
     }

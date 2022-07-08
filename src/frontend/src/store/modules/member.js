@@ -67,50 +67,51 @@ const member = {
                 setTimeout(() => {
                     commit('loginData', data);
                     resolve()
-                }, 1000)
+                }, 500)
             }).then(()=> dispatch('getUserInfo', data.email))
         },
 
         logout({commit}){
-            axios.post("/logout")
-                .then(() => {
-                    return new Promise((resolve) => {
-                        setTimeout(() => {
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    axios.post("/logout")
+                        .then(() => {
                             commit('initData');
-                            resolve()
-                        }, 1000)
-                    })
-                })
-                .catch(error =>{
-                    console.log(error.response);
-                })
+                        }).catch(error =>{
+                            console.log(error.response);
+                        })
+                    resolve()
+                }, 1000)
+            })
         },
 
         getUserInfo: function ({commit}, payload) {
-            let data = {};
-            data.email = payload
-            axios.post('/user/info', JSON.stringify(data), {
-                headers: {
-                    "Content-Type": `application/json`,
-                },
-            })
-                .then((res) => {
-                    console.log(res.data)
-                    data.nickName = res.data.nickName
-                    data.fullName = res.data.fullName
-                    data.mid = res.data.mid
-                    data.phoneNum = res.data.phoneNum
-                    data.profilePicture = res.data.profilePicture
-                    data.userRule = res.data.userRule
-                }).catch((error) => {
-                    console.log(error.res)
-                }).then(()=>{
-                return new Promise((resolve) => {
-                    setTimeout(() => {
-                        commit('putUserInfo', data);
-                        resolve()
-                    }, 1000)
+
+            return new Promise((resolve) => {
+                setTimeout(() => {
+
+                let data = {};
+                data.email = payload
+                axios.post('/user/info', JSON.stringify(data), {
+                    headers: {
+                        "Content-Type": `application/json`,
+                    },
                 })
+                    .then((res) => {
+                        console.log(res.data)
+                        data.nickName = res.data.nickName
+                        data.fullName = res.data.fullName
+                        data.mid = res.data.mid
+                        data.phoneNum = res.data.phoneNum
+                        data.profilePicture = res.data.profilePicture
+                        data.userRule = res.data.userRule
+                    }).catch((error) => {
+                        console.log(error.res)
+                    }).then(()=>{
+                        commit('putUserInfo', data);
+                    })
+                    resolve()
+                }, 1000)
             })
         },
 

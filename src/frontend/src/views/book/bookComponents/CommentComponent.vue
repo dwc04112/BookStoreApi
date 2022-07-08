@@ -291,7 +291,7 @@ export default {
         data.mid = this.$store.state.member.userData.mid;
         data.ratings = this.writeRating;
         data.content = this.writeComment;
-        this.$axios.post("comment/write", JSON.stringify(data), {
+        this.$axios.post("comment/user/write", JSON.stringify(data), {
           headers: {
             "Content-Type": `application/json`,
           },
@@ -311,7 +311,7 @@ export default {
       let comment = {}
       comment.update = data
       comment.cid = cid
-      this.$axios.post("comment/pop/", JSON.stringify(comment),{
+      this.$axios.post("comment/user/pop/", JSON.stringify(comment),{
         headers: {
           "Content-Type": `application/json`,
         },

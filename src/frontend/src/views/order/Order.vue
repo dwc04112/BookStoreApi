@@ -530,7 +530,10 @@ export default {
               .then(response=>{
                 console.log(response.data)
                 //order state 초기화
-                this.$store.dispatch('clearOrderState');
+                this.$store.dispatch('clearOrderState').then(()=>{
+                  alert("결제가 취소되었습니다. 홈 화면으로 돌아갑니다")
+                  this.$router.push({path:'/'})
+                })
               }).catch(error =>{
                 console.log(error.response);
               })
