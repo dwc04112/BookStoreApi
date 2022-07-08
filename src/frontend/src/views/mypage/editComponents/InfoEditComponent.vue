@@ -79,7 +79,7 @@
               text
               color="blue"
               @click="linkTo"
-          >Home</v-btn>
+          >Commit</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>

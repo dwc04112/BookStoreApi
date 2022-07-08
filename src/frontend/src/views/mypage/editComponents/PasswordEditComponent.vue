@@ -83,7 +83,6 @@
       <span class="security-text" style="color: rgb(240,240,240);"> &nbsp; 자세히 알아 보기</span>
     </v-col>
 
-
     <v-col cols="12" class="justify-end d-flex pb-6 pa-4">
       <v-btn
           rounded
@@ -94,6 +93,24 @@
         <span style="color: rgb(40,40,40); font-size: 15px; font-weight: bold">변경하기</span>
       </v-btn>
     </v-col>
+
+    <v-dialog
+        max-width="400"
+        v-model="dialog"
+    >
+      <v-card rounded color="rgb(55,55,55)" tile dark>
+        <div class="pa-4 pb-6 pt-6" style="font-weight: lighter; font-size: 15px">{{dialogMsg}}</div>
+        <v-card-actions class="justify-end" style="background-color: rgb(50,50,50)">
+          <v-btn
+              rounded
+              text
+              color="blue"
+              @click="$router.push({path:'/'})"
+          >Commit</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
 
   </v-row>
 </template>
@@ -115,6 +132,9 @@ export default {
 
       //비밀번호 매치
       matchPass: false,
+
+      dialog:false,
+      dialogMsg:'',
     }
   },
   watch: {
@@ -163,7 +183,9 @@ export default {
           "Content-Type": `application/json`,
         },
       }).then(response=>{
-        console.log(response.data)
+        console.log(response.data);
+        this.dialogMsg = "개인정보를 성공적으로 변경하였습니다. 로그아웃 처리 됩니다."
+        this.$store.dispatch('logout').then(()=> this.dialog =true)
       }).catch(error =>{
         console.log(error.response);
       })
