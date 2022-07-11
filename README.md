@@ -21,7 +21,7 @@
 3. mariadb 10.6 [download page](https://downloads.mariadb.org/)
 4. DBeaver 버전21.2.1 [download page](https://dbeaver.io/download/)
 
-#### B. git clone :+1:
+#### B. git clone :cd:
 ```\> git clone https://github.com/dwc04112/BookStore.git```
 
 #### C. run application (ON Intellij IDEA) :running:
