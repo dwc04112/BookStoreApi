@@ -306,6 +306,7 @@ export default {
       }
       this.deleteDialog = true
     },
+
     listOrItem(){
       console.log(this.deleteTitle)
       if(this.deleteTitle !=null){
@@ -314,6 +315,7 @@ export default {
         this.deleteInList()
       }
     },
+
     deleteWishList(){
       this.$axios.delete("wish/title/"+this.deleteTitle)
           .then(response=>{

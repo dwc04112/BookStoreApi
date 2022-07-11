@@ -75,15 +75,20 @@ public class CartService {
     //장바구니 담기 - list
     public ApiResponse<List<Long>> addListToCart(List<Long> widArr) {
         Long mid = getMemberIdByEmail();
-        ArrayList<Long> successfulBid = new ArrayList<>();
-        ArrayList<Long> failedBid = new ArrayList<>();
+        ArrayList<Long> successfulBid = new ArrayList<>(); //장바구니에 성공적으로 등록한 id목록
+        ArrayList<Long> failedBid = new ArrayList<>();  //장바구니에 등록 실패한 id목록
 
         for(long wid : widArr){
+            //해당 wishlist id의 책 id를 가져와서
             long bid = wishlistRepository.getBidByWid(wid);
+            // 로그인된 회원 정보와 위에서 가져온 book id로 검색된 정보가 있는지 확인
             int matchBid = cartRepository.selectByMidAndBid(mid, bid);
+
+            //있다면? > 이미 등록되어 있으므로 pass
             if(matchBid>0){
                 successfulBid.add(bid);
             }else{
+                //없으면 새 cart id 생성 후 등록
                 long newCartIdValue = this.getNewCartIdValue(cartRepository);
                 int result = cartRepository.addToCart(newCartIdValue, mid, bid, 1);
                 if (result < 1) {

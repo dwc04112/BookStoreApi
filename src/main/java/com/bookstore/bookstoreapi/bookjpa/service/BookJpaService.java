@@ -162,9 +162,7 @@ public class BookJpaService {
         return bookRepository.findBookByBookTagStartingWithAndIsDel(bookTag, "N");
     }
 
-    //
-    // 수정해야함
-    //
+    //책 추천
     public List<BookMainInterface> getRecommend(Long bid) {
         Optional<Book> bookData = bookRepository.findBookByBid(bid);
         Book data = bookData.orElseThrow(() -> new RuntimeException("no data"));
