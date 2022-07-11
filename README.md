@@ -36,6 +36,6 @@
 
 <a href="https://dwc04112.tistory.com/"><img src="https://img.shields.io/badge/Tistory-000000?style=flat-square&logo=&logoColor=white"/></a> <a href="https://github.com/dwc04112/"><img src="https://img.shields.io/badge/GitHub-000000?style=flat-square&logo=GitHub&logoColor=white"/><a/>
 
-#### B. Book Store 시연 영상은 유튜브를 
+#### B. Book Store 시연 영상은 유튜브를 참고해주세요!
 
 [![Video Label](http://i.ytimg.com/vi/okeB-FOu8Z4/mqdefault.jpg)](https://youtu.be/okeB-FOu8Z4) [![Video Label](http://i.ytimg.com/vi/okeB-FOu8Z4/mqdefault.jpg)](https://youtu.be/CD85UOinzrs)
