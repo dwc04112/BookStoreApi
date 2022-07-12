@@ -45,6 +45,12 @@ public class PaymentsController {
         return paymentsService.getPaymentById(orderId);
     }
 
+    @GetMapping("/token")
+    public void tokenTest() throws Exception{
+        String token = paymentsService.getToken();
+        log.debug(token);
+    }
+
     //휴대폰 인증 > 다날 유료결제시 사용가능
     @ResponseBody
     @PostMapping("/certification")

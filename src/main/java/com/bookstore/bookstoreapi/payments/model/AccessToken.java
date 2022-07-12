@@ -5,11 +5,11 @@ import lombok.Data;
 @Data
 public class AccessToken {
 
-    String token;
-    int expired_at;
+    String access_token;
     int now;
+    int expired_at;
 
     public String getToken() {
-        return this.token;
+        return this.access_token;
     }
 }

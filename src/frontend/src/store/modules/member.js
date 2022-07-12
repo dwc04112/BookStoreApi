@@ -67,7 +67,7 @@ const member = {
                 setTimeout(() => {
                     commit('loginData', data);
                     resolve()
-                }, 500)
+                }, 300)
             }).then(()=> dispatch('getUserInfo', data.email))
         },
 
@@ -81,7 +81,7 @@ const member = {
                             console.log(error.response);
                         })
                     resolve()
-                }, 1000)
+                }, 300)
             })
         },
 

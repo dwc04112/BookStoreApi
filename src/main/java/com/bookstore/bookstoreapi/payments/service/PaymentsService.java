@@ -4,10 +4,7 @@ package com.bookstore.bookstoreapi.payments.service;
 import com.bookstore.bookstoreapi.common.ApiResponse;
 import com.bookstore.bookstoreapi.member.MemberRepository;
 import com.bookstore.bookstoreapi.order.model.Orders;
-import com.bookstore.bookstoreapi.payments.dto.ImportDTO;
-import com.bookstore.bookstoreapi.payments.dto.PayAndOrderItems;
-import com.bookstore.bookstoreapi.payments.dto.PaymentsDTO;
-import com.bookstore.bookstoreapi.payments.dto.PaymentsRsp;
+import com.bookstore.bookstoreapi.payments.dto.*;
 import com.bookstore.bookstoreapi.payments.model.AccessToken;
 import com.bookstore.bookstoreapi.payments.model.Payments;
 import com.bookstore.bookstoreapi.payments.model.PaymentsRepository;
@@ -110,24 +107,16 @@ public class PaymentsService {
             body.put("imp_secret", api_secret);
 
             HttpEntity<String> entity = new HttpEntity<>(body.toString(), headers);
-            ResponseEntity<String> response = rt.postForEntity(API_URL + "/users/getToken", entity, String.class);
+            ResponseEntity<GetTokenDTO> response = rt.postForEntity(API_URL + "/users/getToken", entity, GetTokenDTO.class);
 
             if(response.getStatusCodeValue()!=200){
                 throw new RuntimeException("Failed get Auth : HTTP error code : "
                         + response.getStatusCodeValue());
             }
 
-            // No HttpMessageConverter "application/json" 에러때문에
-            //json -> String 변환해서 호출. 받은 String 값 다시 json 으로 변환
-            JSONObject rspBody = new JSONObject(response.getBody());
-            JSONObject rspData = new JSONObject(rspBody.get("response").toString());
+            return Objects.requireNonNull(response.getBody()).getResponse();
 
-            AccessToken auth = new AccessToken();
-            auth.setToken(rspData.get("access_token").toString());
-            auth.setNow((Integer) rspData.get("now"));
-            auth.setExpired_at((Integer) rspData.get("expired_at"));
 
-            return auth;
 
         }catch (Exception e){
             log.debug("Exception (getAuth) : "+ e);
