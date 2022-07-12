@@ -17,6 +17,8 @@
         <java.version>1.8</java.version>
     </properties>
 
+    <packaging>jar</packaging>
+
     <!--iamPort - https://github.com/iamport/iamport-rest-client-java-->
     <repositories>
         <repository>

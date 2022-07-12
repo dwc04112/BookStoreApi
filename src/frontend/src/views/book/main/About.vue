@@ -19,6 +19,7 @@
                 text-color="rgb(240,240,240)"
                 class="top-chip"
                 active-class="white"
+                @click="byCategory(data.num)"
             ><span>{{data.main}}</span>
             </v-chip>
           </v-chip-group>
