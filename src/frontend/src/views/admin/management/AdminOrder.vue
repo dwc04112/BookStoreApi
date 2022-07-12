@@ -20,6 +20,8 @@
             :headers="headers"
             :items="orderData"
             item-key="name"
+            :sort-by="'orderDate'"
+            :sort-desc="true"
             class="elevation-0"
         >
           <template v-slot:item.orderState="{ item }">

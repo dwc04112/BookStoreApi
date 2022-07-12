@@ -62,7 +62,7 @@
       <transition name="sub-slide" mode="in-out" class="detail-hide">
         <v-col
             class="pa-0 detail-hide"
-            cols="7" sm="5" md="4"
+            cols="7" sm="5" md="3"
             color="grey lighten-3"
             v-show="show.data"
         >
