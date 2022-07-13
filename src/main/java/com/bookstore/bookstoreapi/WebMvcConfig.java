@@ -8,14 +8,14 @@ import org.springframework.web.servlet.resource.PathResourceResolver;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
-    @Value("C:/Spring/BookStoreApi/profile_imgs/")
+    @Value("C:/Spring/BookStoreApi/")
     private String profileUploadFolder;
 
     public void addResourceHandlers(ResourceHandlerRegistry registry){
         WebMvcConfigurer.super.addResourceHandlers(registry);
 
         registry
-                .addResourceHandler("/profile_imgs/**")
+                .addResourceHandler("/profile_img/**")
                 .addResourceLocations("file://"+profileUploadFolder)
                 .setCachePeriod(60*10*6)
                 .resourceChain(true)

@@ -42,8 +42,16 @@ const member = {
 
         putProfile: function (state, data){
             state.userData.nickName = data.nickName
-            state.userData.profilePicture = require('@/assets/profile_imgs/'+data.profilePicture)
+            state.userData.profilePicture = require('@/../../../profile_img/'+data.profilePicture)
             console.log(state.userData)
+        },
+        putUserSimpleInfo: function (state, data){
+            state.userData.fullName = data.fullName
+            state.userData.nickName = data.nickName
+            state.userData.mid = data.mid
+            state.userData.phoneNum = data.phoneNum
+            state.userData.userRule = data.userRule
+            console.log("no profilePic : " + state)
         },
 
         putUserInfo: function (state, data){
@@ -51,7 +59,7 @@ const member = {
             state.userData.nickName = data.nickName
             state.userData.mid = data.mid
             state.userData.phoneNum = data.phoneNum
-            state.userData.profilePicture = require('@/assets/profile_imgs/'+data.profilePicture)
+            state.userData.profilePicture = require('@/../../../profile_img/'+data.profilePicture)
             state.userData.userRule = data.userRule
             console.log("putUserInfo : " + state)
         },
@@ -103,12 +111,16 @@ const member = {
                         data.fullName = res.data.fullName
                         data.mid = res.data.mid
                         data.phoneNum = res.data.phoneNum
-                        data.profilePicture = res.data.profilePicture
                         data.userRule = res.data.userRule
+                        data.profilePicture = res.data.profilePicture
                     }).catch((error) => {
                         console.log(error.res)
                     }).then(()=>{
-                        commit('putUserInfo', data);
+                        if(data.profilePicture==null|| data.profilePicture===""){
+                            commit('putUserSimpleInfo', data);
+                        }else{
+                            commit('putUserInfo', data);
+                        }
                     })
                     resolve()
                 }, 1000)
@@ -124,7 +136,7 @@ const member = {
                 setTimeout(() => {
                     commit('putProfile', data);
                     resolve()
-                }, 1000)
+                }, 2000)
             })
         },
 

@@ -153,7 +153,7 @@
                     <img
                         style="object-fit: cover"
                         v-show="data.profile !== void 0"
-                        :src="require('@/assets/profile_imgs/'+data.profile)"
+                        :src="require('@/../../../profile_img/'+data.profile)"
                         alt=""
                     >
                   </v-avatar>

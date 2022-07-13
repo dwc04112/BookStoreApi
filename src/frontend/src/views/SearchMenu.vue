@@ -77,6 +77,9 @@
         <v-icon>mdi-account-circle</v-icon>
       </v-btn>
 
+   
+
+
       <v-menu
           bottom
           min-width="200px"
@@ -102,6 +105,7 @@
             </v-avatar>
           </v-btn>
         </template>
+
         <v-card color="rgb(40,40,40)" rounded>
           <v-list-item-content class="justify-center">
             <div class="mx-auto text-center">

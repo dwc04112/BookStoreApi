@@ -1,5 +1,6 @@
 <template>
     <v-container fluid class="container">
+      <!--
       <div style="width: 100%; height: 80vh; overflow: hidden; margin: 0 auto; position: relative;"
         class="d-flex flex-column"
       >
@@ -12,7 +13,7 @@
           <source :src="rainVideo" type="video/mp4">
         </video>
       </div>
-
+-->
       <div style="height: 150px"/>
       <div style="position: absolute; bottom: 65%">
         <v-carousel
@@ -96,12 +97,10 @@
 </template>
 
 <script>
-import rain from "@/assets/rain.mp4"
 export default {
   name: "MainBook",
   data: function (){
     return{
-      rainVideo : rain,
       bookDatas : [],
       keywords : [],
       selection : [],

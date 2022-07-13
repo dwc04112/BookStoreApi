@@ -108,6 +108,7 @@ public class CommentService {
                 .isDel("N")
                 .build();
         commentRepository.save(postData);
+
         return new ApiResponse<>(true, "Registration successfully ", postData);
     }
 
@@ -127,7 +128,8 @@ public class CommentService {
         return result;
     }
 
-    //4. 내가 쓴 모든 댓글 불러오기
+
+    //4. 마이페이지에서 내가 쓴 모든 댓글 불러오기
     public Page<CommentBookMapping> getMyCommentList(SortDTO sortDTO) {
         PageRequest pageRequest = PageRequest.of(sortDTO.getPage() , sortDTO.getSize());
 
@@ -146,7 +148,7 @@ public class CommentService {
         return null;
     }
 
-    //4-1
+    //4-1 마이페이지에서
     public Total getTotalCount() {
         int bookCount = commentRepository.countCommentByMidAndIsDel(getMemberIdByEmail() , "N");
         String avgRatings = String.format("%.2f", commentRepository.avgRatings(getMemberIdByEmail(), "N"));
@@ -159,7 +161,7 @@ public class CommentService {
         return total;
     }
 
-    //5. 삭제
+    //5. 마이페이지에서 내가 쓴 댓글 삭제
     public ApiResponse<Comment> updateIsDelByCid(long cid) {
         Optional<Comment> commentData = commentRepository.findCommentByCidAndIsDel(cid, "N");
         Comment data = commentData.orElseThrow(() -> new RuntimeException("no data"));
@@ -175,6 +177,8 @@ public class CommentService {
         }
     }
 
+
+    //관리자 페이지에서 삭제
     @Transactional
     public String updateIsDelByAdmin(List<Long> cidArr){
         log.debug("Admin :: delete Cid list : " + cidArr);

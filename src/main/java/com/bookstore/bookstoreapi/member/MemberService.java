@@ -15,6 +15,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,7 +43,7 @@ public class MemberService {
         Optional<Member> member = memberRepository.findByEmail(email);
         Member data = member.orElseThrow(() -> new RuntimeException("no data : find member by email"));
 
-        String imgFileName = data.getMid() + "mid" + multipartFile.getOriginalFilename();
+        String imgFileName = Timestamp.valueOf(data.getCreateDate().atStartOfDay()).getTime() + data.getMid() + "profile.jpg";
         Path imgFilePath = Paths.get(uploadFolder+imgFileName);
 
         if(multipartFile.getSize() !=0){
@@ -64,11 +65,9 @@ public class MemberService {
         Member data = memberData();
         MemberDTO memberDTO = new MemberDTO();
 
-
         if(multipartFile!=null){
-            String imgFileName = data.getMid() + "mid" + multipartFile.getOriginalFilename();
+            String imgFileName = Timestamp.valueOf(data.getCreateDate().atStartOfDay()).getTime()+ data.getMid() +"profile.jpg";
             Path imgFilePath = Paths.get(uploadFolder+imgFileName);
-
 
             if(multipartFile.getSize() !=0){
                 try{
@@ -86,7 +85,6 @@ public class MemberService {
                 memberDTO.setNickName(result.getNickName());
             }
         }
-
 
         if(nickName!=null && nickName.length()>0){
             data.updateNickName(nickName);
