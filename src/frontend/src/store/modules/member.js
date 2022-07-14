@@ -75,23 +75,35 @@ const member = {
                 setTimeout(() => {
                     commit('loginData', data);
                     resolve()
-                }, 300)
+                }, 500)
             }).then(()=> dispatch('getUserInfo', data.email))
         },
-
+/*
         logout({commit}){
+            console.log("logout page")
             return new Promise((resolve) => {
                 setTimeout(() => {
                     axios.post("/logout")
                         .then(() => {
-                            commit('initData');
+                           console.log("success logout")
                         }).catch(error =>{
-                            console.log(error.response);
-                        })
-                    resolve()
-                }, 300)
+                            console.log("error : " + error.response);
+                        }).then(()=> commit('initData'))
+                        resolve()
+                }, 1000)
             })
         },
+
+ */
+        logout({commit}){
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    commit('initData')
+                    resolve()
+                }, 500)
+            }).then(()=> console.log("success logout :: member Store"))
+        },
+
 
         getUserInfo: function ({commit}, payload) {
 

@@ -77,7 +77,7 @@
         <v-icon>mdi-account-circle</v-icon>
       </v-btn>
 
-   
+
 
 
       <v-menu
@@ -152,7 +152,7 @@
               <v-divider dark class="my-3"></v-divider>
               <v-btn
                   dark rounded text depressed
-                  @click="logoutAndDialog"
+                  @click="Logout"
                   class="grey--text text--lighten-2"
               >
                 <v-avatar color="red darken-2" class="mr-2" size="12"></v-avatar>Logout
@@ -182,6 +182,7 @@
 </template>
 
 <script>
+
 
 
 export default {
@@ -282,12 +283,26 @@ export default {
       }
     },
     logoutAndDialog(){
+
       this.$store.dispatch('logout').then(()=>{
           this.dialogMsg="로그아웃 성공. 로그인 페이지로 이동합니다"
           this.dialog=true
         }
       )
     },
+    Logout(){
+      this.$axios.post("/logout")
+        .then(() => {
+              this.$store.dispatch('logout').then(()=> {
+                this.dialogMsg = "로그아웃 성공. 로그인 페이지로 이동합니다"
+                this.dialog = true
+              })
+        }).catch(error =>{
+              console.log("error : " + error.response);
+        })
+
+    },
+
 
     //책 보러가기
     detailView(bid){

@@ -47,7 +47,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .passwordEncoder(passwordEncoder);
     }
 
-
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers(
@@ -59,6 +58,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 "/js/**"   // 여기서 설정 안 해주면 index.html이 읽을 수 없음
         );
     }
+
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
@@ -74,19 +74,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .logout()
                 .logoutUrl("/logout")
-                .logoutSuccessUrl("/")
-                .deleteCookies("viewCookie")
                 .logoutSuccessHandler(logoutSuccessHandler())
+                .invalidateHttpSession(true)
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
+    // .deleteCookies("viewCookie")
+    //     .logoutSuccessUrl("/")
 
     @Bean
     public LogoutSuccessHandler logoutSuccessHandler() {
         CustomLogoutSuccessHandler logoutSuccessHandler = new CustomLogoutSuccessHandler();
-        logoutSuccessHandler.setDefaultTargetUrl("http://localhost:8090/#/");
+        logoutSuccessHandler.setDefaultTargetUrl("/");
         return logoutSuccessHandler;
     }
 }
