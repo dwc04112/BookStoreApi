@@ -87,7 +87,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public LogoutSuccessHandler logoutSuccessHandler() {
         CustomLogoutSuccessHandler logoutSuccessHandler = new CustomLogoutSuccessHandler();
-        logoutSuccessHandler.setDefaultTargetUrl("/");
+        logoutSuccessHandler.setDefaultTargetUrl("http://localhost:8090/#/");   //vue 서버 구동시
+        // logoutSuccessHandler.setDefaultTargetUrl("/");  //빌드로 실행시
+
         return logoutSuccessHandler;
     }
 }
